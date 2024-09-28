@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.DAL.Entities
 {
+    [Table("AccountVoucher")]
     public class AccountVoucher
     {
         public int AccountId { get; set; }

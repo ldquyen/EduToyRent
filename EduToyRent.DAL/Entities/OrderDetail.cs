@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.DAL.Entities
 {
+    [Table("OrderDetail")]
     public class OrderDetail
     {
         [Key]
@@ -19,6 +20,7 @@ namespace EduToyRent.DAL.Entities
         public bool IsRental { get; set; }
         public DateTime? RentalDate { get; set; }
         public DateTime? ReturnDate { get; set; }
+        public decimal? RentalPrice { get; set; }
 
         [ForeignKey("OrderId")]
         public virtual Order Order { get; set; }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.DAL.Entities
 {
+    [Table("CartItem")]
     public class CartItem
     {
         [Key]
@@ -15,7 +16,6 @@ namespace EduToyRent.DAL.Entities
         public int CartId { get; set; }
         public int ToyId { get; set; }
         public int Quantity { get; set; }
-        public decimal TotalAmount { get; set; }
 
         [ForeignKey("CartId")]
         public virtual Cart Cart { get; set; }
