@@ -9,6 +9,8 @@ namespace EduToyRent.DAL.Interfaces
 {
     public interface IAccountRepository : IRepository<Account>
     {
-        Task<Account> LoginAsync(string email, string password);  
+        Task<Account> LoginAsync(string email, string password);
+        Task<bool> CheckEmailExistAsync(string email);
+        Task<bool> CheckPhoneExistAsync(string phone);
     }
 }
