@@ -20,6 +20,7 @@ namespace EduToyRent.DAL.Entities
         public int? RoleId { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
+        public bool IsBan { get; set; }
 
         [ForeignKey("RoleId")]
         public virtual Role Role { get; set; }

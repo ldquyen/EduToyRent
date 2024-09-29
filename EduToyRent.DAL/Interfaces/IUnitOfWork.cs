@@ -8,5 +8,9 @@ namespace EduToyRent.DAL.Interfaces
 {
     public interface IUnitOfWork
     {
+        IAccountRepository AccountRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
+
+        Task SaveAsync();
     }
 }

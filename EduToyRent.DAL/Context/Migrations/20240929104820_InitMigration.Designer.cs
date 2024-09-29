@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduToyRent.DAL.Context.Migrations
 {
     [DbContext(typeof(EduToyRentDbContext))]
-    [Migration("20240929053828_InitMigrationLDQ")]
-    partial class InitMigrationLDQ
+    [Migration("20240929104820_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,9 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
