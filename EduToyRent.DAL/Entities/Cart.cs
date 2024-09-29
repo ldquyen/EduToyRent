@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.DAL.Entities
 {
+    [Table("Cart")]
     public class Cart
     {
         [Key]
         public int CartId { get; set; }
         public int AccountId { get; set; }
-        public decimal TotalPrice { get; set; }
 
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }

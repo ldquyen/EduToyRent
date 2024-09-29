@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.DAL.Entities
 {
+    [Table("Account")]
     public class Account
     {
         [Key]
@@ -22,11 +23,12 @@ namespace EduToyRent.DAL.Entities
 
         [ForeignKey("RoleId")]
         public virtual Role Role { get; set; }
+        public virtual Cart Cart { get; set; }
         public virtual ICollection<Toy> Toys { get; set; }
-        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<AccountVoucher> AccountVouchers { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
     }
 }

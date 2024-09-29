@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.DAL.Entities
 {
+    [Table("Review")]
     public class Review
     {
         [Key]
