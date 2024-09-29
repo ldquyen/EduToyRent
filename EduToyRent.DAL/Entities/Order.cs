@@ -29,7 +29,7 @@ namespace EduToyRent.DAL.Entities
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<DepositOrder> DepositOrders { get; set; }
+        public virtual DepositOrder DepositOrders { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
     }
 

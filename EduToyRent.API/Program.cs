@@ -1,6 +1,6 @@
 using Cursus_API.Helper;
 using EduToyRent.API.Helper;
-using EduToyRent.DAL.DbContexts;
+using EduToyRent.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

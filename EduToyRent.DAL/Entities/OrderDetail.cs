@@ -27,6 +27,6 @@ namespace EduToyRent.DAL.Entities
 
         [ForeignKey("ToyId")]
         public virtual Toy Toy { get; set; }
-        public virtual ICollection<ShipDate> ShipDates { get; set; }
+        public virtual ShipDate ShipDates { get; set; }
     }
 }

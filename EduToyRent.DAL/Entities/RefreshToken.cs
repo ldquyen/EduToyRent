@@ -13,7 +13,7 @@ namespace EduToyRent.DAL.Entities
     {
         [Key]
         public Guid Id { get; set; }
-        public string AccountId { get; set; }
+        public int AccountId { get; set; }
         public string Token { get; set; }
         public string JwtID { get; set; }
         public bool IsUsed { get; set; }

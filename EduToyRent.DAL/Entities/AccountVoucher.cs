@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace EduToyRent.DAL.Entities
     [Table("AccountVoucher")]
     public class AccountVoucher
     {
+        [Key]
+        public int AccountVoucherId { get; set; }
         public int AccountId { get; set; }
         public int VoucherId { get; set; }
         public bool IsUsed { get; set; }
