@@ -1,4 +1,5 @@
 ﻿using EduToyRent.BLL.DTOs.AccountDTO;
+using EduToyRent.BLL.DTOs.TokenDTO;
 using EduToyRent.BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +11,15 @@ namespace EduToyRent.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, ITokenService tokenService)
         {
             _authService = authService;
+            _tokenService = tokenService;
         }
         
-        [HttpPost("login")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
@@ -30,6 +33,13 @@ namespace EduToyRent.API.Controllers
                 return Ok(result);
             }
             return BadRequest(result);
+        }
+
+        [HttpPost("renew-token")]
+        public async Task<IActionResult> RenewToken(RenewTokenDTO renewTokenDTO)
+        {
+            var token = await _tokenService.RenewTokenAsync(renewTokenDTO);
+            return Ok(token);
         }
     }
 }

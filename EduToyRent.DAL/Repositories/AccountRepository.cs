@@ -23,5 +23,15 @@ namespace EduToyRent.DAL.Repositories
             return await _context.Accounts.FirstOrDefaultAsync(a => a.AccountEmail == email && a.AccountPassword == password);
         }
 
+        public async Task<bool> CheckEmailExistAsync(string email)
+        {
+            return await _context.Accounts.AnyAsync(x => x.AccountEmail == email);
+        }
+
+        public async Task<bool> CheckPhoneExistAsync(string phone)
+        {
+            return await _context.Accounts.AnyAsync(x => x.PhoneNumber == phone);
+        }
+
     }
 }

@@ -13,7 +13,7 @@ namespace EduToyRent.DAL.Repositories
         private readonly EduToyRentDbContext _context;
         public IAccountRepository AccountRepository { get; set; }
         public IRefreshTokenRepository RefreshTokenRepository { get; set; }
-
+        public ICartRepository CartRepository { get; set; }
 
 
         public UnitOfWork(EduToyRentDbContext context)
@@ -21,9 +21,8 @@ namespace EduToyRent.DAL.Repositories
             _context = context;
             AccountRepository = new AccountRepository(_context);
             RefreshTokenRepository = new RefreshTokenRepository(_context);  
+            CartRepository = new CartRepository(_context);
         }
-
-
 
         public async Task SaveAsync()
         {

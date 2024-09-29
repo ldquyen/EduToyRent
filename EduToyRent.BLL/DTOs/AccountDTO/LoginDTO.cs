@@ -10,7 +10,7 @@ namespace EduToyRent.BLL.DTOs.AccountDTO
     public class LoginDTO
     {
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
         [Required]
         [MinLength(6, ErrorMessage = "Password should be minimum 6 characters")]

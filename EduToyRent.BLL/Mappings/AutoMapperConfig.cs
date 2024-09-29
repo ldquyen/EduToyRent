@@ -16,7 +16,10 @@ namespace EduToyRent.BLL.Mappings
             CreateMap<LoginDTO, Account>()
                 .ForMember(x => x.AccountEmail, opt => opt.MapFrom(x => x.Email))
                 .ForMember(x => x.AccountPassword, opt => opt.MapFrom(x => x.Password));
+
             CreateMap<Account, CurrentUserObject>().ReverseMap();
+
+            CreateMap<SignupAccountDTO, Account>();
 
         }
     }

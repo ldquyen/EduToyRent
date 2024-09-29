@@ -24,6 +24,7 @@ namespace EduToyRent.DAL.Entities
         public int Stock { get; set; }
         public int SupplierId { get; set; }
         public byte[] ImageToy { get; set; }
+        private bool IsActive { get; set; }
 
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }

@@ -13,12 +13,11 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountRepository, AccountRepository>();
 
-
             //service
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<ITokenService, TokenService>();
-
+            services.AddScoped<IAccountService, AccountService>();
             return services;
         }
     }

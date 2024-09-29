@@ -10,7 +10,7 @@ namespace EduToyRent.DAL.Interfaces
     {
         IAccountRepository AccountRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
-
+        ICartRepository CartRepository { get; }
         Task SaveAsync();
     }
 }
