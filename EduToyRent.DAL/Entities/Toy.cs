@@ -23,7 +23,7 @@ namespace EduToyRent.DAL.Entities
         public decimal? RentPricePerTwoWeeks { get; set; }
         public int Stock { get; set; }
         public int SupplierId { get; set; }
-        public string ImageToy { get; set; }
+        public byte[] ImageToy { get; set; }
 
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
