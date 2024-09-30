@@ -45,7 +45,7 @@ namespace EduToyRent.BLL.Services
                     new Claim("Phone", currentUserObject.PhoneNumber),
                     new Claim(ClaimTypes.Role, currentUserObject.RoleId.ToString())   ,
                     new Claim(ClaimTypes.Email, currentUserObject.AccountEmail),
-                    new Claim("UserId", currentUserObject.AccountId.ToString())
+                    new Claim("AccountId", currentUserObject.AccountId.ToString())
 
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),

@@ -35,6 +35,8 @@ namespace EduToyRent.DAL.Context
         public DbSet<Toy> Toys { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+
+        public DbSet<RequestForm> Requests { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -183,6 +185,18 @@ namespace EduToyRent.DAL.Context
             modelBuilder.Entity<Toy>()
                 .Property(t => t.RentPricePerWeek)
                 .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<RequestForm>()
+    .HasOne(r => r.Toy)
+    .WithMany(t => t.RequestForms) 
+    .HasForeignKey(r => r.ToyId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RequestForm>()
+    .HasOne(r => r.Account)
+    .WithMany(a => a.RequestForms)
+    .HasForeignKey(r => r.ProcessedById)
+    .OnDelete(DeleteBehavior.Restrict);
             //Add-Migration InitMigration -Context EduToyRentDbContext -Project EduToyRent.DAL -StartupProject EduToyRent.API -OutputDir Context/Migrations
 
         }

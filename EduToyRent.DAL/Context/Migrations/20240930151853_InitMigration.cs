@@ -196,7 +196,9 @@ namespace EduToyRent.DAL.Context.Migrations
                     RentPricePerTwoWeeks = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
-                    ImageToy = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -334,6 +336,37 @@ namespace EduToyRent.DAL.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Request",
+                columns: table => new
+                {
+                    RequestId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ToyId = table.Column<int>(type: "int", nullable: false),
+                    ProcessedById = table.Column<int>(type: "int", nullable: true),
+                    RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ResponseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RequestStatus = table.Column<int>(type: "int", nullable: false),
+                    ForRent = table.Column<bool>(type: "bit", nullable: false),
+                    DenyReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Request", x => x.RequestId);
+                    table.ForeignKey(
+                        name: "FK_Request_Account_ProcessedById",
+                        column: x => x.ProcessedById,
+                        principalTable: "Account",
+                        principalColumn: "AccountId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Request_Toy_ToyId",
+                        column: x => x.ToyId,
+                        principalTable: "Toy",
+                        principalColumn: "ToyId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Review",
                 columns: table => new
                 {
@@ -453,6 +486,16 @@ namespace EduToyRent.DAL.Context.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Request_ProcessedById",
+                table: "Request",
+                column: "ProcessedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Request_ToyId",
+                table: "Request",
+                column: "ToyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Review_AccountId",
                 table: "Review",
                 column: "AccountId");
@@ -496,6 +539,9 @@ namespace EduToyRent.DAL.Context.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "Request");
 
             migrationBuilder.DropTable(
                 name: "Review");

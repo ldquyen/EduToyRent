@@ -8,6 +8,9 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EduToyRentDbContext>(opt =>
@@ -82,7 +85,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireStudentRole", policy => policy.RequireRole("1"));
     options.AddPolicy("RequireAdminOrStudentRole", policy => policy.RequireAssertion(context => context.User.IsInRole("3") || context.User.IsInRole("1")));
 });
-
+builder.Services.AddFirebaseServices();                                             //firebase 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);                  //automapper
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -9,8 +9,7 @@ namespace EduToyRent.BLL.Exceptions
 {
     public static class LoginErrors
     {
-        public static Error AccountIsBan => new(
-            "Account", "Your account is banned!!");
+        public static Error AccountIsBan => new("Account", "Your account is banned!!");
         public static Error InvalidAccount => new("Null", "Wrong email or password");
     }
 }

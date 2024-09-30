@@ -23,8 +23,9 @@ namespace EduToyRent.DAL.Entities
         public decimal? RentPricePerTwoWeeks { get; set; }
         public int Stock { get; set; }
         public int SupplierId { get; set; }
-        public byte[] ImageToy { get; set; }
-        private bool IsActive { get; set; }
+        public string ImageUrl { get; set; }
+        public bool IsActive { get; set; } // staff
+        public bool IsDelete { get; set; } // supplier
 
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
@@ -34,5 +35,6 @@ namespace EduToyRent.DAL.Entities
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; }
+        public virtual ICollection<RequestForm> RequestForms { get; set; }
     }
 }
