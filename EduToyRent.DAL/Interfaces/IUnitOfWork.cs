@@ -11,6 +11,9 @@ namespace EduToyRent.DAL.Interfaces
         IAccountRepository AccountRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
         ICartRepository CartRepository { get; }
+        IToyRepository ToyRepository { get; }
+        ICategoryRepository CategoryRepository { get; }
+        IRequestFormRepository RequestFormRepository { get; }
         Task SaveAsync();
     }
 }

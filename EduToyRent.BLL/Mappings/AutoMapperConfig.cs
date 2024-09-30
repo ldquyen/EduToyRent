@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using EduToyRent.BLL.DTOs.AccountDTO;
+using EduToyRent.BLL.DTOs.CategoryDTO;
+using EduToyRent.BLL.DTOs.RequestFormDTO;
+using EduToyRent.BLL.DTOs.ToyDTO;
 using EduToyRent.DAL.Entities;
 
 namespace EduToyRent.BLL.Mappings
@@ -20,6 +23,14 @@ namespace EduToyRent.BLL.Mappings
             CreateMap<Account, CurrentUserObject>().ReverseMap();
 
             CreateMap<SignupAccountDTO, Account>();
+
+            CreateMap<CreateRentalToyDTO, Toy>();
+            CreateMap<CreateSaleToyDTO, Toy>();
+
+            CreateMap<CreateNewCategoryDTO, Category>();
+
+            CreateMap<CreateRentalRequestDTO, RequestForm>();
+            CreateMap<CreateSaleRequestDTO, RequestForm>();
 
         }
     }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduToyRent.DAL.Context.Migrations
 {
     [DbContext(typeof(EduToyRentDbContext))]
-    [Migration("20240929104820_InitMigration")]
+    [Migration("20240930151853_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -376,6 +376,44 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.ToTable("RefreshToken");
                 });
 
+            modelBuilder.Entity("EduToyRent.DAL.Entities.RequestForm", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestId"));
+
+                    b.Property<string>("DenyReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ForRent")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ProcessedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RequestDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RequestStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ResponseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ToyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RequestId");
+
+                    b.HasIndex("ProcessedById");
+
+                    b.HasIndex("ToyId");
+
+                    b.ToTable("Request");
+                });
+
             modelBuilder.Entity("EduToyRent.DAL.Entities.Review", b =>
                 {
                     b.Property<int>("ReviewId")
@@ -475,9 +513,15 @@ namespace EduToyRent.DAL.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageToy")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsRental")
                         .HasColumnType("bit");
@@ -674,6 +718,24 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("EduToyRent.DAL.Entities.RequestForm", b =>
+                {
+                    b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
+                        .WithMany("RequestForms")
+                        .HasForeignKey("ProcessedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("EduToyRent.DAL.Entities.Toy", "Toy")
+                        .WithMany("RequestForms")
+                        .HasForeignKey("ToyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Toy");
+                });
+
             modelBuilder.Entity("EduToyRent.DAL.Entities.Review", b =>
                 {
                     b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
@@ -736,6 +798,8 @@ namespace EduToyRent.DAL.Context.Migrations
 
                     b.Navigation("RefreshTokens");
 
+                    b.Navigation("RequestForms");
+
                     b.Navigation("Reviews");
 
                     b.Navigation("Toys");
@@ -777,6 +841,8 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("RequestForms");
 
                     b.Navigation("Reviews");
                 });

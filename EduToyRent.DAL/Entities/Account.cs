@@ -31,5 +31,6 @@ namespace EduToyRent.DAL.Entities
         public virtual ICollection<AccountVoucher> AccountVouchers { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
+        public virtual ICollection<RequestForm> RequestForms { get; set; }
     }
 }
