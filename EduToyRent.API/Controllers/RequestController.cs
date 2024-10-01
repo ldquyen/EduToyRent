@@ -24,7 +24,7 @@ namespace EduToyRent.API.Controllers
             _firebaseService = firebaseService;
         }
 
-        [HttpPost("create-rental")]
+        [HttpPost("rental")]
         public async Task<IActionResult> CreateRental([FromForm] CreateRentalToyDTO createRentalToyDTO)
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
@@ -45,7 +45,7 @@ namespace EduToyRent.API.Controllers
             return Ok(createToyResult);           
         }
 
-        [HttpPost("create-sale")]
+        [HttpPost("sale")]
         public async Task<IActionResult> CreateSale([FromForm] CreateSaleToyDTO createSaleToyDTO)
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
