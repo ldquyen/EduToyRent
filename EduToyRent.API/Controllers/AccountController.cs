@@ -1,7 +1,12 @@
 ﻿using EduToyRent.BLL.DTOs.AccountDTO;
 using EduToyRent.BLL.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using EduToyRent.API.Helper;
+using Google.Apis.Upload;
+
 
 namespace EduToyRent.API.Controllers
 {
@@ -28,6 +33,48 @@ namespace EduToyRent.API.Controllers
                 var result = await _accountService.SignUpAccount(signupAccountDTO);
                 if (result.IsSuccess)
                     return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("edit-profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] EditAccountProfileDTO editAccountProfileDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _accountService.UpdateProfile(editAccountProfileDTO, currentUserObject);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _accountService.GetProfile(currentUserObject);
+                if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
             }
             catch (Exception ex)

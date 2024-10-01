@@ -43,5 +43,29 @@ namespace EduToyRent.BLL.Services
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
+        public async Task<dynamic> UpdateProfile(EditAccountProfileDTO editAccountProfileDTO, CurrentUserObject currentUserObject)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            account.AccountName = editAccountProfileDTO.AccountName;
+            account.PhoneNumber = editAccountProfileDTO.PhoneNumber;
+            account.Address = editAccountProfileDTO.Address;
+            await _unitOfWork.AccountRepository.UpdateAsync(account);
+            await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
+        public async Task<dynamic> GetProfile(CurrentUserObject currentUserObject)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            ProfileDTO profile = new ProfileDTO()
+            {
+                AccountId = account.AccountId,
+                AccountEmail = account.AccountEmail,
+                AccountName = account.AccountName,
+                RoleId = account.RoleId,
+                Address = account.Address,
+                PhoneNumber = account.PhoneNumber,
+            };
+            return Result.SuccessWithObject(profile);
+        }
     }
 }

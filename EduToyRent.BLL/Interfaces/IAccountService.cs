@@ -10,5 +10,10 @@ namespace EduToyRent.BLL.Interfaces
     public interface IAccountService
     {
         Task<dynamic> SignUpAccount(SignupAccountDTO signupAccountDTO);
+        Task<dynamic> UpdateProfile(EditAccountProfileDTO editAccountProfileDTO, CurrentUserObject currentUserObject);
+        Task<dynamic> GetProfile(CurrentUserObject currentUserObject);
+
+
+
     }
 }

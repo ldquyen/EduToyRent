@@ -61,6 +61,52 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Account");
+
+                    b.HasData(
+                        new
+                        {
+                            AccountId = 1,
+                            AccountEmail = "user@gmail.com",
+                            AccountName = "user",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            AccountId = 2,
+                            AccountEmail = "supplier@gmail.com",
+                            AccountName = "supplier",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            AccountId = 3,
+                            AccountEmail = "staff@gmail.com",
+                            AccountName = "staff",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            AccountId = 4,
+                            AccountEmail = "admin@gmail.com",
+                            AccountName = "admin",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 4
+                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.AccountVoucher", b =>
@@ -408,7 +454,7 @@ namespace EduToyRent.DAL.Context.Migrations
 
                     b.HasIndex("ToyId");
 
-                    b.ToTable("Request");
+                    b.ToTable("RequestForm");
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.Review", b =>
@@ -459,6 +505,28 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            RoleName = "User"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            RoleName = "Supplier"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            RoleName = "Staff"
+                        },
+                        new
+                        {
+                            RoleId = 4,
+                            RoleName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.ShipDate", b =>
