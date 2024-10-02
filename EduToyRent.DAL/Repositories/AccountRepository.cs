@@ -32,6 +32,6 @@ namespace EduToyRent.DAL.Repositories
         {
             return await _context.Accounts.AnyAsync(x => x.PhoneNumber == phone);
         }
-
+       
     }
 }

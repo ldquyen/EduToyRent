@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduToyRent.API", "EduToyRent.API\EduToyRent.API.csproj", "{561F1884-93E9-4FA5-BD36-DF375673FF8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EduToyRent.API", "EduToyRent.API\EduToyRent.API.csproj", "{561F1884-93E9-4FA5-BD36-DF375673FF8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduToyRent.BLL", "EduToyRent.BLL\EduToyRent.BLL.csproj", "{20EA2076-A766-4512-8E01-B96C46527E68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduToyRent.Service", "EduToyRent.Service\EduToyRent.Service.csproj", "{1C1B5CC9-4143-4B59-99A3-9B76D42FA5FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduToyRent.DAL", "EduToyRent.DAL\EduToyRent.DAL.csproj", "{1402932C-2B80-40D3-BD0F-46CE2A4E2AB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduToyRent.Repository", "EduToyRent.Repository\EduToyRent.Repository.csproj", "{B20F5BCA-D100-4495-83EB-351579035DBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduToyRent.DataAccess", "EduToyRent.DataAccess\EduToyRent.DataAccess.csproj", "{A2FFA71E-A69E-4DA6-912F-D24AC4F721B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +21,18 @@ Global
 		{561F1884-93E9-4FA5-BD36-DF375673FF8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{561F1884-93E9-4FA5-BD36-DF375673FF8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{561F1884-93E9-4FA5-BD36-DF375673FF8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20EA2076-A766-4512-8E01-B96C46527E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20EA2076-A766-4512-8E01-B96C46527E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20EA2076-A766-4512-8E01-B96C46527E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20EA2076-A766-4512-8E01-B96C46527E68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1402932C-2B80-40D3-BD0F-46CE2A4E2AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1402932C-2B80-40D3-BD0F-46CE2A4E2AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1402932C-2B80-40D3-BD0F-46CE2A4E2AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1402932C-2B80-40D3-BD0F-46CE2A4E2AB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C1B5CC9-4143-4B59-99A3-9B76D42FA5FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C1B5CC9-4143-4B59-99A3-9B76D42FA5FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C1B5CC9-4143-4B59-99A3-9B76D42FA5FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C1B5CC9-4143-4B59-99A3-9B76D42FA5FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B20F5BCA-D100-4495-83EB-351579035DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B20F5BCA-D100-4495-83EB-351579035DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B20F5BCA-D100-4495-83EB-351579035DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B20F5BCA-D100-4495-83EB-351579035DBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2FFA71E-A69E-4DA6-912F-D24AC4F721B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2FFA71E-A69E-4DA6-912F-D24AC4F721B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2FFA71E-A69E-4DA6-912F-D24AC4F721B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2FFA71E-A69E-4DA6-912F-D24AC4F721B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
