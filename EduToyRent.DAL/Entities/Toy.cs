@@ -36,5 +36,7 @@ namespace EduToyRent.DAL.Entities
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; }
         public virtual ICollection<RequestForm> RequestForms { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
+
     }
 }

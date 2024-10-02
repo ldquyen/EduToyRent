@@ -195,6 +195,28 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Toan Hoc"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Y Hoc"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Vat Ly"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Dia Ly"
+                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.DepositOrder", b =>
@@ -417,6 +439,36 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("RefreshToken");
+                });
+
+            modelBuilder.Entity("EduToyRent.DAL.Entities.Report", b =>
+                {
+                    b.Property<int>("ReportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
+
+                    b.Property<int>("ReportById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReportDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReportDetail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ToyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReportId");
+
+                    b.HasIndex("ReportById");
+
+                    b.HasIndex("ToyId");
+
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.RequestForm", b =>
@@ -783,6 +835,25 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("EduToyRent.DAL.Entities.Report", b =>
+                {
+                    b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
+                        .WithMany("Reports")
+                        .HasForeignKey("ReportById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EduToyRent.DAL.Entities.Toy", "Toy")
+                        .WithMany("Reports")
+                        .HasForeignKey("ToyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Toy");
+                });
+
             modelBuilder.Entity("EduToyRent.DAL.Entities.RequestForm", b =>
                 {
                     b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
@@ -863,6 +934,8 @@ namespace EduToyRent.DAL.Context.Migrations
 
                     b.Navigation("RefreshTokens");
 
+                    b.Navigation("Reports");
+
                     b.Navigation("RequestForms");
 
                     b.Navigation("Reviews");
@@ -906,6 +979,8 @@ namespace EduToyRent.DAL.Context.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("RequestForms");
 
