@@ -82,5 +82,26 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword(PasswordDTO password )
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _accountService.ChangePassword(password, currentUserObject);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

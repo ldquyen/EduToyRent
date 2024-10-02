@@ -58,7 +58,6 @@ namespace EduToyRent.BLL.Services
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
             ProfileDTO profile = new ProfileDTO()
             {
-                AccountId = account.AccountId,
                 AccountEmail = account.AccountEmail,
                 AccountName = account.AccountName,
                 RoleId = account.RoleId,
@@ -66,6 +65,15 @@ namespace EduToyRent.BLL.Services
                 PhoneNumber = account.PhoneNumber,
             };
             return Result.SuccessWithObject(profile);
+        }
+        public async Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+
+            account.AccountPassword = await HashPassword.HassPass(password.AccountPassword);
+            await _unitOfWork.AccountRepository.UpdateAsync(account);
+            await _unitOfWork.SaveAsync();
+            return Result.Success();
         }
     }
 }

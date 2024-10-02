@@ -12,7 +12,7 @@ namespace EduToyRent.BLL.Interfaces
         Task<dynamic> SignUpAccount(SignupAccountDTO signupAccountDTO);
         Task<dynamic> UpdateProfile(EditAccountProfileDTO editAccountProfileDTO, CurrentUserObject currentUserObject);
         Task<dynamic> GetProfile(CurrentUserObject currentUserObject);
-
+        Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject);
 
 
     }
