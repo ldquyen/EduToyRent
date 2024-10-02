@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EduToyRent.DAL.Context.Configuration
+namespace EduToyRent.DataAccess.Context.Configuration
 {
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {

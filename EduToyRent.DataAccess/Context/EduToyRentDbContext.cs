@@ -1,4 +1,6 @@
 ﻿using EduToyRent.DAL.Entities;
+using EduToyRent.DataAccess.Context.Configuration;
+using EduToyRent.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Net.WebRequestMethods;
 
 namespace EduToyRent.DAL.Context
 {
@@ -37,10 +40,16 @@ namespace EduToyRent.DAL.Context
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public DbSet<RequestForm> Requests { get; set; }
+        public DbSet<Report> Reports { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new AccountConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Toys)
                 .WithOne(t => t.Supplier)

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EduToyRent.DAL.Context.Configuration
+namespace EduToyRent.DataAccess.Context.Configuration
 {
     public class AccountConfiguration : IEntityTypeConfiguration<Account>
     {
@@ -38,7 +38,7 @@ namespace EduToyRent.DAL.Context.Configuration
               {
                   AccountId = 3,
                   AccountEmail = "staff@gmail.com",
-                   AccountName = "staff",
+                  AccountName = "staff",
                   AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89", //edutoyrent123
                   RoleId = 3,
                   Address = "HCM",
@@ -47,7 +47,7 @@ namespace EduToyRent.DAL.Context.Configuration
               {
                   AccountId = 4,
                   AccountEmail = "admin@gmail.com",
-                   AccountName = "admin",
+                  AccountName = "admin",
                   AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89", //edutoyrent123
                   RoleId = 4,
                   Address = "HCM",
