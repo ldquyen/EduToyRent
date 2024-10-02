@@ -9,8 +9,8 @@ namespace EduToyRent.BLL.DTOs.CategoryDTO
 {
     public class CreateNewCategoryDTO
     {
-        [Required]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Category name must contain only letters.")]
+        [Required(ErrorMessage = "Category name is required.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Category name must contain only letters and spaces and do not is Vietnamese.")]
         public string CategoryName { get; set; }
     }
 }

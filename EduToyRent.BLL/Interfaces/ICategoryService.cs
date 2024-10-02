@@ -11,5 +11,7 @@ namespace EduToyRent.BLL.Interfaces
     public interface ICategoryService
     {
         Task<dynamic> CreateCategory(CreateNewCategoryDTO createNewCategoryDTO);
+        Task<dynamic> GetListCategory();
+
     }
 }

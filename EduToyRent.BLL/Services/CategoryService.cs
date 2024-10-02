@@ -29,5 +29,25 @@ namespace EduToyRent.BLL.Services
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
+        public async Task<dynamic> GetListCategory()
+        {
+            var list = await _unitOfWork.CategoryRepository.GetAllAsync();
+            List<ListCategoryDTO> listCategoryDTO = new List<ListCategoryDTO>();
+            foreach (var category in list)
+            {
+                var dto = new ListCategoryDTO
+                {
+                    CategoryId = category.CategoryId,
+                    CategoryName = category.CategoryName
+                };
+
+                listCategoryDTO.Add(dto);
+            }
+            return Result.SuccessWithObject(listCategoryDTO);
+        }
+        public async Task<dynamic> UpdateCategory(int cateId, )
+        {
+            Catego
+        }
     }
 }
