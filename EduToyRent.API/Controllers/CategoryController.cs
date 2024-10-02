@@ -23,21 +23,19 @@ namespace EduToyRent.API.Controllers
         [HttpPost("category")]
         public async Task<IActionResult> CreateCategory(CreateNewCategoryDTO createNewCategoryDTO)
         {
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                try
-                {
-                    var result = await _categoryService.CreateCategory(createNewCategoryDTO);
-                    if (result.IsSuccess) return Ok(result);
-                    return BadRequest(result);
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-                }
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _categoryService.CreateCategory(createNewCategoryDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
         [Authorize(Policy = "StaffOnly")]
@@ -45,17 +43,31 @@ namespace EduToyRent.API.Controllers
         [HttpGet("categories")]
         public async Task<IActionResult> GetCategories()
         {
+            try
             {
-                try
-                {
-                    var result = await _categoryService.GetListCategory();
-                    if (result.IsSuccess) return Ok(result);
-                    return BadRequest(result);
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-                }
+                var result = await _categoryService.GetListCategory();
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("category")]
+        public async Task<IActionResult> UpdateCategory(UpdateCategoryDTO updateCategoryDTO)
+        {
+            try
+            {
+                var result = await _categoryService.UpdateCategory(updateCategoryDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }

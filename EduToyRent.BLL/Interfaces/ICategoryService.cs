@@ -12,6 +12,8 @@ namespace EduToyRent.BLL.Interfaces
     {
         Task<dynamic> CreateCategory(CreateNewCategoryDTO createNewCategoryDTO);
         Task<dynamic> GetListCategory();
+        Task<dynamic> UpdateCategory(UpdateCategoryDTO updateCategoryDTO);
+
 
     }
 }

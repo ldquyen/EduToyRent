@@ -45,9 +45,13 @@ namespace EduToyRent.BLL.Services
             }
             return Result.SuccessWithObject(listCategoryDTO);
         }
-        public async Task<dynamic> UpdateCategory(int cateId, )
+        public async Task<dynamic> UpdateCategory(UpdateCategoryDTO updateCategoryDTO)
         {
-            Catego
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(updateCategoryDTO.CategoryId);
+            category.CategoryName = updateCategoryDTO.CategoryName;
+            await _unitOfWork.CategoryRepository.UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+            return Result.Success();
         }
     }
 }
