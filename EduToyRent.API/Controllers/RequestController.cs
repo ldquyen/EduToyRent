@@ -1,9 +1,9 @@
 ﻿using EduToyRent.API.Helper;
-using EduToyRent.BLL.DTOs.AccountDTO;
-using EduToyRent.BLL.DTOs.RequestFormDTO;
-using EduToyRent.BLL.DTOs.ToyDTO;
-using EduToyRent.BLL.Interfaces;
-using EduToyRent.BLL.Services;
+using EduToyRent.Service.DTOs.AccountDTO;
+using EduToyRent.Service.DTOs.RequestFormDTO;
+using EduToyRent.Service.DTOs.ToyDTO;
+using EduToyRent.Service.Interfaces;
+using EduToyRent.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

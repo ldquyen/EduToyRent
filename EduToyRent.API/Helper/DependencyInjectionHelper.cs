@@ -1,7 +1,7 @@
-﻿using EduToyRent.BLL.Interfaces;
-using EduToyRent.BLL.Services;
-using EduToyRent.DAL.Interfaces;
-using EduToyRent.DAL.Repositories;
+﻿using EduToyRent.Service.Interfaces;
+using EduToyRent.Service.Services;
+using EduToyRent.Repository.Interfaces;
+using EduToyRent.Repository.Repositories;
 
 namespace EduToyRent.API.Helper
 {
