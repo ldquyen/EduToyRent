@@ -1,4 +1,5 @@
-﻿using EduToyRent.DAL.Entities;
+﻿using EduToyRent.DAL.Context.Configuration;
+using EduToyRent.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
@@ -41,6 +42,9 @@ namespace EduToyRent.DAL.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new AccountConfiguration());
+
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Toys)
                 .WithOne(t => t.Supplier)
