@@ -1,8 +1,8 @@
 ﻿using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 
-using EduToyRent.BLL.Services;
-using EduToyRent.BLL.Interfaces;
+using EduToyRent.Service.Services;
+using EduToyRent.Service.Interfaces;
 using Google.Cloud.Storage.V1;
 
 namespace EduToyRent.API.Helper

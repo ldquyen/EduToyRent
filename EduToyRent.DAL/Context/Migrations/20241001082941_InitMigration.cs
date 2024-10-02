@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace EduToyRent.DAL.Context.Migrations
 {
     /// <inheritdoc />
@@ -336,7 +338,7 @@ namespace EduToyRent.DAL.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Request",
+                name: "RequestForm",
                 columns: table => new
                 {
                     RequestId = table.Column<int>(type: "int", nullable: false)
@@ -351,15 +353,15 @@ namespace EduToyRent.DAL.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Request", x => x.RequestId);
+                    table.PrimaryKey("PK_RequestForm", x => x.RequestId);
                     table.ForeignKey(
-                        name: "FK_Request_Account_ProcessedById",
+                        name: "FK_RequestForm_Account_ProcessedById",
                         column: x => x.ProcessedById,
                         principalTable: "Account",
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Request_Toy_ToyId",
+                        name: "FK_RequestForm_Toy_ToyId",
                         column: x => x.ToyId,
                         principalTable: "Toy",
                         principalColumn: "ToyId",
@@ -416,6 +418,28 @@ namespace EduToyRent.DAL.Context.Migrations
                         principalTable: "OrderDetail",
                         principalColumn: "OrderDetailId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "RoleId", "RoleName" },
+                values: new object[,]
+                {
+                    { 1, "User" },
+                    { 2, "Supplier" },
+                    { 3, "Staff" },
+                    { 4, "Admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Account",
+                columns: new[] { "AccountId", "AccountEmail", "AccountName", "AccountPassword", "Address", "IsBan", "PhoneNumber", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "user@gmail.com", "user", "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89", "HCM", false, "1234567890", 1 },
+                    { 2, "supplier@gmail.com", "supplier", "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89", "HCM", false, "1234567890", 2 },
+                    { 3, "staff@gmail.com", "staff", "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89", "HCM", false, "1234567890", 3 },
+                    { 4, "admin@gmail.com", "admin", "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89", "HCM", false, "1234567890", 4 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -486,13 +510,13 @@ namespace EduToyRent.DAL.Context.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Request_ProcessedById",
-                table: "Request",
+                name: "IX_RequestForm_ProcessedById",
+                table: "RequestForm",
                 column: "ProcessedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Request_ToyId",
-                table: "Request",
+                name: "IX_RequestForm_ToyId",
+                table: "RequestForm",
                 column: "ToyId");
 
             migrationBuilder.CreateIndex(
@@ -541,7 +565,7 @@ namespace EduToyRent.DAL.Context.Migrations
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
-                name: "Request");
+                name: "RequestForm");
 
             migrationBuilder.DropTable(
                 name: "Review");

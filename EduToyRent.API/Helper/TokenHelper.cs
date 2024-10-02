@@ -1,4 +1,4 @@
-﻿using EduToyRent.BLL.DTOs.AccountDTO;
+﻿using EduToyRent.Service.DTOs.AccountDTO;
 using static Azure.Core.HttpHeader;
 using System.Security.Claims;
 
