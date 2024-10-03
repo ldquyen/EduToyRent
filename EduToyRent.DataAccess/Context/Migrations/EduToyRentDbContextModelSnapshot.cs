@@ -905,15 +905,15 @@ namespace EduToyRent.DataAccess.Context.Migrations
             modelBuilder.Entity("EduToyRent.DataAccess.Entities.Report", b =>
                 {
                     b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
-                        .WithMany()
+                        .WithMany("Reports")
                         .HasForeignKey("ReportById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EduToyRent.DAL.Entities.Toy", "Toy")
-                        .WithMany()
+                        .WithMany("Reports")
                         .HasForeignKey("ToyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -933,6 +933,8 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("RequestForms");
 
@@ -977,6 +979,8 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("RequestForms");
 
