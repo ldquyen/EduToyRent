@@ -206,6 +206,17 @@ namespace EduToyRent.DAL.Context
     .WithMany(a => a.RequestForms)
     .HasForeignKey(r => r.ProcessedById)
     .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Report>()
+       .HasOne(r => r.Toy)
+       .WithMany(t => t.Reports)
+       .HasForeignKey(r => r.ToyId)
+       .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
+
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.Account)
+                .WithMany(a => a.Reports)
+                .HasForeignKey(r => r.ReportById)
+                .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
             //Add-Migration InitMigration -Context EduToyRentDbContext -Project EduToyRent.DataAccess -StartupProject EduToyRent.API -OutputDir Context/Migrations
 
         }

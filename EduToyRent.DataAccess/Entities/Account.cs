@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EduToyRent.DataAccess.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -32,5 +33,7 @@ namespace EduToyRent.DAL.Entities
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
         public virtual ICollection<RequestForm> RequestForms { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
+
     }
 }
