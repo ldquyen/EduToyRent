@@ -10,6 +10,7 @@ namespace EduToyRent.Service.DTOs.AccountDTO
     {
         public string AccountName { get; set; }
         public string AccountEmail { get; set; }
+        public int? RoleId { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
     }

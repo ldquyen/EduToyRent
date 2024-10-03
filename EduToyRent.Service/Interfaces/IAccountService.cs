@@ -10,8 +10,8 @@ namespace EduToyRent.Service.Interfaces
     public interface IAccountService
     {
         Task<dynamic> SignUpAccount(SignupAccountDTO signupAccountDTO);
-        Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject);
         Task<dynamic> UpdateProfile(EditAccountProfileDTO editAccountProfileDTO, CurrentUserObject currentUserObject);
         Task<dynamic> GetProfile(CurrentUserObject currentUserObject);
+        Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject);
     }
 }

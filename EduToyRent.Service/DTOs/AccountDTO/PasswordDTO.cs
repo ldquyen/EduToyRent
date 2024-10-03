@@ -9,8 +9,10 @@ namespace EduToyRent.Service.DTOs.AccountDTO
 {
     public class PasswordDTO
     {
-        [Required]
+        [Required(ErrorMessage = "Account password is required.")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_]).+$", ErrorMessage = "Account password must contain at least one uppercase letter and one special character.")]
         [MinLength(6, ErrorMessage = "Password should be minimum 6 characters")]
-        public string password;
+        public string AccountPassword { get; set; }
+
     }
 }
