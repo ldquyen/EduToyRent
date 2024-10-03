@@ -1,8 +1,8 @@
 using Cursus_API.Helper;
 using EduToyRent.API.Helper;
-using EduToyRent.BLL.Mappings;
+using EduToyRent.Service.Mappings;
 using EduToyRent.DAL.Context;
-using EduToyRent.BLL.DTOs.TokenDTO;
+using EduToyRent.Service.DTOs.TokenDTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -10,13 +10,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using EduToyRent.DataAccess.Context;
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<EduToyRentDbContext>(opt =>
-{
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("MyDb"));
-});
+var connectionString = builder.Configuration.GetConnectionString("MyDb");
+builder.Services.AddEduToyRentDbContext(connectionString);
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });

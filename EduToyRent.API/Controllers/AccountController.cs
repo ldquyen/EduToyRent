@@ -1,7 +1,8 @@
-﻿using EduToyRent.BLL.DTOs.AccountDTO;
-using EduToyRent.BLL.Interfaces;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using EduToyRent.Service.DTOs.AccountDTO;
+using EduToyRent.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EduToyRent.API.Helper;
@@ -85,7 +86,7 @@ namespace EduToyRent.API.Controllers
         [Authorize(Policy = "UserOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("change-password")]
-        public async Task<IActionResult> ChangePassword(PasswordDTO password )
+        public async Task<IActionResult> ChangePassword(PasswordDTO password)
         {
             if (!ModelState.IsValid)
             {

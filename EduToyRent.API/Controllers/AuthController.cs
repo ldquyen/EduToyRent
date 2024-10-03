@@ -1,6 +1,6 @@
-﻿using EduToyRent.BLL.DTOs.AccountDTO;
-using EduToyRent.BLL.DTOs.TokenDTO;
-using EduToyRent.BLL.Interfaces;
+﻿using EduToyRent.Service.DTOs.AccountDTO;
+using EduToyRent.Service.DTOs.TokenDTO;
+using EduToyRent.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
