@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EduToyRent.DataAccess.Entities;
 
 namespace EduToyRent.DAL.Entities
 {
@@ -36,5 +37,7 @@ namespace EduToyRent.DAL.Entities
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; }
         public virtual ICollection<RequestForm> RequestForms { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
+
     }
 }

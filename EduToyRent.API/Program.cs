@@ -77,19 +77,13 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("3"));
-//    options.AddPolicy("RequireInstructorRole", policy => policy.RequireRole("2"));
-//    options.AddPolicy("RequireStudentRole", policy => policy.RequireRole("1"));
-//    options.AddPolicy("RequireAdminOrStudentRole", policy => policy.RequireAssertion(context => context.User.IsInRole("3") || context.User.IsInRole("1")));
-//});
+
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("4"));
-    options.AddPolicy("StaffOnly", policy => policy.RequireRole("3"));
     options.AddPolicy("UserOnly", policy => policy.RequireRole("1"));
     options.AddPolicy("SupplierOnly", policy => policy.RequireRole("2"));
+    options.AddPolicy("StaffOnly", policy => policy.RequireRole("3"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("4"));
 });
 builder.Services.AddFirebaseServices();                                             //firebase 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);                  //automapper

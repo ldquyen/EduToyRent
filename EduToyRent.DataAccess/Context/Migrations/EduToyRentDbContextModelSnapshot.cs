@@ -61,6 +61,52 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Account");
+
+                    b.HasData(
+                        new
+                        {
+                            AccountId = 1,
+                            AccountEmail = "user@gmail.com",
+                            AccountName = "user",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            AccountId = 2,
+                            AccountEmail = "supplier@gmail.com",
+                            AccountName = "supplier",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            AccountId = 3,
+                            AccountEmail = "staff@gmail.com",
+                            AccountName = "staff",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            AccountId = 4,
+                            AccountEmail = "admin@gmail.com",
+                            AccountName = "admin",
+                            AccountPassword = "ca6f3892687b200b296a8c4712c2d5f7ad09228a0bfeee5483de2fa67cffcf89",
+                            Address = "HCM",
+                            IsBan = false,
+                            PhoneNumber = "1234567890",
+                            RoleId = 4
+                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.AccountVoucher", b =>
@@ -149,6 +195,28 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Toan Hoc"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Y Hoc"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Vat Ly"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Dia Ly"
+                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.DepositOrder", b =>
@@ -459,6 +527,28 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            RoleName = "User"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            RoleName = "Supplier"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            RoleName = "Staff"
+                        },
+                        new
+                        {
+                            RoleId = 4,
+                            RoleName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.ShipDate", b =>
@@ -584,6 +674,36 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasKey("VoucherId");
 
                     b.ToTable("Voucher");
+                });
+
+            modelBuilder.Entity("EduToyRent.DataAccess.Entities.Report", b =>
+                {
+                    b.Property<int>("ReportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
+
+                    b.Property<int>("ReportById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReportDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReportDetail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ToyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReportId");
+
+                    b.HasIndex("ReportById");
+
+                    b.HasIndex("ToyId");
+
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.Account", b =>
@@ -782,6 +902,25 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("EduToyRent.DataAccess.Entities.Report", b =>
+                {
+                    b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
+                        .WithMany("Reports")
+                        .HasForeignKey("ReportById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EduToyRent.DAL.Entities.Toy", "Toy")
+                        .WithMany("Reports")
+                        .HasForeignKey("ToyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Toy");
+                });
+
             modelBuilder.Entity("EduToyRent.DAL.Entities.Account", b =>
                 {
                     b.Navigation("AccountVouchers");
@@ -794,6 +933,8 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("RequestForms");
 
@@ -838,6 +979,8 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("RequestForms");
 

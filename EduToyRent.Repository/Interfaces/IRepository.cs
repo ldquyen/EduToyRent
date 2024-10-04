@@ -9,7 +9,12 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(
+       Expression<Func<T, bool>>? filter = null,
+       string? includeProperties = null,
+       int page = 1,
+       int size = 10);
+        Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null);
         Task<T> GetByIdAsync(int id);
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);

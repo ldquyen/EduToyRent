@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using EduToyRent.Service.Common;
-using EduToyRent.Service.DTOs.CategoryDTO;
-using EduToyRent.Service.Interfaces;
+using EduToyRent.BLL.Common;
+using EduToyRent.BLL.DTOs.CategoryDTO;
+using EduToyRent.BLL.Interfaces;
 using EduToyRent.DAL.Entities;
-using EduToyRent.Repository.Interfaces;
+using EduToyRent.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EduToyRent.Service.Services
+namespace EduToyRent.BLL.Services
 {
     public class CategoryService : ICategoryService
     {
@@ -29,7 +29,6 @@ namespace EduToyRent.Service.Services
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
-
         public async Task<dynamic> GetListCategory()
         {
             var list = await _unitOfWork.CategoryRepository.GetAllAsync();
