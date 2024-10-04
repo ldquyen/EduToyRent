@@ -39,7 +39,7 @@ namespace EduToyRent.DAL.Context
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        public DbSet<RequestForm> Requests { get; set; }
+        public DbSet<RequestForm> RequestForms { get; set; }
         public DbSet<Report> Reports { get; set; }
         #endregion
 
