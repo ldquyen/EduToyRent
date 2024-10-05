@@ -441,36 +441,6 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.ToTable("RefreshToken");
                 });
 
-            modelBuilder.Entity("EduToyRent.DAL.Entities.Report", b =>
-                {
-                    b.Property<int>("ReportId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
-
-                    b.Property<int>("ReportById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReportDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReportDetail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ToyId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportId");
-
-                    b.HasIndex("ReportById");
-
-                    b.HasIndex("ToyId");
-
-                    b.ToTable("Report");
-                });
-
             modelBuilder.Entity("EduToyRent.DAL.Entities.RequestForm", b =>
                 {
                     b.Property<int>("RequestId")
@@ -863,25 +833,6 @@ namespace EduToyRent.DataAccess.Context.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("EduToyRent.DAL.Entities.Report", b =>
-                {
-                    b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
-                        .WithMany("Reports")
-                        .HasForeignKey("ReportById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("EduToyRent.DAL.Entities.Toy", "Toy")
-                        .WithMany("Reports")
-                        .HasForeignKey("ToyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Toy");
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.RequestForm", b =>

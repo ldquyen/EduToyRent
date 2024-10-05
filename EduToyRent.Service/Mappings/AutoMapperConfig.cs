@@ -30,9 +30,13 @@ namespace EduToyRent.Service.Mappings
 
             CreateMap<CreateNewCategoryDTO, Category>();
 
+
+            //request
             CreateMap<CreateRentalRequestDTO, RequestForm>();
             CreateMap<CreateSaleRequestDTO, RequestForm>();
-
+            CreateMap<RequestForm, ResponseRequestListDTO>();
+            CreateMap<RequestForm, ResponseRequestDetailDTO>();
+            CreateMap<RequestForm, UpdateRequestDTO>();
         }
     }
 }
