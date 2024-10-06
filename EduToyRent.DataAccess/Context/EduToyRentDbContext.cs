@@ -41,6 +41,7 @@ namespace EduToyRent.DAL.Context
 
         public DbSet<RequestForm> RequestForms { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<StatusOrder> StatusOrders {  get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -227,7 +228,11 @@ namespace EduToyRent.DAL.Context
                 .HasForeignKey(r => r.ReportById)
                 .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
 
-            
+            modelBuilder.Entity<StatusOrder>()
+            .HasMany(r => r.Orders)
+            .WithOne(a => a.StatusOrder)
+            .HasForeignKey(a => a.StatusId);
+
             //Add-Migration InitMigration -Context EduToyRentDbContext -Project EduToyRent.DataAccess -StartupProject EduToyRent.API -OutputDir Context/Migrations
 
 

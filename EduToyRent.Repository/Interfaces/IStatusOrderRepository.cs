@@ -1,4 +1,4 @@
-﻿using EduToyRent.DAL.Entities;
+﻿using EduToyRent.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.Repository.Interfaces
 {
-    public interface IToyRepository : IRepository<Toy>
+    public interface IStatusOrderRepository : IRepository<StatusOrder>
     {
-
     }
 }

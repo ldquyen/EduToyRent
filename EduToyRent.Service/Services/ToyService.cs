@@ -26,6 +26,13 @@ namespace EduToyRent.Service.Services
             _requestFromService = requestFromService;
         }
 
+        public async Task<dynamic> ChangeToyStatus(int toyId)
+        {
+            var toy = await _unitOfWork.ToyRepository.GetAsync(x => x.ToyId == toyId);
+            toy.IsActive = !toy.IsActive;
+            return Result.Success();
+        }
+
         public async Task<dynamic> CreateRentalToy(CreateRentalToyDTO createRentalToyDTO, string fileURL, int supplierID)
         {
             var rentalToy = _mapper.Map<Toy>(createRentalToyDTO);

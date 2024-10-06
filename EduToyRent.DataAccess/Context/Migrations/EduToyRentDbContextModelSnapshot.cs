@@ -303,7 +303,7 @@ namespace EduToyRent.DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StatusOrder")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalMoney")
@@ -312,6 +312,8 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasKey("OrderId");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Order");
                 });
@@ -706,6 +708,23 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.ToTable("Report");
                 });
 
+            modelBuilder.Entity("EduToyRent.DataAccess.Entities.StatusOrder", b =>
+                {
+                    b.Property<int>("StatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusId"));
+
+                    b.Property<string>("StatusName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StatusId");
+
+                    b.ToTable("StatusOrder");
+                });
+
             modelBuilder.Entity("EduToyRent.DAL.Entities.Account", b =>
                 {
                     b.HasOne("EduToyRent.DAL.Entities.Role", "Role")
@@ -783,7 +802,15 @@ namespace EduToyRent.DataAccess.Context.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EduToyRent.DataAccess.Entities.StatusOrder", "StatusOrder")
+                        .WithMany("Orders")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Account");
+
+                    b.Navigation("StatusOrder");
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.OrderDetail", b =>
@@ -990,6 +1017,11 @@ namespace EduToyRent.DataAccess.Context.Migrations
             modelBuilder.Entity("EduToyRent.DAL.Entities.Voucher", b =>
                 {
                     b.Navigation("AccountVouchers");
+                });
+
+            modelBuilder.Entity("EduToyRent.DataAccess.Entities.StatusOrder", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
