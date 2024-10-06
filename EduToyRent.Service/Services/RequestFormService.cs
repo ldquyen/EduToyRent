@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EduToyRent.Repository.Repositories;
 using EduToyRent.Service.Exceptions;
+using System.Drawing;
 
 namespace EduToyRent.Service.Services
 {
@@ -52,6 +53,19 @@ namespace EduToyRent.Service.Services
             var r = await _unitOfWork.RequestFormRepository.GetAsync(x => x.RequestId == requestId);
             var request = _mapper.Map<ResponseRequestDetailDTO>(r);
             return Result.SuccessWithObject(request);
+        }
+
+        public async Task<dynamic> GetUnansweredRequest(int page = 1, int size = 10)
+        {
+            var list = await _unitOfWork.RequestFormRepository.GetAllAsync(x => x.RequestStatus == 0, null, page, size);
+            var requestList = _mapper.Map<IEnumerable<ResponseRequestListDTO>>(list);
+            return Result.SuccessWithObject(requestList);
+        }
+        public async Task<dynamic> GetAnsweredRequest(int page = 1, int size = 10)
+        {
+            var list = await _unitOfWork.RequestFormRepository.GetAllAsync(x => x.RequestStatus != 0, null, page, size);
+            var requestList = _mapper.Map<IEnumerable<ResponseRequestListDTO>>(list);
+            return Result.SuccessWithObject(requestList);
         }
 
         public async Task<dynamic> UppdateRequestStatus(UpdateRequestDTO updateRequestDTO, int staffId)

@@ -2,6 +2,7 @@
 using EduToyRent.DAL.Context;
 using EduToyRent.DAL.Entities;
 using EduToyRent.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace EduToyRent.Repository.Repositories
             _context = context;
         }
 
+        
     }
 }
