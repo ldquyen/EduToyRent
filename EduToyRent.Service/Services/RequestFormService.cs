@@ -78,6 +78,12 @@ namespace EduToyRent.Service.Services
                     return Result.Failure(RequestErrors.DenyReason);
                 existingRequest.DenyReason = updateRequestDTO.DenyReason;
             }
+            if(updateRequestDTO.RequestStatus == 1)
+            {
+                var toy = await _unitOfWork.ToyRepository.GetAsync(x => x.ToyId == existingRequest.ToyId);
+                toy.IsActive = true; 
+                await _unitOfWork.ToyRepository.UpdateAsync(toy);
+            }
             existingRequest.ResponseDate = DateTime.Now;
             existingRequest.ProcessedById = staffId;    
             await _unitOfWork.RequestFormRepository.UpdateAsync(existingRequest);

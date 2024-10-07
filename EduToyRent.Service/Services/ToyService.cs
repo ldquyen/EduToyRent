@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EduToyRent.Service.Exceptions;
 
 namespace EduToyRent.Service.Services
 {
@@ -65,6 +66,25 @@ namespace EduToyRent.Service.Services
             return Result.Success();
         }
 
-        
+        public async Task<dynamic> GetToyByToyId(int toyId)
+        {
+            var toy = await _unitOfWork.ToyRepository.GetAsync(x => x.ToyId == toyId, includeProperties: "Supplier,Category");
+            if (toy == null) return Result.Failure(ToyErrors.ToyIsNull);
+            
+            if (toy.IsRental)
+            {
+                var rentalToy = _mapper.Map<ResponseRentalToyDTO>(toy);
+                rentalToy.CategoryName = toy.Category.CategoryName;
+                rentalToy.SupplierName = toy.Supplier.AccountName;
+                return Result.SuccessWithObject(rentalToy);
+            }
+            else
+            {
+                var saleToy = _mapper.Map<ResponseSaleToyDTO>(toy);
+                saleToy.CategoryName = toy.Category.CategoryName;
+                saleToy.SupplierName = toy.Supplier.AccountName;
+                return Result.SuccessWithObject(saleToy);
+            }
+        }
     }
 }
