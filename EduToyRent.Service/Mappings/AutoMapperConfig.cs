@@ -25,8 +25,11 @@ namespace EduToyRent.Service.Mappings
             CreateMap<SignupAccountDTO, Account>();
             CreateMap<ProfileDTO, Account>().ReverseMap();
 
+            //toy
             CreateMap<CreateRentalToyDTO, Toy>();
             CreateMap<CreateSaleToyDTO, Toy>();
+            CreateMap<Toy, ResponseRentalToyDTO>();
+            CreateMap<Toy, ResponseSaleToyDTO>();
 
             CreateMap<CreateNewCategoryDTO, Category>();
 

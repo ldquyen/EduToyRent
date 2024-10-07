@@ -68,7 +68,8 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject)
         {
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
-            if(account.AccountPassword == password.OldAccountPassword)
+            string oldPassword = await HashPassword.HassPass(password.OldAccountPassword);
+            if (account.AccountPassword == oldPassword)
             {
                 account.AccountPassword = await HashPassword.HassPass(password.AccountPassword);
                 await _unitOfWork.AccountRepository.UpdateAsync(account);

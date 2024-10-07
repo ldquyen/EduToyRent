@@ -12,5 +12,6 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> CreateRentalToy(CreateRentalToyDTO createRentalToyDTO, string fileURL, int supplierID);
         Task<dynamic> CreateSaleToy(CreateSaleToyDTO createSaleToyDTO, string fileURL, int supplierID);
         Task<dynamic> ChangeToyStatus(int toyId);
+        Task<dynamic> GetToyByToyId(int toyId);
     }
 }
