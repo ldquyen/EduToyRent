@@ -9,6 +9,7 @@ using EduToyRent.Service.DTOs.CategoryDTO;
 using EduToyRent.Service.DTOs.RequestFormDTO;
 using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.DAL.Entities;
+using EduToyRent.Service.DTOs.OrderDTO;
 
 namespace EduToyRent.Service.Mappings
 {
@@ -37,13 +38,15 @@ namespace EduToyRent.Service.Mappings
 
             CreateMap<CreateNewCategoryDTO, Category>();
 
-
             //request
             CreateMap<CreateRentalRequestDTO, RequestForm>();
             CreateMap<CreateSaleRequestDTO, RequestForm>();
             CreateMap<RequestForm, ResponseRequestListDTO>();
             CreateMap<RequestForm, ResponseRequestDetailDTO>();
             CreateMap<RequestForm, UpdateRequestDTO>();
+
+            //order
+            CreateMap<CreateOrderDTO, Order>();
         }
     }
 }

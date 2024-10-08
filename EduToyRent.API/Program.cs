@@ -84,6 +84,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("SupplierOnly", policy => policy.RequireRole("2"));
     options.AddPolicy("StaffOnly", policy => policy.RequireRole("3"));
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("4"));
+    options.AddPolicy("SupplierAndStaffOnly", policy => policy.RequireRole("3", "2"));
 });
 builder.Services.AddFirebaseServices();                                             //firebase 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);                  //automapper
