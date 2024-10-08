@@ -16,7 +16,6 @@ namespace EduToyRent.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
@@ -132,8 +131,8 @@ namespace EduToyRent.API.Controllers
 
         [Authorize(Policy = "StaffOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("viewGetAll")]
-        public async Task<IActionResult> GetViewAll()
+        [HttpGet]
+        public async Task<IActionResult> GetViewAll(int page = 1 )
         {
             if (!ModelState.IsValid)
             {
@@ -141,11 +140,8 @@ namespace EduToyRent.API.Controllers
             }
             try
             {
-                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-                var result = await _accountService.ViewAllAccount();
-                if (result != null) 
+                var result = await _accountService.ViewAllAccount(page);
                 return Ok(result);
-                return BadRequest(result);
             }
             catch (Exception ex)
             {

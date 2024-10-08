@@ -15,7 +15,7 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> GetProfile(CurrentUserObject currentUserObject);
         Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject);
 
-        Task<IEnumerable<AccountDTO>> ViewAllAccount();
+        Task<dynamic> ViewAllAccount(int page);
         Task<dynamic> BanAccount(int accountDTO);
 
         Task<dynamic> SignUpAccountToySupplier(SignupAccountDTO signupAccountDTO);

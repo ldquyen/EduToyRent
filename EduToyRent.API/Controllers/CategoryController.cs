@@ -35,7 +35,7 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "SupplierAndStaffOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("categories")]
         public async Task<IActionResult> GetCategories()

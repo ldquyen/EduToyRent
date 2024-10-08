@@ -68,7 +68,8 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject)
         {
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
-            if(account.AccountPassword == password.OldAccountPassword)
+            string oldPassword = await HashPassword.HassPass(password.OldAccountPassword);
+            if (account.AccountPassword == oldPassword)
             {
                 account.AccountPassword = await HashPassword.HassPass(password.AccountPassword);
                 await _unitOfWork.AccountRepository.UpdateAsync(account);
@@ -87,25 +88,11 @@ namespace EduToyRent.Service.Services
         //    var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
         //    return account1;
         //}
-        public async Task<IEnumerable<AccountDTO>> ViewAllAccount()
+        public async Task<dynamic> ViewAllAccount(int page)
         {
-            var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
-
-            // Ánh xạ thủ công từ Account sang AccountDTO
-            var accountDtos = accounts.Select(a => new AccountDTO
-            {
-                AccountId = a.AccountId,                 // Giả sử `Account.Id` tương ứng với `AccountDTO.AccountId`
-                AccountName = a.AccountName,         // Giả sử `Account.Username` tương ứng với `AccountDTO.AccountName`
-                AccountEmail = a.AccountEmail,           // Giả sử `Account.Email` tương ứng với `AccountDTO.AccountEmail`
-                AccountPassword = a.AccountPassword,     // Giả sử `Account.Password` tương ứng với `AccountDTO.AccountPassword`
-                RoleId = a.RoleId,                // Giả sử `Account.RoleId` tương ứng với `AccountDTO.RoleId`
-                Address = a.Address,              // Giả sử `Account.Address` tương ứng với `AccountDTO.Address`
-                PhoneNumber = a.PhoneNumber,      // Giả sử `Account.PhoneNumber` tương ứng với `AccountDTO.PhoneNumber`
-                IsBan = a.IsBan,                  // Giả sử `Account.IsBan` tương ứng với `AccountDTO.IsBan`
-                /*Role = a.Role     */                // Nếu `Role` là một entity khác được ánh xạ vào DTO
-            });
-
-            return accountDtos;
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync(x => x.RoleId == 1 || x.RoleId == 2, null,page,10);
+            var list = _mapper.Map<IEnumerable<AccountDTO>>(accounts);
+          return Result.SuccessWithObject(list);
         }
 
 

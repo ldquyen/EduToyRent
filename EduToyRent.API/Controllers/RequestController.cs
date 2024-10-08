@@ -4,6 +4,8 @@ using EduToyRent.Service.DTOs.RequestFormDTO;
 using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.Service.Interfaces;
 using EduToyRent.Service.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +26,8 @@ namespace EduToyRent.API.Controllers
             _firebaseService = firebaseService;
         }
 
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("rental")]
         public async Task<IActionResult> CreateRental([FromForm] CreateRentalToyDTO createRentalToyDTO)
         {
@@ -44,7 +48,8 @@ namespace EduToyRent.API.Controllers
                 return BadRequest(createToyResult);
             return Ok(createToyResult);           
         }
-
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSale([FromForm] CreateSaleToyDTO createSaleToyDTO)
         {
@@ -64,6 +69,54 @@ namespace EduToyRent.API.Controllers
             if (!createToyResult.IsSuccess)
                 return BadRequest(createToyResult);
             return Ok(createToyResult);
+        }
+
+        [HttpGet("requests")]
+        public async Task<IActionResult> GetAllRequests(int page = 1, int size = 10)
+        {
+            var requests = await _requestFromService.GetAllsRequest(page, size);
+            return Ok(requests);
+        }
+
+        [HttpGet("unanswered-requests")]
+        public async Task<IActionResult> GetUnansweredRequests(int page = 1, int size = 10)
+        {
+            var requests = await _requestFromService.GetUnansweredRequest(page, size);
+            return Ok(requests);
+        }
+
+        [HttpGet("answered-requests")]
+        public async Task<IActionResult> GetAnsweredRequests(int page = 1, int size = 10)
+        {
+            var requests = await _requestFromService.GetAnsweredRequest(page, size);
+            return Ok(requests);
+        }
+
+        [HttpGet("request/{id}")]
+        public async Task<IActionResult> GetRequest(int id)
+        {
+            var requests = await _requestFromService.GetRequestById(id);
+            return Ok(requests);
+        }
+
+
+        [HttpPut("update-status")]
+        public async Task<IActionResult> UpdateRequestStatus([FromBody] UpdateRequestDTO updateRequestDTO)
+        {
+            //CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            int staffId = 3;
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var updateResult = await _requestFromService.UppdateRequestStatus(updateRequestDTO, staffId);
+
+            if (!updateResult.IsSuccess)
+                return BadRequest(updateResult);
+            
+            return Ok(updateResult);
         }
     }
 }

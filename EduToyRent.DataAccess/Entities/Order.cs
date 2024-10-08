@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EduToyRent.DataAccess.Entities;
 
 namespace EduToyRent.DAL.Entities
 {
@@ -14,7 +15,7 @@ namespace EduToyRent.DAL.Entities
         [Key]
         public int OrderId { get; set; }
         public int AccountId { get; set; }
-        public int StatusOrder { get; set; }
+        public int StatusId { get; set; }
         public bool PaymentStatus { get; set; }
         public string ShippingAddress { get; set; }
         public decimal TotalMoney { get; set; }
@@ -28,9 +29,12 @@ namespace EduToyRent.DAL.Entities
 
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
+        [ForeignKey("StatusId")]
+        public virtual StatusOrder StatusOrder { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual DepositOrder DepositOrders { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
+
     }
 
 }
