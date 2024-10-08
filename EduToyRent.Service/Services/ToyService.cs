@@ -86,5 +86,68 @@ namespace EduToyRent.Service.Services
                 return Result.SuccessWithObject(saleToy);
             }
         }
+        public async Task<Result> UpdateToyInfo(int toyId, UpdateToyDTO updateToyDTO)
+        {
+            var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
+            if (toy == null)
+                return Result.Failure(ToyErrors.ToyIsNull);
+            _mapper.Map(updateToyDTO, toy);
+            var updateResult = await _unitOfWork.ToyRepository.UpdateToy(toy);
+            if (!updateResult)
+                return Result.Failure(new Error("UpdateFailed", "Failed to update toy information"));
+            return Result.Success();
+        }
+        public async Task<Pagination<ViewToyDTO>> ViewToys(int pageIndex, int pageSize)
+        {
+            var totalItemsCount = await _unitOfWork.ToyRepository.GetCountAsync();
+            var toys = await _unitOfWork.ToyRepository.GetAllAsync(pageIndex, pageSize);
+
+            var toyDTOs = _mapper.Map<IEnumerable<ViewToyDTO>>(toys);
+            return new Pagination<ViewToyDTO>
+            {
+                TotalItemsCount = totalItemsCount,
+                PageSize = pageSize,
+                PageIndex = pageIndex,
+                Items = toyDTOs.ToList()
+            };
+        }
+        public async Task<ViewToyDetailDTO> ViewToyDetail(int toyId)
+        {
+            var toy = await _unitOfWork.ToyRepository.GetAsync(x => x.ToyId == toyId, includeProperties: "Supplier,Category");
+            if (toy == null) return null;
+            var toyDetailDTO = _mapper.Map<ViewToyDetailDTO>(toy);
+            toyDetailDTO.SupplierName = toy.Supplier?.AccountName;
+            toyDetailDTO.CategoryName = toy.Category?.CategoryName;
+            return toyDetailDTO;
+        }
+        public async Task<Pagination<ViewToyDTO>> SearchToys(string keyword, int pageIndex, int pageSize)
+        {
+            var totalItemsCount = await _unitOfWork.ToyRepository.GetCountByName(keyword);
+            var toys = await _unitOfWork.ToyRepository.SearchByName(keyword, pageIndex, pageSize);
+
+            var toyDTOs = _mapper.Map<IEnumerable<ViewToyDTO>>(toys);
+            return new Pagination<ViewToyDTO>
+            {
+                TotalItemsCount = totalItemsCount,
+                PageSize = pageSize,
+                PageIndex = pageIndex,
+                Items = toyDTOs.ToList()
+            };
+        }
+
+        public async Task<Pagination<ViewToyDTO>> SortToys(string sortBy, int pageIndex, int pageSize)
+        {
+            var totalItemsCount = await _unitOfWork.ToyRepository.GetCountAsync();
+            var toys = await _unitOfWork.ToyRepository.SortToy(sortBy, pageIndex, pageSize);
+
+            var toyDTOs = _mapper.Map<IEnumerable<ViewToyDTO>>(toys);
+            return new Pagination<ViewToyDTO>
+            {
+                TotalItemsCount = totalItemsCount,
+                PageSize = pageSize,
+                PageIndex = pageIndex,
+                Items = toyDTOs.ToList()
+            };
+        }
     }
 }
