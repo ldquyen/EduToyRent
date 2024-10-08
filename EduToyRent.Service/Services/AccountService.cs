@@ -81,5 +81,63 @@ namespace EduToyRent.Service.Services
             }
             
         }
+
+        //public async Task<IEnumerable<Account>> ViewAllAcount()
+        //{
+        //    var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
+        //    return account1;
+        //}
+        public async Task<IEnumerable<AccountDTO>> ViewAllAccount()
+        {
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
+
+            // Ánh xạ thủ công từ Account sang AccountDTO
+            var accountDtos = accounts.Select(a => new AccountDTO
+            {
+                AccountId = a.AccountId,                 // Giả sử `Account.Id` tương ứng với `AccountDTO.AccountId`
+                AccountName = a.AccountName,         // Giả sử `Account.Username` tương ứng với `AccountDTO.AccountName`
+                AccountEmail = a.AccountEmail,           // Giả sử `Account.Email` tương ứng với `AccountDTO.AccountEmail`
+                AccountPassword = a.AccountPassword,     // Giả sử `Account.Password` tương ứng với `AccountDTO.AccountPassword`
+                RoleId = a.RoleId,                // Giả sử `Account.RoleId` tương ứng với `AccountDTO.RoleId`
+                Address = a.Address,              // Giả sử `Account.Address` tương ứng với `AccountDTO.Address`
+                PhoneNumber = a.PhoneNumber,      // Giả sử `Account.PhoneNumber` tương ứng với `AccountDTO.PhoneNumber`
+                IsBan = a.IsBan,                  // Giả sử `Account.IsBan` tương ứng với `AccountDTO.IsBan`
+                /*Role = a.Role     */                // Nếu `Role` là một entity khác được ánh xạ vào DTO
+            });
+
+            return accountDtos;
+        }
+
+
+
+        public async Task<dynamic> BanAccount(int accountDTO)
+        {
+
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(accountDTO);
+            account.IsBan = true;
+            await _unitOfWork.AccountRepository.UpdateAsync(account);
+            await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
+
+        public async Task<dynamic> SignUpAccountToySupplier(SignupAccountDTO signupAccountDTO)
+        {
+            var account = _mapper.Map<Account>(signupAccountDTO);
+            if (await _unitOfWork.AccountRepository.CheckEmailExistAsync(account.AccountEmail)) return Result.Failure(SignupErrors.DuplicateEmail);
+            if (await _unitOfWork.AccountRepository.CheckPhoneExistAsync(account.PhoneNumber)) return Result.Failure(SignupErrors.DuplicatePhone);
+            account.AccountPassword = await HashPassword.HassPass(account.AccountPassword);
+            account.RoleId = 2;
+            account.IsBan = false;
+            await _unitOfWork.AccountRepository.AddAsync(account);
+            await _unitOfWork.SaveAsync();
+
+            //var cart = new Cart
+            //{
+            //    AccountId = account.AccountId
+            //};
+            //await _unitOfWork.CartRepository.AddAsync(cart);
+            //await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
     }
 }
