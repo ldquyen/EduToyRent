@@ -72,23 +72,23 @@ namespace EduToyRent.API.Controllers
         }
 
         [HttpGet("requests")]
-        public async Task<IActionResult> GetAllRequests(int page = 1, int size = 10)
+        public async Task<IActionResult> GetAllRequests(int page = 1)
         {
-            var requests = await _requestFromService.GetAllsRequest(page, size);
+            var requests = await _requestFromService.GetAllsRequest(page, 10);
             return Ok(requests);
         }
 
         [HttpGet("unanswered-requests")]
-        public async Task<IActionResult> GetUnansweredRequests(int page = 1, int size = 10)
+        public async Task<IActionResult> GetUnansweredRequests(int page = 1)
         {
-            var requests = await _requestFromService.GetUnansweredRequest(page, size);
+            var requests = await _requestFromService.GetUnansweredRequest(page, 10);
             return Ok(requests);
         }
 
         [HttpGet("answered-requests")]
-        public async Task<IActionResult> GetAnsweredRequests(int page = 1, int size = 10)
+        public async Task<IActionResult> GetAnsweredRequests(int page = 1)
         {
-            var requests = await _requestFromService.GetAnsweredRequest(page, size);
+            var requests = await _requestFromService.GetAnsweredRequest(page, 10);
             return Ok(requests);
         }
 

@@ -17,6 +17,8 @@ namespace EduToyRent.Repository.Repositories
         public IToyRepository ToyRepository { get; set; }
         public ICategoryRepository CategoryRepository { get; set; }
         public IRequestFormRepository RequestFormRepository { get; set; }
+        public IOrderRepository OrderRepository { get; set; }
+        public IStatusOrderRepository StatusOrderRepository { get; set; }
 
         public UnitOfWork(EduToyRentDbContext context)
         {
@@ -27,6 +29,8 @@ namespace EduToyRent.Repository.Repositories
             ToyRepository = new ToyRepository(_context);
             CategoryRepository = new CategoryRepository(_context);
             RequestFormRepository = new RequestFormRepository(_context);
+            OrderRepository = new OrderRepository(_context);
+            StatusOrderRepository = new StatusOrderRepository(_context);
         }
 
         public async Task SaveAsync()
