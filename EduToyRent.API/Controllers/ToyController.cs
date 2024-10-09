@@ -62,11 +62,6 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("test")]
-        public async Task<IActionResult> TestTot([FromForm]TestDTO testDTO)
-        {
-            var result = await _toyService.CheckToy(testDTO);
-            return Ok(result);
-        }
+       
     }
 }

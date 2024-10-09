@@ -26,6 +26,8 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
         {
+            if (!await _unitOfWork.ToyRepository.CheckExistToy(createOrderDTO.ToyList))
+                return Result.Failure(ToyErrors.NotExistToy);   // neu bao loi nay thi chinh lai dong 29
             if (!await _unitOfWork.ToyRepository.CheckSameTypeOfToy(createOrderDTO.ToyList, createOrderDTO.IsRentalOrder))
                 return Result.Failure(ToyErrors.NotSameToy);
              
