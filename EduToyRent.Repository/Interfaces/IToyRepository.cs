@@ -16,5 +16,6 @@ namespace EduToyRent.Repository.Interfaces
         Task<int> GetCountByName(string keyword);
         Task<IEnumerable<Toy>> SearchByName(string keyword, int pageIndex, int pageSize);
         Task<IEnumerable<Toy>> SortToy(string sortBy, int pageIndex, int pageSize);
+        Task<bool> CheckSameTypeOfToy(List<int> toyIds, bool isRent);
     }
 }

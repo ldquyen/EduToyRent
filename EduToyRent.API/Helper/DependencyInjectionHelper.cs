@@ -21,6 +21,7 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IToyService, ToyService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IRequestFromService, RequestFormService>();
+            services.AddScoped<IOrderService, OrderService>();  
             return services;
         }
     }

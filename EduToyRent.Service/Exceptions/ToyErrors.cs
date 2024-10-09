@@ -10,5 +10,6 @@ namespace EduToyRent.Service.Exceptions
     public class ToyErrors
     {
         public static Error ToyIsNull => new("Null toy", "Toy not found");
+        public static Error NotSameToy => new("Not same toy", "The toy in list is not same type with Order");
     }
 }
