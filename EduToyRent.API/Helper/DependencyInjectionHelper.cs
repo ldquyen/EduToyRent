@@ -18,6 +18,8 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
+
+			services.AddScoped<ICartService, CartService>();
             return services;
         }
     }

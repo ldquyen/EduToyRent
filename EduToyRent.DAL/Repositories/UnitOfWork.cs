@@ -15,6 +15,7 @@ namespace EduToyRent.DAL.Repositories
         public IRefreshTokenRepository RefreshTokenRepository { get; set; }
         public ICartRepository CartRepository { get; set; }
 
+        public ICartItemRepository CartItemRepository {  get; set; }
 
         public UnitOfWork(EduToyRentDbContext context)
         {
@@ -22,6 +23,7 @@ namespace EduToyRent.DAL.Repositories
             AccountRepository = new AccountRepository(_context);
             RefreshTokenRepository = new RefreshTokenRepository(_context);  
             CartRepository = new CartRepository(_context);
+            CartItemRepository = new CartItemRepository(_context);
         }
 
         public async Task SaveAsync()

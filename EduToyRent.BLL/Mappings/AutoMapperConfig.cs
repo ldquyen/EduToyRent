@@ -21,6 +21,7 @@ namespace EduToyRent.BLL.Mappings
 
             CreateMap<SignupAccountDTO, Account>();
 
+			
         }
     }
 }

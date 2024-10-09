@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.DAL.Interfaces
 {
-    public interface ICartRepository : IRepository<Cart>
+    public interface IToyRepository : IRepository<Toy>
     {
-        Task<Cart> GetByAccountIdAsync(int accountId);
-        Task<Cart> AddCartAsync(Cart cart);
-
-
-
     }
 }
