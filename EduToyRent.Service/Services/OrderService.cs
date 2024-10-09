@@ -40,7 +40,7 @@ namespace EduToyRent.Service.Services
 
         public async Task<dynamic> CreateOrderDetail(List<int> toyIdList, int orderId)
         {
-
+            return null;
         }
     }
 }

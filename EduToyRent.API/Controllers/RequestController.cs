@@ -26,12 +26,12 @@ namespace EduToyRent.API.Controllers
             _firebaseService = firebaseService;
         }
 
-        [Authorize(Policy = "SupplierOnly")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Policy = "SupplierOnly")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("rental")]
         public async Task<IActionResult> CreateRental([FromForm] CreateRentalToyDTO createRentalToyDTO)
         {
-            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            //CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -43,17 +43,17 @@ namespace EduToyRent.API.Controllers
                 return BadRequest("Failed to upload image.");
             }
 
-            var createToyResult = await _toyService.CreateRentalToy(createRentalToyDTO, fileUrl, currentUserObject.AccountId);
+            var createToyResult = await _toyService.CreateRentalToy(createRentalToyDTO, fileUrl, 2);
             if (!createToyResult.IsSuccess)
                 return BadRequest(createToyResult);
             return Ok(createToyResult);           
         }
-        [Authorize(Policy = "SupplierOnly")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Policy = "SupplierOnly")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSale([FromForm] CreateSaleToyDTO createSaleToyDTO)
         {
-            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            //CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -65,7 +65,7 @@ namespace EduToyRent.API.Controllers
                 return BadRequest("Failed to upload image.");
             }
 
-            var createToyResult = await _toyService.CreateSaleToy(createSaleToyDTO, fileUrl, currentUserObject.AccountId);
+            var createToyResult = await _toyService.CreateSaleToy(createSaleToyDTO, fileUrl, 2);
             if (!createToyResult.IsSuccess)
                 return BadRequest(createToyResult);
             return Ok(createToyResult);
