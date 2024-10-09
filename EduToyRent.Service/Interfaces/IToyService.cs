@@ -20,6 +20,6 @@ namespace EduToyRent.Service.Interfaces
         Task<ViewToyDetailDTO> ViewToyDetail(int toyId);
         Task<Pagination<ViewToyDTO>> SearchToys(string keyword, int pageIndex, int pageSize);
         Task<Pagination<ViewToyDTO>> SortToys(string sortBy, int pageIndex, int pageSize);
-        
+        Task<bool> CheckToy(TestDTO testDTO);
     }
 }

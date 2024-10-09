@@ -9,8 +9,7 @@ namespace EduToyRent.Service.DTOs
 {
     public class TestDTO
     {
-        [Required]
-        public bool IsRentalOrder { get; set; }
+
         [Required]
         public List<int> ToyList { get; set; }
     }

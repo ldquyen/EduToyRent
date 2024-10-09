@@ -151,6 +151,9 @@ namespace EduToyRent.Service.Services
             };
         }
 
-       
+       public async Task<bool> CheckToy(TestDTO testDTO)
+        {
+            return await _unitOfWork.ToyRepository.CheckExistToy(testDTO.ToyList);
+        }
     }
 }
