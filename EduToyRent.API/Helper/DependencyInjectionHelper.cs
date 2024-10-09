@@ -1,7 +1,7 @@
-﻿using EduToyRent.BLL.Interfaces;
-using EduToyRent.BLL.Services;
-using EduToyRent.DAL.Interfaces;
-using EduToyRent.DAL.Repositories;
+﻿using EduToyRent.Service.Interfaces;
+using EduToyRent.Service.Services;
+using EduToyRent.Repository.Interfaces;
+using EduToyRent.Repository.Repositories;
 
 namespace EduToyRent.API.Helper
 {
@@ -18,6 +18,9 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IToyService, ToyService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IRequestFromService, RequestFormService>();
 
 			services.AddScoped<ICartService, CartService>();
             return services;
