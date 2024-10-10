@@ -37,10 +37,5 @@ namespace EduToyRent.Service.Services
             await _unitOfWork.SaveAsync();
             return Result.SuccessWithObject(order);
         }
-
-        public async Task<dynamic> CreateOrderDetail(List<int> toyIdList, int orderId)
-        {
-
-        }
     }
 }
