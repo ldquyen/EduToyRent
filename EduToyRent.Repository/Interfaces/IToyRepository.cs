@@ -11,10 +11,13 @@ namespace EduToyRent.Repository.Interfaces
     {
         Task<Toy> GetToyById(int toyId);
         Task<bool> UpdateToy(Toy toy);
-        Task<int> GetCountAsync();
-        Task<IEnumerable<Toy>> GetAllAsync(int pageIndex, int pageSize);
-        Task<int> GetCountByName(string keyword);
-        Task<IEnumerable<Toy>> SearchByName(string keyword, int pageIndex, int pageSize);
-        Task<IEnumerable<Toy>> SortToy(string sortBy, int pageIndex, int pageSize);
+        Task<int> GetRentCount();
+        Task<int> GetSaleCount();
+        Task<IEnumerable<Toy>> ViewToysForRent(int pageIndex, int pageSize);
+        Task<IEnumerable<Toy>> ViewToysForSale(int pageIndex, int pageSize);
+        Task<int> GetCountByToyName(string keyword, bool isRental);
+        Task<IEnumerable<Toy>> SearchToysByName(string keyword, bool isRental, int pageIndex, int pageSize);
+        Task<IEnumerable<Toy>> SortToysForRent(string sortBy, int pageIndex, int pageSize);
+        Task<IEnumerable<Toy>> SortToysForSale(string sortBy, int pageIndex, int pageSize);
     }
 }

@@ -18,7 +18,7 @@ var connectionString = builder.Configuration.GetConnectionString("MyDb");
 builder.Services.AddEduToyRentDbContext(connectionString);
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "EduToyRent API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
