@@ -19,5 +19,7 @@ namespace EduToyRent.Repository.Interfaces
         Task<IEnumerable<Toy>> SearchToysByName(string keyword, bool isRental, int pageIndex, int pageSize);
         Task<IEnumerable<Toy>> SortToysForRent(string sortBy, int pageIndex, int pageSize);
         Task<IEnumerable<Toy>> SortToysForSale(string sortBy, int pageIndex, int pageSize);
+        Task<bool> CheckSameTypeOfToy(List<int> toyIds, bool isRent);
+        Task<bool> CheckExistToy(List<int> toyIds);
     }
 }

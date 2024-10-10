@@ -1,8 +1,8 @@
 ﻿
 using EduToyRent.API.Helper;
-using EduToyRent.BLL.Interfaces;
 using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.CartDTO;
+using EduToyRent.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
