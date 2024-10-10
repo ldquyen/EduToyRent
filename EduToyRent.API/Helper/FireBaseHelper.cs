@@ -12,7 +12,7 @@ namespace EduToyRent.API.Helper
         public static IServiceCollection AddFirebaseServices(this IServiceCollection services)
         {
             var credentialPath = Path.Combine(Directory.GetCurrentDirectory(),
-                "edutoyrent-firebase-adminsdk-3e8dj-7ca1c273d0.json");
+                "edutoyrent-3f3f53b2f1c2.json");
             if (FirebaseApp.DefaultInstance == null)
             {
                 FirebaseApp.Create(new AppOptions

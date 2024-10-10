@@ -21,6 +21,9 @@ namespace EduToyRent.Repository.Repositories
         public IRequestFormRepository RequestFormRepository { get; set; }
         public IOrderRepository OrderRepository { get; set; }
         public IStatusOrderRepository StatusOrderRepository { get; set; }
+        public IOrderDetailRepository OrderDetailRepository { get; set; }
+        public IVoucherRepository VoucherRepository { get; set; }
+        public IAccountVoucherRepository AccountVoucherRepository   { get; set; }
 
         public UnitOfWork(EduToyRentDbContext context)
         {
@@ -34,6 +37,9 @@ namespace EduToyRent.Repository.Repositories
             RequestFormRepository = new RequestFormRepository(_context);
             OrderRepository = new OrderRepository(_context);
             StatusOrderRepository = new StatusOrderRepository(_context);
+            OrderDetailRepository = new OrderDetailRepository(_context);
+            VoucherRepository = new VoucherRepository(_context);
+            AccountVoucherRepository = new AccountVoucherRepository(_context);
         }
 
         public async Task SaveAsync()

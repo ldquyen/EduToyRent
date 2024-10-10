@@ -16,6 +16,9 @@ namespace EduToyRent.Repository.Interfaces
         IRequestFormRepository RequestFormRepository { get; } 
         IOrderRepository OrderRepository { get; } 
         IStatusOrderRepository StatusOrderRepository { get; }
+        IVoucherRepository VoucherRepository { get; }
+        IOrderDetailRepository OrderDetailRepository { get; }
+        IAccountVoucherRepository AccountVoucherRepository { get; }
         Task SaveAsync();
     }
 }
