@@ -8,12 +8,14 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IUnitOfWork
     {
-        IAccountRepository AccountRepository { get; }
-        IRefreshTokenRepository RefreshTokenRepository { get; }
-        ICartRepository CartRepository { get; }
+        IAccountRepository AccountRepository { get; } 
+        IRefreshTokenRepository RefreshTokenRepository { get; } 
+        ICartRepository CartRepository { get; } 
         IToyRepository ToyRepository { get; }
-        ICategoryRepository CategoryRepository { get; }
-        IRequestFormRepository RequestFormRepository { get; }
+        ICategoryRepository CategoryRepository { get; } 
+        IRequestFormRepository RequestFormRepository { get; } 
+        IOrderRepository OrderRepository { get; } 
+        IStatusOrderRepository StatusOrderRepository { get; }
         Task SaveAsync();
     }
 }
