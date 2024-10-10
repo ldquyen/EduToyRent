@@ -1,4 +1,5 @@
-﻿using EduToyRent.Service.DTOs.AccountDTO;
+﻿using EduToyRent.DAL.Entities;
+using EduToyRent.Service.DTOs.AccountDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,10 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> UpdateProfile(EditAccountProfileDTO editAccountProfileDTO, CurrentUserObject currentUserObject);
         Task<dynamic> GetProfile(CurrentUserObject currentUserObject);
         Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject);
+
+        Task<dynamic> ViewAllAccount(int page);
+        Task<dynamic> BanAccount(int accountDTO);
+
+        Task<dynamic> SignUpAccountToySupplier(SignupAccountDTO signupAccountDTO);
     }
 }

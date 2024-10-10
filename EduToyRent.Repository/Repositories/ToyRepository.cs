@@ -122,5 +122,23 @@ namespace EduToyRent.Repository.Repositories
                 .Take(pageSize)
                 .ToListAsync();
         }
+
+        public async Task<bool> CheckSameTypeOfToy(List<int> toyIds, bool isRent)
+        {
+            if (toyIds == null || !toyIds.Any()) return false;
+            var toys = await _context.Toys.Where(x => toyIds.Contains(x.ToyId)).ToListAsync();
+            if (toys.Count == 0) return false;
+            bool firstToy = toys.First().IsRental;
+            if (firstToy != isRent) return false;
+            return toys.All(x => x.IsRental == firstToy);
+        }
+
+        public async Task<bool> CheckExistToy(List<int> toyIds)
+        {
+            var toys = await _context.Toys.ToListAsync();
+            var hasInvalidToys = toys.Any(toy => toyIds.Contains(toy.ToyId) && (!toy.IsActive || toy.IsDelete || toy.Stock <= 0));
+            return !hasInvalidToys;
+
+        }
     }
 }

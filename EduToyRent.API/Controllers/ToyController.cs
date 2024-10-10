@@ -1,4 +1,5 @@
-﻿using EduToyRent.Service.DTOs.ToyDTO;
+﻿using EduToyRent.Service.DTOs;
+using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -99,5 +100,7 @@ namespace EduToyRent.API.Controllers
             var result = await _toyService.SortToysForRent(sortBy, pageIndex, pageSize);
             return Ok(result);
         }
+
+       
     }
 }
