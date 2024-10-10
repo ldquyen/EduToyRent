@@ -26,17 +26,16 @@ namespace EduToyRent.Service.Mappings
             CreateMap<SignupAccountDTO, Account>();
             CreateMap<ProfileDTO, Account>().ReverseMap();
 
-            CreateMap<AccountDTO , Account>().ReverseMap();
-
             //toy
             CreateMap<CreateRentalToyDTO, Toy>();
             CreateMap<CreateSaleToyDTO, Toy>();
             CreateMap<UpdateToyDTO, Toy>();
-            CreateMap<Toy, ViewToyDTO>().ReverseMap();
-            CreateMap<Toy, ViewToyDTO>().ReverseMap();
-            CreateMap<Toy, ViewToyDetailDTO>().ReverseMap();
-            CreateMap<Toy, ResponseRentalToyDTO>();
-            CreateMap<Toy, ResponseSaleToyDTO>();
+            CreateMap<Toy, ViewToyForRentDTO>().ReverseMap();
+            CreateMap<Toy, ViewToyForSaleDTO>().ReverseMap();
+            CreateMap<Toy, ViewToyForRentDetailDTO>().ReverseMap();
+            CreateMap<Toy, ViewToyForSaleDetailDTO>().ReverseMap();
+            //CreateMap<Toy, ResponseRentalToyDTO>();
+            //CreateMap<Toy, ResponseSaleToyDTO>();
 
             CreateMap<CreateNewCategoryDTO, Category>();
 
@@ -49,7 +48,6 @@ namespace EduToyRent.Service.Mappings
 
             //order
             CreateMap<CreateOrderDTO, Order>();
-            CreateMap<Order, ResponseOrderForStaff>();
         }
     }
 }
