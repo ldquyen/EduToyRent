@@ -45,6 +45,36 @@ namespace EduToyRent.Service.Services
             return Result.Success();
         }
 
-      
+        public async Task<dynamic> GetAllOrderForStaff(int page)
+        {
+            var orderList = await _unitOfWork.OrderRepository.GetAllAsync(null, null, page, 10);
+            var list = _mapper.Map<List<ResponseOrderForStaff>>(orderList);
+            return Result.SuccessWithObject(list);
+        }
+
+        public async Task<dynamic> ConfirmOrder(ConfirmOrderDTO confirmOrderDTO)
+        {
+            Order order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == confirmOrderDTO.OrderId);
+            if(order == null) return Result.Failure(OrderErrors.OrderIsNull);
+            if(confirmOrderDTO.StatusId == 9)
+            {
+                order.StatusId = confirmOrderDTO.StatusId;
+                await _unitOfWork.SaveAsync();
+                return Result.Success();
+            }
+            if(confirmOrderDTO.StatusId == 2)
+            {
+                if(string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
+                    return Result.Failure(OrderErrors.ShiperInfo);
+                order.Shipper = confirmOrderDTO.Shipper;
+                order.ShipperPhone = confirmOrderDTO.ShipperPhone;
+                order.StatusId = confirmOrderDTO.StatusId;
+                await _unitOfWork.OrderRepository.UpdateAsync(order);
+                await _unitOfWork.SaveAsync();
+                return Result.Success();
+            }
+            else
+                return Result.Failure(OrderErrors.ConfirmStatus);
+        }
     }
 }

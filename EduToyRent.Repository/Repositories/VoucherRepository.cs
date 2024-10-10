@@ -9,14 +9,12 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.Repository.Repositories
 {
-    public class OrderRepository : Repository<Order>, IOrderRepository
+    public class VoucherRepository : Repository<Voucher> , IVoucherRepository
     {
         private readonly EduToyRentDbContext _context;
-        public OrderRepository(EduToyRentDbContext context) : base(context)
+        public VoucherRepository(EduToyRentDbContext context) : base(context)
         {
             _context = context;
         }
-
-        
     }
 }

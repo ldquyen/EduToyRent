@@ -28,5 +28,21 @@ namespace EduToyRent.API.Controllers
             if(result.IsSuccess) return Ok(result);
             return BadRequest(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrderForStaff(int page = 1)
+        {
+            Result result = await _orderService.GetAllOrderForStaff(page);
+            return Ok(result);
+        }
+
+        [HttpPut("confirm")]
+        public async Task<IActionResult> ConfirmOrder([FromForm] ConfirmOrderDTO confirmOrderDTO)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            Result result = await _orderService.ConfirmOrder(confirmOrderDTO);
+            if (result.IsSuccess) return Ok(result);
+            return BadRequest(result);
+        }
     }
 }

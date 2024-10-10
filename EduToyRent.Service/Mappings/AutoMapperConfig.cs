@@ -49,6 +49,7 @@ namespace EduToyRent.Service.Mappings
 
             //order
             CreateMap<CreateOrderDTO, Order>();
+            CreateMap<Order, ResponseOrderForStaff>();
         }
     }
 }

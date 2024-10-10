@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.Repository.Interfaces
 {
-    public interface IOrderDetailRepository : IRepository<OrderDetail>
+    public interface IVoucherRepository : IRepository<Voucher>
     {
-        Task<List<OrderDetail>> GetOrderForSupplier(int supplierId);
     }
 }
