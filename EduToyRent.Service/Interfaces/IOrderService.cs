@@ -6,7 +6,8 @@ namespace EduToyRent.Service.Interfaces
     public interface IOrderService
     {
         Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO);
-        Task<dynamic> GetAllOrder();
+        Task<dynamic> GetAllOrderForStaff(int page);
+        Task<dynamic> ConfirmOrder(ConfirmOrderDTO confirmOrderDTO);
         
     }
 }
