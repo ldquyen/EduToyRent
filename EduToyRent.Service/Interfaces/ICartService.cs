@@ -1,6 +1,5 @@
-﻿using EduToyRent.BLL.DTOs.CartDTO;
-using EduToyRent.DAL.Entities;
-using EduToyRent.DAL.Entities.Responses;
+﻿
+using EduToyRent.Service.DTOs.CartDTO;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace EduToyRent.BLL.Interfaces
     {
         public Task<GetCartResponse> GetCart(int accountId);
 
-        public Task<bool> AddItemToCart(GetCartRequest request);
+        public Task<bool> AddItemToCart(GetCartRequest request, int accountId);
 
 		Task<bool> RemoveItemsFromCart(List<int> itemIdList);
 	}

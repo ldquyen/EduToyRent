@@ -1,6 +1,7 @@
 ﻿using EduToyRent.DAL.Context;
 using EduToyRent.DAL.Entities;
 using EduToyRent.DAL.Interfaces;
+using EduToyRent.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

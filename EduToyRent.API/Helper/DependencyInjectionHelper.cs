@@ -2,6 +2,10 @@
 using EduToyRent.Service.Services;
 using EduToyRent.Repository.Interfaces;
 using EduToyRent.Repository.Repositories;
+using EduToyRent.BLL.Interfaces;
+using EduToyRent.BLL.Services;
+using EduToyRent.DAL.Interfaces;
+using EduToyRent.DAL.Repositories;
 
 namespace EduToyRent.API.Helper
 {
@@ -12,6 +16,8 @@ namespace EduToyRent.API.Helper
             //repository
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+			services.AddScoped<ICartRepository, CartRepository>();
+			services.AddScoped<ICartItemRepository, CartItemRepository>();
 
             //service
             services.AddScoped<IAuthService, AuthService>();
@@ -21,7 +27,7 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IToyService, ToyService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IRequestFromService, RequestFormService>();
-			      services.AddScoped<ICartService, CartService>();
+			services.AddScoped<ICartService, CartService>();
             services.AddScoped<IOrderService, OrderService>();  
             services.AddScoped<IVoucherService, VoucherService>();
           

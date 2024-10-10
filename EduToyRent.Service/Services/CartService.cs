@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
-using EduToyRent.BLL.DTOs.CartDTO;
+
 using EduToyRent.BLL.Interfaces;
 using EduToyRent.DAL.Entities;
-using EduToyRent.DAL.Entities.Responses;
+
 using EduToyRent.DAL.Interfaces;
 using EduToyRent.DAL.Repositories;
+using EduToyRent.Repository.Interfaces;
+using EduToyRent.Service.DTOs.CartDTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,14 +27,18 @@ namespace EduToyRent.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> AddItemToCart(GetCartRequest request)
+        public async Task<bool> AddItemToCart(GetCartRequest request, int accountId)
         {
-            Cart? cart = await _unitOfWork.CartRepository.GetByAccountIdAsync(request.accountId);
+
+			Toy existingToy = await _unitOfWork.ToyRepository.GetByIdAsync(request.toyId);
+			if (existingToy == null) return false;
+
+            Cart? cart = await _unitOfWork.CartRepository.GetByAccountIdAsync(accountId);
             if (cart == null) 
             {
                 cart = new()
                 {
-                    AccountId = request.accountId,
+                    AccountId = accountId,
                 };
                 cart = await _unitOfWork.CartRepository.AddCartAsync(cart);
             }
@@ -62,6 +68,17 @@ namespace EduToyRent.BLL.Services
         {
 			GetCartResponse response = new();
 			Cart result = await _unitOfWork.CartRepository.GetByAccountIdAsync(accountId);
+
+			if (result == null)
+			{
+				result = new()
+				{
+					AccountId = accountId,
+				};
+				result = await _unitOfWork.CartRepository.AddCartAsync(result);
+				return response;
+			}
+
 			List<CartItem>? items = await _unitOfWork.CartItemRepository.GetByCartIdAsync(result.CartId);
 
 			response.CartId = result.CartId;

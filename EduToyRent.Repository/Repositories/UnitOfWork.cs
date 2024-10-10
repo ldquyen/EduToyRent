@@ -1,4 +1,6 @@
 ﻿using EduToyRent.DAL.Context;
+using EduToyRent.DAL.Interfaces;
+using EduToyRent.DAL.Repositories;
 using EduToyRent.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,6 @@ namespace EduToyRent.Repository.Repositories
         public IAccountRepository AccountRepository { get; set; }
         public IRefreshTokenRepository RefreshTokenRepository { get; set; }
         public ICartRepository CartRepository { get; set; }
-
         public ICartItemRepository CartItemRepository {  get; set; }
         public IToyRepository ToyRepository { get; set; }
         public ICategoryRepository CategoryRepository { get; set; }

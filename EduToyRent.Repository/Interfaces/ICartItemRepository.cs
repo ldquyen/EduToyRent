@@ -1,4 +1,5 @@
 ﻿using EduToyRent.DAL.Entities;
+using EduToyRent.Repository.Interfaces;
 
 namespace EduToyRent.DAL.Interfaces
 {
