@@ -87,6 +87,7 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
+
         [HttpGet("SortToysForSale")]
         public async Task<IActionResult> SortToysForSale(string sortBy, int pageIndex = 0, int pageSize = 10)
         {
