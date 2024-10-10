@@ -14,6 +14,8 @@ namespace EduToyRent.Repository.Repositories
         public IAccountRepository AccountRepository { get; set; }
         public IRefreshTokenRepository RefreshTokenRepository { get; set; }
         public ICartRepository CartRepository { get; set; }
+
+        public ICartItemRepository CartItemRepository {  get; set; }
         public IToyRepository ToyRepository { get; set; }
         public ICategoryRepository CategoryRepository { get; set; }
         public IRequestFormRepository RequestFormRepository { get; set; }
@@ -29,6 +31,7 @@ namespace EduToyRent.Repository.Repositories
             AccountRepository = new AccountRepository(_context);
             RefreshTokenRepository = new RefreshTokenRepository(_context);  
             CartRepository = new CartRepository(_context);
+            CartItemRepository = new CartItemRepository(_context);
             ToyRepository = new ToyRepository(_context);
             CategoryRepository = new CategoryRepository(_context);
             RequestFormRepository = new RequestFormRepository(_context);

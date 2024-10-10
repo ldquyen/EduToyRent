@@ -9,6 +9,10 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface ICartRepository : IRepository<Cart>
     {
+        Task<Cart> GetByAccountIdAsync(int accountId);
+        Task<Cart> AddCartAsync(Cart cart);
+
+
 
     }
 }
