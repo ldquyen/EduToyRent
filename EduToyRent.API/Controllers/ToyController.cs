@@ -61,7 +61,7 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("search/rent")]
+        [HttpGet("Search/rent")]
         public async Task<IActionResult> SearchRentToys(string keyword, [Required] int pageIndex, [Required] int pageSize)
         {
             if (pageIndex < 1 || pageSize < 1)
@@ -74,7 +74,7 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("search/sale")]
+        [HttpGet("Search/sale")]
         public async Task<IActionResult> SearchSaleToys(string keyword, [Required] int pageIndex,  [Required] int pageSize)
         {
             if (pageIndex < 1 || pageSize < 1)
