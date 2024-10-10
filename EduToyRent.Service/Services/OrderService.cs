@@ -45,6 +45,9 @@ namespace EduToyRent.Service.Services
             return Result.Success();
         }
 
-      
+        public async Task<dynamic> GetAllOrder()
+        {
+            
+        }
     }
 }
