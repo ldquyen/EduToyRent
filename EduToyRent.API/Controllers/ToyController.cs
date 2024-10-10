@@ -3,6 +3,7 @@ using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduToyRent.API.Controllers
 {
@@ -33,32 +34,70 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("view")]
-        public async Task<IActionResult> ViewToys(int pageIndex = 0, int pageSize = 10)
+        [HttpGet("ViewToysRent")]
+        public async Task<IActionResult> GetToysForRent(int pageIndex = 0, int pageSize = 10)
         {
-            var result = await _toyService.ViewToys(pageIndex, pageSize);
+            var result = await _toyService.ViewToysForRent(pageIndex, pageSize);
             return Ok(result);
         }
 
-        [HttpGet("detail/{id}")]
-        public async Task<IActionResult> ViewToyDetail(int id)
+        [HttpGet("ViewToysSale")]
+        public async Task<IActionResult> GetToysForSale(int pageIndex = 0, int pageSize = 10)
         {
-            var result = await _toyService.ViewToyDetail(id);
-            if (result == null) return NotFound();
+            var result = await _toyService.ViewToysForSale(pageIndex, pageSize);
             return Ok(result);
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchToys(string keyword, int pageIndex = 0, int pageSize = 10)
+        [HttpGet("detail/rent/{toyId}")]
+        public async Task<IActionResult> ViewToyDetailForRent(int toyId)
         {
-            var result = await _toyService.SearchToys(keyword, pageIndex, pageSize);
+            var result = await _toyService.ViewToyDetailForRent(toyId);
             return Ok(result);
         }
 
-        [HttpGet("sort")]
-        public async Task<IActionResult> SortToys(string sortBy, int pageIndex = 0, int pageSize = 10)
+        [HttpGet("detail/sale/{toyId}")]
+        public async Task<IActionResult> ViewToyDetailForSale(int toyId)
         {
-            var result = await _toyService.SortToys(sortBy, pageIndex, pageSize);
+            var result = await _toyService.ViewToyDetailForSale(toyId);
+            return Ok(result);
+        }
+
+        [HttpGet("search/rent")]
+        public async Task<IActionResult> SearchRentToys(string keyword, [Required] int pageIndex, [Required] int pageSize)
+        {
+            if (pageIndex < 1 || pageSize < 1)
+            {
+                return BadRequest("PageIndex and PageSize must be greater than 0.");
+            }
+            pageIndex = pageIndex < 1 ? 1 : pageIndex;
+            var result = await _toyService.SearchRentByName(keyword, pageIndex, pageSize);
+
+            return Ok(result);
+        }
+
+        [HttpGet("search/sale")]
+        public async Task<IActionResult> SearchSaleToys(string keyword, [Required] int pageIndex,  [Required] int pageSize)
+        {
+            if (pageIndex < 1 || pageSize < 1)
+            {
+                return BadRequest("PageIndex and PageSize must be greater than 0.");
+            }
+            pageIndex = pageIndex < 1 ? 1 : pageIndex;
+            var result = await _toyService.SearchSaleByName(keyword, pageIndex, pageSize);
+
+            return Ok(result);
+        }
+
+        [HttpGet("SortToysForSale")]
+        public async Task<IActionResult> SortToysForSale(string sortBy, int pageIndex = 0, int pageSize = 10)
+        {
+            var result = await _toyService.SortToysForSale(sortBy, pageIndex, pageSize);
+            return Ok(result);
+        }
+        [HttpGet("SortToysForRent")]
+        public async Task<IActionResult> SortToysForRent(string sortBy, int pageIndex = 0, int pageSize = 10)
+        {
+            var result = await _toyService.SortToysForRent(sortBy, pageIndex, pageSize);
             return Ok(result);
         }
 

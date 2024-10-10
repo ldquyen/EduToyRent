@@ -32,33 +32,52 @@ namespace EduToyRent.Repository.Repositories
             _context.Toys.Update(toy);
             return await _context.SaveChangesAsync() > 0;
         }
-        public async Task<int> GetCountAsync()
+        public async Task<int> GetRentCount()
         {
-            return await _context.Toys.CountAsync();
-        }
-        public async Task<IEnumerable<Toy>> GetAllAsync(int pageIndex, int pageSize)
-        {
-            return await _context.Toys
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-        public async Task<int> GetCountByName(string keyword)
-        {
-            return await _context.Toys.CountAsync(x => x.ToyName.Contains(keyword));
+            return await _context.Toys.CountAsync(t => t.IsRental);
         }
 
-        public async Task<IEnumerable<Toy>> SearchByName(string keyword, int pageIndex, int pageSize)
+        public async Task<int> GetSaleCount()
+        {
+            return await _context.Toys.CountAsync(t => !t.IsRental);
+        }
+
+        public async Task<IEnumerable<Toy>> ViewToysForRent(int pageIndex, int pageSize)
         {
             return await _context.Toys
-                .Where(x => x.ToyName.Contains(keyword))
+                .Where(t => t.IsRental)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<Toy>> SortToy(string sortBy, int pageIndex, int pageSize)
+
+        public async Task<IEnumerable<Toy>> ViewToysForSale(int pageIndex, int pageSize)
         {
-            IQueryable<Toy> toys = _context.Toys;
+            return await _context.Toys
+                .Where(t => !t.IsRental)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+        public async Task<int> GetCountByToyName(string keyword, bool isRental)
+        {
+            return await _context.Toys.CountAsync(x => x.ToyName.Contains(keyword) && x.IsRental == isRental && !x.IsDelete);
+        }
+
+        public async Task<IEnumerable<Toy>> SearchToysByName(string keyword, bool isRental, int pageIndex, int pageSize)
+        {
+            pageIndex = pageIndex < 1 ? 1 : pageIndex;
+
+            return await _context.Toys
+                .Where(x => x.ToyName.Contains(keyword) && x.IsRental == isRental && !x.IsDelete)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Toy>> SortToysForRent(string sortBy, int pageIndex, int pageSize)
+        {
+            IQueryable<Toy> toys = _context.Toys.Where(t => t.IsRental);
             switch (sortBy)
             {
                 case "price_asc":
@@ -73,7 +92,29 @@ namespace EduToyRent.Repository.Repositories
                 case "name_desc":
                     toys = toys.OrderByDescending(x => x.ToyName);
                     break;
-                default:
+            }
+            return await toys
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Toy>> SortToysForSale(string sortBy, int pageIndex, int pageSize)
+        {
+            IQueryable<Toy> toys = _context.Toys.Where(t => !t.IsRental);
+            switch (sortBy)
+            {
+                case "price_asc":
+                    toys = toys.OrderBy(x => x.BuyPrice);
+                    break;
+                case "price_desc":
+                    toys = toys.OrderByDescending(x => x.BuyPrice);
+                    break;
+                case "name_asc":
+                    toys = toys.OrderBy(x => x.ToyName);
+                    break;
+                case "name_desc":
+                    toys = toys.OrderByDescending(x => x.ToyName);
                     break;
             }
             return await toys

@@ -1,5 +1,4 @@
 ﻿using EduToyRent.Service.Common;
-using EduToyRent.Service.DTOs;
 using EduToyRent.Service.DTOs.ToyDTO;
 using System;
 using System.Collections.Generic;
@@ -11,15 +10,18 @@ namespace EduToyRent.Service.Interfaces
 {
     public interface IToyService
     {
+        Task<dynamic> ChangeToyStatus(int toyId);
         Task<dynamic> CreateRentalToy(CreateRentalToyDTO createRentalToyDTO, string fileURL, int supplierID);
         Task<dynamic> CreateSaleToy(CreateSaleToyDTO createSaleToyDTO, string fileURL, int supplierID);
-        Task<dynamic> ChangeToyStatus(int toyId);
         Task<dynamic> GetToyByToyId(int toyId);
         Task<Result> UpdateToyInfo(int toyId, UpdateToyDTO updateToyDTO);
-        Task<Pagination<ViewToyDTO>> ViewToys(int pageIndex, int pageSize);
-        Task<ViewToyDetailDTO> ViewToyDetail(int toyId);
-        Task<Pagination<ViewToyDTO>> SearchToys(string keyword, int pageIndex, int pageSize);
-        Task<Pagination<ViewToyDTO>> SortToys(string sortBy, int pageIndex, int pageSize);
-        
+        Task<Pagination<ViewToyForRentDTO>> ViewToysForRent(int pageIndex, int pageSize);
+        Task<Pagination<ViewToyForSaleDTO>> ViewToysForSale(int pageIndex, int pageSize);
+        Task<ViewToyForRentDetailDTO> ViewToyDetailForRent(int toyId);
+        Task<ViewToyForSaleDetailDTO> ViewToyDetailForSale(int toyId);
+        Task<Pagination<ViewToyForRentDTO>> SearchRentByName(string keyword, int pageIndex, int pageSize);
+        Task<Pagination<ViewToyForSaleDTO>> SearchSaleByName(string keyword, int pageIndex, int pageSize);
+        Task<Pagination<ViewToyForRentDTO>> SortToysForRent(string sortBy, int pageIndex, int pageSize);
+        Task<Pagination<ViewToyForSaleDTO>> SortToysForSale(string sortBy, int pageIndex, int pageSize);
     }
 }
