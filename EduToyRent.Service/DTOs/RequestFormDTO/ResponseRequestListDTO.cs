@@ -12,5 +12,6 @@ namespace EduToyRent.Service.DTOs.RequestFormDTO
         public DateTime RequestDate { get; set; }
         public int RequestStatus { get; set; }
         public bool ForRent { get; set; }
+        public string? DenyReason { get; set; }
     }
 }
