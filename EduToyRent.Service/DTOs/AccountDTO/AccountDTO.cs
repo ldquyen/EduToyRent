@@ -17,6 +17,5 @@ namespace EduToyRent.Service.DTOs.AccountDTO
         public string PhoneNumber { get; set; }
         public bool IsBan { get; set; }
 
-        //public virtual Role Role { get; set; }
     }
 }
