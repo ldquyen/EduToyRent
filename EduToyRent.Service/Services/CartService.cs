@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-
-using EduToyRent.BLL.Interfaces;
 using EduToyRent.DAL.Entities;
-
 using EduToyRent.DAL.Interfaces;
 using EduToyRent.DAL.Repositories;
 using EduToyRent.Repository.Interfaces;
 using EduToyRent.Service.DTOs.CartDTO;
+using EduToyRent.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EduToyRent.BLL.Services
+namespace EduToyRent.Service.Services
 {
     public class CartService : ICartService
     {
