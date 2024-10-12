@@ -10,8 +10,8 @@ namespace EduToyRent.Service.DTOs.CartDTO
 {
 	public class GetCartResponse
 	{
-		public int CartId { get; set; }
-		public int AccountId { get; set; }
-		public List<CartItem> CartItems { get; set; } = new List<CartItem>();
-	}
+        public int CartItemId { get; set; }
+        public int ToyId { get; set; }
+        public int Quantity { get; set; }
+    }
 }

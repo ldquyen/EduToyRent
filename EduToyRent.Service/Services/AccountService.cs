@@ -83,15 +83,11 @@ namespace EduToyRent.Service.Services
             
         }
 
-        //public async Task<IEnumerable<Account>> ViewAllAcount()
-        //{
-        //    var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
-        //    return account1;
-        //}
+
         public async Task<dynamic> ViewAllAccount(int page)
         {
             var accounts = await _unitOfWork.AccountRepository.GetAllAsync(x => x.RoleId == 1 || x.RoleId == 2, null,page,10);
-            var list = _mapper.Map<IEnumerable<AccountDTO>>(accounts);
+            var list = _mapper.Map<List<AccountDTO>>(accounts);
           return Result.SuccessWithObject(list);
         }
 

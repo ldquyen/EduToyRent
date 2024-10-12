@@ -1,5 +1,7 @@
 ﻿
+using Azure;
 using EduToyRent.API.Helper;
+using EduToyRent.Service.Common;
 using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.CartDTO;
 using EduToyRent.Service.Interfaces;
@@ -27,12 +29,9 @@ namespace EduToyRent.API.Controllers
 			try
 			{
 				CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-				GetCartResponse response = await _cartService.GetCart(currentUserObject.AccountId);
-				if (response == null)
-				{
-					return NotFound();
-				};
-				return Ok(response);
+				Result response = await _cartService.GetCart(currentUserObject.AccountId);
+				if(response.IsSuccess) return Ok(response);
+				return BadRequest(response);
 			}
 			catch (Exception ex)
 			{
@@ -42,16 +41,15 @@ namespace EduToyRent.API.Controllers
 		}
 
 		[HttpPost("add-item-to-cart")]
-		public async Task<IActionResult> AddItemToCart([FromBody] GetCartRequest request)
+		public async Task<IActionResult> AddItemToCart([FromForm] GetCartRequest request)
 		{
 			try
 			{
 				CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-				bool result = await _cartService.AddItemToCart(request, currentUserObject.AccountId);
-				if (result == false)
-					return StatusCode(500);
-				return Ok();
-			} catch (Exception ex) 
+				Result result = await _cartService.AddItemToCart(request, currentUserObject.AccountId);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            } catch (Exception ex) 
 			{
 				return StatusCode(500, ex.Message);
 			};
