@@ -146,6 +146,9 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsRental")
+                        .HasColumnType("bit");
+
                     b.HasKey("CartId");
 
                     b.HasIndex("AccountId")
@@ -292,11 +295,9 @@ namespace EduToyRent.DataAccess.Context.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Shipper")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShipperPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddress")

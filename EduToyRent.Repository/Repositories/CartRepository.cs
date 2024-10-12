@@ -19,9 +19,18 @@ namespace EduToyRent.Repository.Repositories
             _context = context;
         }
 
-        public async Task<Cart> GetByAccountIdAsync(int accountId)
+        public async Task<List<Cart>> GetByAccountIdAsync(int accountId)
         {
-            return await _context.Carts.FirstOrDefaultAsync(c => c.AccountId == accountId);
+            return await _context.Carts.Where(c => c.AccountId == accountId).ToListAsync();
+        }
+
+        public async Task<Cart> GetRentCart(int accountId)
+        {
+            return await _context.Carts.FirstOrDefaultAsync(c => c.AccountId == accountId && c.IsRental == true);
+        }
+        public async Task<Cart> GetSaleCart(int accountId)
+        {
+            return await _context.Carts.FirstOrDefaultAsync(c => c.AccountId == accountId && c.IsRental == false);
         }
 
         public async Task<Cart> AddCartAsync(Cart cart) 

@@ -30,21 +30,31 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> AddItemToCart(GetCartRequest request, int accountId)
         {
 
-			Toy existingToy = await _unitOfWork.ToyRepository.GetByIdAsync(request.toyId);
-			if (existingToy == null) return Result.Failure(ToyErrors.ToyIsNull);
+            Toy toy = await _unitOfWork.ToyRepository.GetByIdAsync(request.toyId);
+            if (toy == null) return Result.Failure(ToyErrors.ToyIsNull);
 
-            Cart? cart = await _unitOfWork.CartRepository.GetByAccountIdAsync(accountId);
-            if (cart == null) 
+            var carts = await _unitOfWork.CartRepository.GetByAccountIdAsync(accountId);
+            if (carts == null) 
             {
-                cart = new()
+                Cart cartrent = new()
                 {
                     AccountId = accountId,
+                    IsRental = true,
                 };
-                await _unitOfWork.CartRepository.AddAsync(cart);
+                await _unitOfWork.CartRepository.AddAsync(cartrent);
+                Cart cartsale = new()
+                {
+                    AccountId = accountId,
+                    IsRental = false,
+                };
+                await _unitOfWork.CartRepository.AddAsync(cartsale);
                 await _unitOfWork.SaveAsync();
             }
-
-            CartItem? item = await _unitOfWork.CartItemRepository.GetAsync(request.toyId);
+            Cart cart = new Cart();
+            if (toy.IsRental)
+                cart = await _unitOfWork.CartRepository.GetRentCart(accountId);
+            cart = await _unitOfWork.CartRepository.GetSaleCart(accountId);
+            CartItem? item = await _unitOfWork.CartItemRepository.GetCartItem(request.toyId, cart.CartId);
             if (item == null)
             { // add
                 item = new()
@@ -65,9 +75,12 @@ namespace EduToyRent.Service.Services
         }
 
 
-        public async Task<dynamic> GetCart(int accountId)
+        public async Task<dynamic> GetCart(int accountId, bool isRent)
         {
-			Cart cart = await _unitOfWork.CartRepository.GetByAccountIdAsync(accountId);
+            Cart cart = new Cart();
+            if(isRent)
+                cart = await _unitOfWork.CartRepository.GetRentCart(accountId);
+            cart = await _unitOfWork.CartRepository.GetSaleCart(accountId);
 
 			if (cart == null)
 			{

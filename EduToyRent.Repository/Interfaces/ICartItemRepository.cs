@@ -5,7 +5,7 @@ namespace EduToyRent.DAL.Interfaces
 {
     public interface ICartItemRepository : IRepository<CartItem>
     {
-        Task<CartItem?> GetAsync(int toyId);
+        Task<CartItem?> GetCartItem(int toyId, int cartId);
         Task<bool> DeleteAsync(List<int> itemIdList);
 		Task<List<CartItem>?> GetByCartIdAsync(int cartId);
 

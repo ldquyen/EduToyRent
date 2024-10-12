@@ -5,6 +5,7 @@ using EduToyRent.Service.Common;
 using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.CartDTO;
 using EduToyRent.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,14 +23,15 @@ namespace EduToyRent.API.Controllers
 		{
 			_cartService = cartService;
 		}
-
-		[HttpGet("get-cart")]
-		public async Task<IActionResult> GetCart()
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("rental-cart")]
+		public async Task<IActionResult> GetCartForRent()
 		{
 			try
 			{
 				CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-				Result response = await _cartService.GetCart(currentUserObject.AccountId);
+				Result response = await _cartService.GetCart(currentUserObject.AccountId, false);
 				if(response.IsSuccess) return Ok(response);
 				return BadRequest(response);
 			}
@@ -39,8 +41,26 @@ namespace EduToyRent.API.Controllers
 			}
 			
 		}
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("sale-cart")]
+        public async Task<IActionResult> GetCartForSale()
+        {
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                Result response = await _cartService.GetCart(currentUserObject.AccountId, true);
+                if (response.IsSuccess) return Ok(response);
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
 
-		[HttpPost("add-item-to-cart")]
+        }
+
+        [HttpPost("add-item-to-cart")]
 		public async Task<IActionResult> AddItemToCart([FromForm] GetCartRequest request)
 		{
 			try
