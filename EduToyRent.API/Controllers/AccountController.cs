@@ -129,8 +129,8 @@ namespace EduToyRent.API.Controllers
         }
 
 
-        [Authorize(Policy = "StaffOnly")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Policy = "StaffOnly")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> GetViewAll(int page = 1 )
         {
