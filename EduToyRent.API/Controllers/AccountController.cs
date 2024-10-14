@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EduToyRent.API.Helper;
 using Google.Apis.Upload;
+using EduToyRent.Service.DTOs.ForgotPasswordDTO;
+using EduToyRent.Service.Common;
 
 
 namespace EduToyRent.API.Controllers
@@ -170,6 +172,32 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+		[HttpPost("forgot-password")]
+		[AllowAnonymous]
+		public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto request)
+		{
+			if (!ModelState.IsValid) 
+				return BadRequest(ModelState); 
+
+			Result result = await _accountService.SendPasswordResetOTP(request);
+
+			if (result.IsFailure) return StatusCode(500, result.Error);
+			return Ok();
+		}
+
+		[HttpPost("reset-password")]
+		[AllowAnonymous]
+		public async Task<IActionResult> ResetPassword(ResetPasswordDto request)
+		{
+			if(!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			Result result = await _accountService.ResetPasswordUsingOTP(request);
+
+			if (result.IsFailure) return StatusCode(500, result.Error);
+			return Ok();
+		}
 
     }
 }
