@@ -54,14 +54,15 @@ namespace EduToyRent.Service.Services
                     Quantity = request.quantity
                 };
                 await _unitOfWork.CartItemRepository.AddAsync(item);
-                await _unitOfWork.SaveAsync();
-                return Result.Success();
             }
-            //update
-            item.Quantity += request.quantity;
-
-            await _unitOfWork.SaveAsync();
-            return Result.Success();
+			else
+			{
+				//update
+				item.Quantity += request.quantity;
+				await _unitOfWork.CartItemRepository.UpdateAsync(item);
+			}
+			await _unitOfWork.SaveAsync();
+			return Result.Success();
         }
 
 

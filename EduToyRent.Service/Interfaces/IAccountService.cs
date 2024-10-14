@@ -1,5 +1,6 @@
 ﻿using EduToyRent.DAL.Entities;
 using EduToyRent.Service.DTOs.AccountDTO;
+using EduToyRent.Service.DTOs.ForgotPasswordDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,8 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> BanAccount(int accountDTO);
 
         Task<dynamic> SignUpAccountToySupplier(SignupAccountDTO signupAccountDTO);
-    }
+		Task<dynamic> SendPasswordResetOTP(ForgotPasswordDto request);
+		Task<dynamic> ResetPasswordUsingOTP(ResetPasswordDto request);
+
+	}
 }

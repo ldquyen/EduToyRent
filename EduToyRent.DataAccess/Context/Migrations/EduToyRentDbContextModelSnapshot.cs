@@ -292,11 +292,9 @@ namespace EduToyRent.DataAccess.Context.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Shipper")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShipperPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddress")
@@ -706,6 +704,30 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasIndex("ToyId");
 
                     b.ToTable("Report");
+                });
+
+            modelBuilder.Entity("EduToyRent.DataAccess.Entities.ResetPasswordOTP", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OTP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("expires")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ResetPasswordOTP");
                 });
 
             modelBuilder.Entity("EduToyRent.DataAccess.Entities.StatusOrder", b =>
