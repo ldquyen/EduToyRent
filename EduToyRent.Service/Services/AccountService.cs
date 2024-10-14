@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Identity.Client;
 
 namespace EduToyRent.Service.Services
 {
@@ -38,8 +39,18 @@ namespace EduToyRent.Service.Services
             {
                 AccountId = account.AccountId
             };
-            await _unitOfWork.CartRepository.AddAsync(cart);
-            await _unitOfWork.SaveAsync();
+            Cart cartrent = new()
+            {
+                AccountId = account.AccountId,
+                IsRental = true,
+            };
+            await _unitOfWork.CartRepository.AddCartAsync(cartrent);
+            Cart cartsale = new()
+            {
+                AccountId = account.AccountId,
+                IsRental = false,
+            };
+            await _unitOfWork.CartRepository.AddCartAsync(cartsale);
             return Result.Success();
         }
         public async Task<dynamic> UpdateProfile(EditAccountProfileDTO editAccountProfileDTO, CurrentUserObject currentUserObject)

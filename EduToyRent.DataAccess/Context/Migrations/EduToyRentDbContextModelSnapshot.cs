@@ -151,8 +151,7 @@ namespace EduToyRent.DataAccess.Context.Migrations
 
                     b.HasKey("CartId");
 
-                    b.HasIndex("AccountId")
-                        .IsUnique();
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Cart");
                 });
@@ -757,8 +756,8 @@ namespace EduToyRent.DataAccess.Context.Migrations
             modelBuilder.Entity("EduToyRent.DAL.Entities.Cart", b =>
                 {
                     b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
-                        .WithOne("Cart")
-                        .HasForeignKey("EduToyRent.DAL.Entities.Cart", "AccountId")
+                        .WithMany("Carts")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -953,8 +952,7 @@ namespace EduToyRent.DataAccess.Context.Migrations
                 {
                     b.Navigation("AccountVouchers");
 
-                    b.Navigation("Cart")
-                        .IsRequired();
+                    b.Navigation("Carts");
 
                     b.Navigation("Orders");
 

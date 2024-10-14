@@ -24,20 +24,19 @@ namespace EduToyRent.Repository.Repositories
             return await _context.Carts.Where(c => c.AccountId == accountId).ToListAsync();
         }
 
-        public async Task<Cart> GetRentCart(int accountId)
+        public async Task<Cart?> GetRentCart(int accountId)
         {
             return await _context.Carts.FirstOrDefaultAsync(c => c.AccountId == accountId && c.IsRental == true);
         }
-        public async Task<Cart> GetSaleCart(int accountId)
+        public async Task<Cart?> GetSaleCart(int accountId)
         {
             return await _context.Carts.FirstOrDefaultAsync(c => c.AccountId == accountId && c.IsRental == false);
         }
 
-        public async Task<Cart> AddCartAsync(Cart cart) 
+        public async Task AddCartAsync(Cart cart) 
         {
             var result = await _context.Carts.AddAsync(cart);
             await _context.SaveChangesAsync();
-            return cart;
         }
     }
 }
