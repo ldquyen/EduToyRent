@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.Repository.Interfaces
 {
-    public interface IOrderRepository : IRepository<Order>
+    public interface IVoucherRepository : IRepository<Voucher>
     {
-       
     }
 }

@@ -10,6 +10,7 @@ using EduToyRent.Service.DTOs.RequestFormDTO;
 using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.DAL.Entities;
 using EduToyRent.Service.DTOs.OrderDTO;
+using EduToyRent.Service.DTOs.CartDTO;
 
 namespace EduToyRent.Service.Mappings
 {
@@ -22,9 +23,9 @@ namespace EduToyRent.Service.Mappings
                 .ForMember(x => x.AccountPassword, opt => opt.MapFrom(x => x.Password));
 
             CreateMap<Account, CurrentUserObject>().ReverseMap();
-
             CreateMap<SignupAccountDTO, Account>();
             CreateMap<ProfileDTO, Account>().ReverseMap();
+            CreateMap<Account, AccountDTO>();
 
             //toy
             CreateMap<CreateRentalToyDTO, Toy>();
@@ -34,8 +35,8 @@ namespace EduToyRent.Service.Mappings
             CreateMap<Toy, ViewToyForSaleDTO>().ReverseMap();
             CreateMap<Toy, ViewToyForRentDetailDTO>().ReverseMap();
             CreateMap<Toy, ViewToyForSaleDetailDTO>().ReverseMap();
-            //CreateMap<Toy, ResponseRentalToyDTO>();
-            //CreateMap<Toy, ResponseSaleToyDTO>();
+            CreateMap<Toy, ResponseRentalToyDTO>();
+            CreateMap<Toy, ResponseSaleToyDTO>();
 
             CreateMap<CreateNewCategoryDTO, Category>();
 
@@ -48,6 +49,9 @@ namespace EduToyRent.Service.Mappings
 
             //order
             CreateMap<CreateOrderDTO, Order>();
+
+            //cart
+            CreateMap<CartItem, GetCartResponse>();
         }
     }
 }

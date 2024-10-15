@@ -99,19 +99,19 @@ namespace EduToyRent.API.Controllers
             return Ok(requests);
         }
 
-
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("update-status")]
         public async Task<IActionResult> UpdateRequestStatus([FromBody] UpdateRequestDTO updateRequestDTO)
         {
-            //CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            int staffId = 3;
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var updateResult = await _requestFromService.UppdateRequestStatus(updateRequestDTO, staffId);
+            var updateResult = await _requestFromService.UppdateRequestStatus(updateRequestDTO, currentUserObject.AccountId);
 
             if (!updateResult.IsSuccess)
                 return BadRequest(updateResult);

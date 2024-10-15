@@ -14,6 +14,7 @@ namespace EduToyRent.DAL.Entities
         [Key]
         public int CartId { get; set; }
         public int AccountId { get; set; }
+        public bool IsRental { get; set; }
 
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }

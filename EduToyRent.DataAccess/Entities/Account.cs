@@ -25,7 +25,7 @@ namespace EduToyRent.DAL.Entities
 
         [ForeignKey("RoleId")]
         public virtual Role Role { get; set; }
-        public virtual Cart Cart { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Toy> Toys { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }

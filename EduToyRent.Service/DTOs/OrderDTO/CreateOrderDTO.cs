@@ -17,21 +17,9 @@ namespace EduToyRent.Service.DTOs.OrderDTO
         public string ReceivePhoneNumber { get; set; }
         [Required]
         public bool IsRentalOrder { get; set; }
+        [Required]
+        public List<int> ToyList { get; set; }
+        
     }
 }
 
-/*
- public int OrderId { get; set; }
-        public int AccountId { get; set; }
-        public int StatusId { get; set; }
-        public bool PaymentStatus { get; set; }
-        public string ShippingAddress { get; set; }
-        public decimal TotalMoney { get; set; }
-        public int? Discount { get; set; }
-        public decimal FinalMoney { get; set; }
-        public DateTime OrderDate { get; set; }
-        public bool IsRentalOrder { get; set; }
-        public string ReceivePhoneNumber { get; set; }
-        public string Shipper { get; set; }
-        public string ShipperPhone { get; set; }
- */
