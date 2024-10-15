@@ -12,7 +12,7 @@ namespace EduToyRent.Repository.Interfaces
         Task<List<Cart>> GetByAccountIdAsync(int accountId);    
         Task<Cart> GetRentCart(int accountId);
         Task<Cart> GetSaleCart(int accountId);
-        Task<Cart> AddCartAsync(Cart cart);
+        Task AddCartAsync(Cart cart);
 
 
 

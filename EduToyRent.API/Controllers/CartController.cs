@@ -31,7 +31,7 @@ namespace EduToyRent.API.Controllers
 			try
 			{
 				CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-				Result response = await _cartService.GetCart(currentUserObject.AccountId, false);
+				Result response = await _cartService.GetCart(currentUserObject.AccountId, true);
 				if(response.IsSuccess) return Ok(response);
 				return BadRequest(response);
 			}
@@ -49,7 +49,7 @@ namespace EduToyRent.API.Controllers
             try
             {
                 CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-                Result response = await _cartService.GetCart(currentUserObject.AccountId, true);
+                Result response = await _cartService.GetCart(currentUserObject.AccountId, false);
                 if (response.IsSuccess) return Ok(response);
                 return BadRequest(response);
             }
