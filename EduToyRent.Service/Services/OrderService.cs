@@ -26,10 +26,13 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
         {
-            if (!await _unitOfWork.ToyRepository.CheckExistToy(createOrderDTO.ToyList))
-                return Result.Failure(ToyErrors.NotExistToy);   // neu bao loi nay thi chinh lai dong 29
-            if (!await _unitOfWork.ToyRepository.CheckSameTypeOfToy(createOrderDTO.ToyList, createOrderDTO.IsRentalOrder))
-                return Result.Failure(ToyErrors.NotSameToy);
+            var toyIds = createOrderDTO.ToyList.Select(x => x.ToyId).ToList();
+            if (!await _unitOfWork.ToyRepository.CheckExistToy(toyIds))
+                return Result.Failure(ToyErrors.NotExistToy);
+            if (createOrderDTO.ToyList == null)
+            {
+                return Result.Failure(ToyErrors.NotExistToy);
+            }
             if (createOrderDTO.IsRentalOrder)
             {
                 if (string.IsNullOrEmpty(createOrderDTO.RentalDate.ToString())
@@ -48,122 +51,104 @@ namespace EduToyRent.Service.Services
             order.OrderDate = DateTime.Now;
             await _unitOfWork.OrderRepository.AddAsync(order);
             await _unitOfWork.SaveAsync();
-            int id = order.OrderId; 
-            // => tiếp tục tạo orderDetail
-            await CreateOrderDetailForRent(createOrderDTO, id);
-            return Result.Success();
-        }
-        //
-        private async Task<bool> CreateOrderDetailForRent(CreateOrderDTO createOrderDTO, int orderId)
-        {
-            foreach (var toy in createOrderDTO.ToyList)
+            int id = order.OrderId;
+
+            if (createOrderDTO.IsRentalOrder)
             {
-                OrderDetail od = new OrderDetail
+                if (await CreateOrderDetailForRent(createOrderDTO, id))
                 {
-                    OrderId = orderId,
-                    ToyId = toy,
-                    Quantity = 1,
-                    Price = 10,
-                    IsRental = true,
-                    RentalDate = createOrderDTO.RentalDate,
-                    ReturnDate = createOrderDTO.ReturnDate,
-                    RentalPrice = 100,
-                };
-                await _unitOfWork.OrderDetailRepository.AddAsync(od);
-                await _unitOfWork.SaveAsync();
-            }
-            return true;
-        }
-
-
-
-        //
-        public async Task<dynamic> CreateRentOrderDetail(CreateRentOrderDetailDTO dto)
-        {
-            var orderDetails = await _unitOfWork.OrderRepository.GetByOrderIdAsync(dto.OrderId);
-            if (orderDetails == null)
-            {
-                return Result.Failure(ToyErrors.NotExistToy);
-            }
-            var totalMoney = 0m;
-
-            foreach (var orderDetail in orderDetails)
-            {
-                var toy = await _unitOfWork.ToyRepository.GetByIdAsync(orderDetail.ToyId);
-                if (toy == null) return Result.Failure(new Error("ToyNotFound", "Toy not found!"));
-
-                var rentalDuration = (dto.ReturnDate - dto.RentalDate)?.Days ?? 0;
-
-                decimal rentalPrice = 0;
-
-                if (rentalDuration <= 6)
-                {
-                    rentalPrice = toy.RentPricePerDay.GetValueOrDefault() * rentalDuration;
-                }
-                else if (rentalDuration == 7)
-                {
-                    rentalPrice = toy.RentPricePerWeek.GetValueOrDefault();
-                }
-                else if (rentalDuration <= 14)
-                {
-                    rentalPrice = toy.RentPricePerWeek.GetValueOrDefault() + (toy.RentPricePerDay.GetValueOrDefault() * (rentalDuration - 7));
+                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 10);
+                    foreach (var odDetail in odList)
+                    {
+                        odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
+                        await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
+                    }
+                    await _unitOfWork.SaveAsync();
+                    order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
                 }
                 else
-                {
-                    rentalPrice = toy.RentPricePerTwoWeeks.GetValueOrDefault() + (toy.RentPricePerWeek.GetValueOrDefault() * ((rentalDuration - 14) / 7)) + (toy.RentPricePerDay.GetValueOrDefault() * ((rentalDuration - 14) % 7));
-                }
-
-                totalMoney += rentalPrice * orderDetail.Quantity;
-
-                var newOrderDetail = new OrderDetail
-                {
-                    OrderId = dto.OrderId,
-                    ToyId = orderDetail.ToyId,
-                    Quantity = orderDetail.Quantity,
-                    Price = rentalPrice,
-                    IsRental = true,
-                    RentalDate = dto.RentalDate,
-                    ReturnDate = dto.ReturnDate
-                };
-
-                await _unitOfWork.OrderRepository.AddOrderDetailAsync(newOrderDetail);
+                    return Result.Failure(ToyErrors.CannotCreateToyRentOrder);
             }
-
-            var order = await _unitOfWork.OrderRepository.GetByIdAsync(dto.OrderId);
-            order.TotalMoney += totalMoney;
-            await _unitOfWork.SaveAsync();
-            return Result.Success();
-        }
-
-        public async Task<dynamic> CreateSaleOrderDetail(CreateSaleOrderDetailDTO dto)
-        {
-            var orderDetails = await _unitOfWork.OrderRepository.GetByOrderIdAsync(dto.OrderId);
-            var totalMoney = 0m;
-
-            foreach (var orderDetail in orderDetails)
+            else if (!createOrderDTO.IsRentalOrder)
             {
-                var toy = await _unitOfWork.ToyRepository.GetByIdAsync(orderDetail.ToyId);
-                if (toy == null) return Result.Failure(new Error("ToyNotFound", "Toy not found!"));
-
-                totalMoney += toy.BuyPrice.GetValueOrDefault() * orderDetail.Quantity;
-
-                var newOrderDetail = new OrderDetail
+                if (await CreateOrderDetailForSale(createOrderDTO, id))
                 {
-                    OrderId = dto.OrderId,
-                    ToyId = orderDetail.ToyId,
-                    Quantity = orderDetail.Quantity,
-                    Price = toy.BuyPrice.GetValueOrDefault(),
-                    IsRental = false
-                };
-
-                await _unitOfWork.OrderRepository.AddOrderDetailAsync(newOrderDetail);
+                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 10);
+                    foreach (var odDetail in odList)
+                    {
+                        odDetail.Price = await _unitOfWork.ToyRepository.GetMoneySaleByToyId(odDetail.ToyId, odDetail.Quantity);
+                        await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
+                    }
+                    await _unitOfWork.SaveAsync();
+                    order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
+                }
+                else
+                    return Result.Failure(ToyErrors.CannotCreateToySaleOrder);
             }
-
-            var order = await _unitOfWork.OrderRepository.GetByIdAsync(dto.OrderId);
-            order.TotalMoney += totalMoney;
-            await _unitOfWork.SaveAsync();
-            return Result.Success();
+            else
+                return Result.Failure(ToyErrors.CannotCreateToyOrder);
         }
+
+        private async Task<bool> CreateOrderDetailForRent(CreateOrderDTO createOrderDTO, int orderId)
+        {
+            if (createOrderDTO.ToyList != null)
+            {
+                foreach (var toy in createOrderDTO.ToyList)
+                {
+                    OrderDetail od = new OrderDetail
+                    {
+                        OrderId = orderId,
+                        ToyId = toy.ToyId,
+                        Quantity = toy.Quantity,
+                        Price = 0,
+                        IsRental = true,
+                        RentalDate = createOrderDTO.RentalDate,
+                        ReturnDate = createOrderDTO.ReturnDate,
+                        RentalPrice = 0,
+                    };
+                    await _unitOfWork.OrderDetailRepository.AddAsync(od);
+                }
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            else
+                return false;
+        }
+        //await _unitOfWork.ToyRepository.GetMoneyRentByToyId(toy.ToyId, toy.Quantity,createOrderDTO.RentalDate, createOrderDTO.ReturnDate)
+        private async Task<bool> CreateOrderDetailForSale(CreateOrderDTO createOrderDTO, int orderId)
+        {
+            if (createOrderDTO.ToyList != null)
+            {
+                foreach (var toy in createOrderDTO.ToyList)
+                {
+                    OrderDetail od = new OrderDetail
+                    {
+                        OrderId = orderId,
+                        ToyId = toy.ToyId,
+                        Quantity = toy.Quantity,
+                        Price = 0,
+                        IsRental = false,
+                        RentalDate = createOrderDTO.RentalDate,
+                        ReturnDate = createOrderDTO.ReturnDate,
+                        RentalPrice = 0,
+                    };
+                    await _unitOfWork.OrderDetailRepository.AddAsync(od);
+                }
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            else
+                return false;
+        }
+
+
+
 
         public async Task<dynamic> GetAllOrderForStaff(int page)
         {
@@ -175,16 +160,16 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> ConfirmOrder(ConfirmOrderDTO confirmOrderDTO)
         {
             Order order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == confirmOrderDTO.OrderId);
-            if(order == null) return Result.Failure(OrderErrors.OrderIsNull);
-            if(confirmOrderDTO.StatusId == 9)
+            if (order == null) return Result.Failure(OrderErrors.OrderIsNull);
+            if (confirmOrderDTO.StatusId == 9)
             {
                 order.StatusId = confirmOrderDTO.StatusId;
                 await _unitOfWork.SaveAsync();
                 return Result.Success();
             }
-            if(confirmOrderDTO.StatusId == 2)
+            if (confirmOrderDTO.StatusId == 2)
             {
-                if(string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
+                if (string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
                     return Result.Failure(OrderErrors.ShiperInfo);
                 order.Shipper = confirmOrderDTO.Shipper;
                 order.ShipperPhone = confirmOrderDTO.ShipperPhone;

@@ -20,7 +20,7 @@ namespace EduToyRent.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromForm] CreateOrderDTO createOrderDTO)
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO createOrderDTO)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
@@ -29,33 +29,7 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("rental-order-detail")]
-        public async Task<IActionResult> CreateRentOrderDetail([FromForm] CreateRentOrderDetailDTO dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await _orderService.CreateRentOrderDetail(dto);
-
-            if (result.IsSuccess)
-                return Ok(result);
-
-            return BadRequest(result.Errors);
-        }
-
-        [HttpPost("CreateSaleOrderDetail")]
-        public async Task<IActionResult> CreateSaleOrderDetail([FromForm] CreateSaleOrderDetailDTO dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await _orderService.CreateSaleOrderDetail(dto);
-
-            if (result.IsSuccess)
-                return Ok(result);
-
-            return BadRequest(result.Errors);
-        }
+        
 
         [HttpGet]
         public async Task<IActionResult> GetOrderForStaff(int page = 1)

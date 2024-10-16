@@ -21,5 +21,7 @@ namespace EduToyRent.Repository.Interfaces
         Task<IEnumerable<Toy>> SortToysForSale(string sortBy, int pageIndex, int pageSize);
         Task<bool> CheckSameTypeOfToy(List<int> toyIds, bool isRent);
         Task<bool> CheckExistToy(List<int> toyIds);
+        Task<decimal> GetMoneyRentByToyId(int toyId,int quantity, DateTime? RentalDate, DateTime? ReturnDate);
+        Task<decimal> GetMoneySaleByToyId(int toyId, int quantity);
     }
 }
