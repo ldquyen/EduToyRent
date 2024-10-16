@@ -49,7 +49,10 @@ namespace EduToyRent.Service.Mappings
 
             //order
             CreateMap<CreateOrderDTO, Order>();
-
+            CreateMap<CreateRentOrderDetailDTO, OrderDetail>()
+            .ForMember(dest => dest.RentalDate, opt => opt.MapFrom(src => src.RentalDate))
+            .ForMember(dest => dest.ReturnDate, opt => opt.MapFrom(src => src.ReturnDate));
+            CreateMap<CreateSaleOrderDetailDTO, OrderDetail>();
             //cart
             CreateMap<CartItem, GetCartResponse>();
         }
