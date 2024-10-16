@@ -19,7 +19,22 @@ namespace EduToyRent.Service.DTOs.OrderDTO
         public bool IsRentalOrder { get; set; }
         [Required]
         public List<int> ToyList { get; set; }
-        
+        public DateTime? RentalDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
+    }
+    public class CreateRentOrderDetailDTO
+    {
+        [Required]
+        public int OrderId { get; set; }
+        [Required]
+        public DateTime? RentalDate { get; set; }
+        [Required]
+        public DateTime? ReturnDate { get; set; }
+    }
+    public class CreateSaleOrderDetailDTO
+    {
+        [Required]
+        public int OrderId { get; set; }
     }
 }
 
