@@ -25,13 +25,18 @@ namespace EduToyRent.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
             Result result = await _orderService.CreateOrder(currentUserObject, createOrderDTO);
-            if(result.IsSuccess) return Ok(result);
+            if (result.IsSuccess) return Ok(result);
             return BadRequest(result);
         }
 
-        
+        [HttpGet("/user/{orderId}")]
+        public async Task<IActionResult> GetOrderForUser(int orderId)
+        {
+            Result result = await _orderService.GetOrderDetailForUser(orderId);
+            return Ok(result);
+        }
 
-        [HttpGet]
+        [HttpGet("/staff")]
         public async Task<IActionResult> GetOrderForStaff(int page = 1)
         {
             Result result = await _orderService.GetAllOrderForStaff(page);

@@ -120,7 +120,7 @@ namespace EduToyRent.Service.Services
             else
                 return false;
         }
-        //await _unitOfWork.ToyRepository.GetMoneyRentByToyId(toy.ToyId, toy.Quantity,createOrderDTO.RentalDate, createOrderDTO.ReturnDate)
+        
         private async Task<bool> CreateOrderDetailForSale(CreateOrderDTO createOrderDTO, int orderId)
         {
             if (createOrderDTO.ToyList != null)
@@ -147,7 +147,23 @@ namespace EduToyRent.Service.Services
                 return false;
         }
 
-
+        public async Task<dynamic> GetOrderDetailForUser( int orderId)
+        {
+            var order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
+            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderId, includeProperties: "Toy", 1 , 20);
+            if (order.IsRentalOrder)
+            {
+                var responseOrderDTO = _mapper.Map<ResponseOrderRentForUserDTO>(order);
+                responseOrderDTO.OrdersDetail = _mapper.Map<List<ODRentDTO>>(odList);
+                return Result.SuccessWithObject(responseOrderDTO);
+            }
+            else
+            {
+                var responseOrderDTO = _mapper.Map<ResponseOrderSaleForUserDTO>(order);
+                responseOrderDTO.OrdersDetail = _mapper.Map<List<ODSaleDTO>>(odList);
+                return Result.SuccessWithObject(responseOrderDTO);
+            }
+        }
 
 
         public async Task<dynamic> GetAllOrderForStaff(int page)
