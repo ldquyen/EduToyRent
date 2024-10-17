@@ -67,7 +67,7 @@ namespace EduToyRent.Service.Services
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
                     await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
-                    return Result.Success();
+                    return Result.SuccessWithObject(id);
                 }
                 else
                     return Result.Failure(ToyErrors.CannotCreateToyRentOrder);
@@ -86,7 +86,7 @@ namespace EduToyRent.Service.Services
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
                     await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
-                    return Result.Success();
+                    return Result.SuccessWithObject(id);
                 }
                 else
                     return Result.Failure(ToyErrors.CannotCreateToySaleOrder);
