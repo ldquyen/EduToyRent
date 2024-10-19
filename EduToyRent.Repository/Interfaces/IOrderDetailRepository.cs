@@ -10,5 +10,7 @@ namespace EduToyRent.Repository.Interfaces
     public interface IOrderDetailRepository : IRepository<OrderDetail>
     {
         Task<List<OrderDetail>> GetOrderForSupplier(int supplierId);
+        Task<decimal> GetTotalMoney(int orderId);
+        Task<List<OrderDetail>> GetOrderDetailsByOrderId(int orderid);
     }
 }

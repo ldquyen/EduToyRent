@@ -9,6 +9,7 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IOrderRepository : IRepository<Order>
     {
-       
+        Task<IEnumerable<OrderDetail>> GetByOrderIdAsync(int orderId);
+        Task AddOrderDetailAsync(OrderDetail orderDetail);
     }
 }

@@ -52,7 +52,6 @@ namespace EduToyRent.Service.Services
             {
                 return Result.Failure(LoginErrors.InvalidAccount);
             }
-            
         }
 
 

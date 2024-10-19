@@ -26,11 +26,21 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
         {
-            if (!await _unitOfWork.ToyRepository.CheckExistToy(createOrderDTO.ToyList))
-                return Result.Failure(ToyErrors.NotExistToy);   // neu bao loi nay thi chinh lai dong 29
-            if (!await _unitOfWork.ToyRepository.CheckSameTypeOfToy(createOrderDTO.ToyList, createOrderDTO.IsRentalOrder))
-                return Result.Failure(ToyErrors.NotSameToy);
-             
+            var toyIds = createOrderDTO.ToyList.Select(x => x.ToyId).ToList();
+            if (!await _unitOfWork.ToyRepository.CheckExistToy(toyIds))
+                return Result.Failure(ToyErrors.NotExistToy);
+            if (createOrderDTO.ToyList == null)
+            {
+                return Result.Failure(ToyErrors.NotExistToy);
+            }
+            if (createOrderDTO.IsRentalOrder)
+            {
+                if (string.IsNullOrEmpty(createOrderDTO.RentalDate.ToString())
+                    || string.IsNullOrEmpty(createOrderDTO.ReturnDate.ToString()))
+                {
+                    return Result.Failure(ToyErrors.RentalDateToyNull);
+                }
+            }
             var order = _mapper.Map<Order>(createOrderDTO);
             order.AccountId = currentUserObject.AccountId;
             order.StatusId = 1;
@@ -41,9 +51,120 @@ namespace EduToyRent.Service.Services
             order.OrderDate = DateTime.Now;
             await _unitOfWork.OrderRepository.AddAsync(order);
             await _unitOfWork.SaveAsync();
-            int id = order.OrderId; // => tiếp tục tạo orderDetail
-            return Result.Success();
+            int id = order.OrderId;
+
+            if (createOrderDTO.IsRentalOrder)
+            {
+                if (await CreateOrderDetailForRent(createOrderDTO, id))
+                {
+                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 10);
+                    foreach (var odDetail in odList)
+                    {
+                        odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
+                        await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
+                    }
+                    await _unitOfWork.SaveAsync();
+                    order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    await _unitOfWork.SaveAsync();
+                    return Result.SuccessWithObject(id);
+                }
+                else
+                    return Result.Failure(ToyErrors.CannotCreateToyRentOrder);
+            }
+            else if (!createOrderDTO.IsRentalOrder)
+            {
+                if (await CreateOrderDetailForSale(createOrderDTO, id))
+                {
+                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 10);
+                    foreach (var odDetail in odList)
+                    {
+                        odDetail.Price = await _unitOfWork.ToyRepository.GetMoneySaleByToyId(odDetail.ToyId, odDetail.Quantity);
+                        await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
+                    }
+                    await _unitOfWork.SaveAsync();
+                    order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    await _unitOfWork.SaveAsync();
+                    return Result.SuccessWithObject(id);
+                }
+                else
+                    return Result.Failure(ToyErrors.CannotCreateToySaleOrder);
+            }
+            else
+                return Result.Failure(ToyErrors.CannotCreateToyOrder);
         }
+
+        private async Task<bool> CreateOrderDetailForRent(CreateOrderDTO createOrderDTO, int orderId)
+        {
+            if (createOrderDTO.ToyList != null)
+            {
+                foreach (var toy in createOrderDTO.ToyList)
+                {
+                    OrderDetail od = new OrderDetail
+                    {
+                        OrderId = orderId,
+                        ToyId = toy.ToyId,
+                        Quantity = toy.Quantity,
+                        Price = 0,
+                        IsRental = true,
+                        RentalDate = createOrderDTO.RentalDate,
+                        ReturnDate = createOrderDTO.ReturnDate,
+                        RentalPrice = 0,
+                    };
+                    await _unitOfWork.OrderDetailRepository.AddAsync(od);
+                }
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            else
+                return false;
+        }
+        
+        private async Task<bool> CreateOrderDetailForSale(CreateOrderDTO createOrderDTO, int orderId)
+        {
+            if (createOrderDTO.ToyList != null)
+            {
+                foreach (var toy in createOrderDTO.ToyList)
+                {
+                    OrderDetail od = new OrderDetail
+                    {
+                        OrderId = orderId,
+                        ToyId = toy.ToyId,
+                        Quantity = toy.Quantity,
+                        Price = 0,
+                        IsRental = false,
+                        RentalDate = createOrderDTO.RentalDate,
+                        ReturnDate = createOrderDTO.ReturnDate,
+                        RentalPrice = 0,
+                    };
+                    await _unitOfWork.OrderDetailRepository.AddAsync(od);
+                }
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public async Task<dynamic> GetOrderDetailForUser( int orderId)
+        {
+            var order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
+            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderId, includeProperties: "Toy", 1 , 20);
+            if (order.IsRentalOrder)
+            {
+                var responseOrderDTO = _mapper.Map<ResponseOrderRentForUserDTO>(order);
+                responseOrderDTO.OrdersDetail = _mapper.Map<List<ODRentDTO>>(odList);
+                return Result.SuccessWithObject(responseOrderDTO);
+            }
+            else
+            {
+                var responseOrderDTO = _mapper.Map<ResponseOrderSaleForUserDTO>(order);
+                responseOrderDTO.OrdersDetail = _mapper.Map<List<ODSaleDTO>>(odList);
+                return Result.SuccessWithObject(responseOrderDTO);
+            }
+        }
+
 
         public async Task<dynamic> GetAllOrderForStaff(int page)
         {
@@ -55,16 +176,16 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> ConfirmOrder(ConfirmOrderDTO confirmOrderDTO)
         {
             Order order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == confirmOrderDTO.OrderId);
-            if(order == null) return Result.Failure(OrderErrors.OrderIsNull);
-            if(confirmOrderDTO.StatusId == 9)
+            if (order == null) return Result.Failure(OrderErrors.OrderIsNull);
+            if (confirmOrderDTO.StatusId == 9)
             {
                 order.StatusId = confirmOrderDTO.StatusId;
                 await _unitOfWork.SaveAsync();
                 return Result.Success();
             }
-            if(confirmOrderDTO.StatusId == 2)
+            if (confirmOrderDTO.StatusId == 2)
             {
-                if(string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
+                if (string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
                     return Result.Failure(OrderErrors.ShiperInfo);
                 order.Shipper = confirmOrderDTO.Shipper;
                 order.ShipperPhone = confirmOrderDTO.ShipperPhone;

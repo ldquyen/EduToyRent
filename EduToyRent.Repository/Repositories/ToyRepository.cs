@@ -140,5 +140,41 @@ namespace EduToyRent.Repository.Repositories
             return !hasInvalidToys;
 
         }
+
+        public async Task<decimal> GetMoneySaleByToyId(int toyId, int quantity)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            decimal totalSale = 0;
+            totalSale = (toy.BuyPrice ?? 0) * quantity;
+            return totalSale;
+        }
+
+        public async Task<decimal> GetMoneyRentByToyId(int toyId, int quantity, DateTime? rentalDate, DateTime? returnDate)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            int totalDays = (returnDate.Value - rentalDate.Value).Days;
+            decimal totalRent = 0;
+
+            if (totalDays < 7) 
+            {
+                totalRent = totalDays * (toy.RentPricePerDay ?? 0); // duoi 7
+            }else if(totalDays == 7)
+            {
+                totalRent = (toy.RentPricePerWeek ?? 0); // bang 7
+            }
+            else if (totalDays < 14) //duoi 2 tuan
+            {
+                totalRent = (toy.RentPricePerWeek ?? 0) + ((totalDays - 7) * (toy.RentPricePerDay ?? 0));
+            }
+            else if(totalDays == 14) // bang 2 tuan
+            {
+                totalRent = (toy.RentPricePerTwoWeeks ?? 0);
+            }
+            else // hon 2 tuan
+            {
+                totalRent = (toy.RentPricePerTwoWeeks ?? 0) + ((totalDays - 14) * (toy.RentPricePerDay ?? 0));
+            }
+            return totalRent * quantity;
+        }
     }
 }

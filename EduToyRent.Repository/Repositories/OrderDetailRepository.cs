@@ -22,5 +22,30 @@ namespace EduToyRent.Repository.Repositories
         {
             return await _context.OrderDetails.Where(x => x.Toy.SupplierId == supplierId).ToListAsync();
         }
+
+        public async Task<decimal> GetTotalMoney(int orderId)
+        {
+            var orderDetails = await _context.OrderDetails.Where(od => od.OrderId == orderId).ToListAsync();
+            if (orderDetails == null || orderDetails.Count == 0)
+                return 0;
+            decimal totalMoney = 0;
+            foreach (var orderDetail in orderDetails)
+            {
+                if (orderDetail.IsRental)
+                {
+                    totalMoney += orderDetail.RentalPrice ?? 0; 
+                }
+                else
+                {
+                    totalMoney += orderDetail.Price ;
+                }
+            }
+            return totalMoney;
+        }
+
+        public async Task<List<OrderDetail>> GetOrderDetailsByOrderId(int orderid)
+        {
+            return await _context.OrderDetails.Where(x => x.OrderId == orderid).ToListAsync();
+        }
     }
 }
