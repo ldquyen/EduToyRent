@@ -1,4 +1,5 @@
-﻿using EduToyRent.Service.DTOs.CategoryDTO;
+﻿using EduToyRent.DAL.Entities;
+using EduToyRent.Service.DTOs.CategoryDTO;
 using EduToyRent.Service.DTOs.VoucherDTO;
 using EduToyRent.Service.Interfaces;
 using EduToyRent.Service.Services;
@@ -56,6 +57,46 @@ namespace EduToyRent.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-        }       
+        }
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("assign-voucher-to-user")]
+        public async Task<IActionResult> GiveVoucherToAccount([FromForm] int accountid, [FromForm] int voucherid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _voucherService.GiveVoucherToAccount(accountid, voucherid);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("active-deactive-voucher")]
+        public async Task<IActionResult> ActiveDeactiveVoucher([FromForm] int voucherid, [FromForm] int flag)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _voucherService.ActiveDeactiveVoucher(voucherid, flag);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

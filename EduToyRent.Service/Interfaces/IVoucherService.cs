@@ -12,7 +12,6 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> CreateVoucher(CreateVoucherDTO createVoucherDTO);
         Task<dynamic> GetListVoucher();
         Task<dynamic> GiveVoucherToAccount(int accountid, int voucherid);
-
-
+        Task<dynamic> ActiveDeactiveVoucher(int voucherid, int flag);
     }
 }

@@ -8,6 +8,7 @@ namespace EduToyRent.Service.DTOs.VoucherDTO
 {
     public class ViewVoucherDTO
     {
+        public int VoucherId { get; set; }
         public string VoucherName { get; set; }
         public DateTime ExpiredDate { get; set; }
         public float Discount { get; set; }

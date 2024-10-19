@@ -4,6 +4,7 @@ using EduToyRent.Repository.Interfaces;
 using EduToyRent.Service.Common;
 using EduToyRent.Service.DTOs.CategoryDTO;
 using EduToyRent.Service.DTOs.VoucherDTO;
+using EduToyRent.Service.Exceptions;
 using EduToyRent.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreateVoucher(CreateVoucherDTO createVoucherDTO)
         {
-            var voucher = new Voucher() 
+            var voucher = new Voucher()
             {
                 VoucherName = createVoucherDTO.VoucherName,
                 CreatedDate = DateTime.Now,
@@ -47,9 +48,10 @@ namespace EduToyRent.Service.Services
             {
                 var dto = new ViewVoucherDTO
                 {
+                    VoucherId = voucher.VoucherId,
                     VoucherName = voucher.VoucherName,
                     Discount = voucher.Discount,
-                    ExpiredDate= voucher.ExpiredDate,
+                    ExpiredDate = voucher.ExpiredDate,
                     Quantity = voucher.Quantity,
                     IsActive = voucher.IsActive
                 };
@@ -60,15 +62,59 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> GiveVoucherToAccount(int accountid, int voucherid)
         {
-            var accountVoucher = new AccountVoucher()
+            var voucher = await _unitOfWork.VoucherRepository.GetByIdAsync(voucherid);
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(accountid);
+            if (voucher != null && account != null)
             {
-                AccountId = accountid,
-                VoucherId = voucherid,
-                IsUsed = false
-            };
-            await _unitOfWork.AccountVoucherRepository.AddAsync(accountVoucher);
-            await _unitOfWork.SaveAsync();
-            return Result.Success();
+                var accountVoucher = new AccountVoucher()
+                {
+                    AccountId = accountid,
+                    VoucherId = voucherid,
+                    IsUsed = false
+                };
+                var reducevoucher = await _unitOfWork.VoucherRepository.GetByIdAsync(voucherid);
+                reducevoucher.Used++;
+                await _unitOfWork.VoucherRepository.UpdateAsync(reducevoucher);
+                await _unitOfWork.AccountVoucherRepository.AddAsync(accountVoucher);
+                await _unitOfWork.SaveAsync();
+                return Result.Success();
+            }
+            else
+            {
+                return Result.Failure(VoucherErrors.InvalidAccountIdAndVoucherId);
+            }
+        }
+        public async Task<dynamic> ActiveDeactiveVoucher(int voucherid, int flag)
+        {
+            var voucher = await _unitOfWork.VoucherRepository.GetByIdAsync(voucherid);
+            if (voucher != null)
+            {
+                if (flag == 1 || flag == 0)
+                {
+                    if (flag == 0)
+                    {
+                        voucher.IsActive = false;
+                        await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
+                        await _unitOfWork.SaveAsync();
+                        return Result.Success();
+                    }
+                    else
+                    {
+                        voucher.IsActive = true;
+                        await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
+                        await _unitOfWork.SaveAsync();
+                        return Result.Success();
+                    }
+                }
+                else
+                {
+                    return Result.Failure(VoucherErrors.InvalidFlag);
+                }
+            }
+            else
+            {
+                return Result.Failure(VoucherErrors.InvalidVoucherId);
+            }
         }
     }
 }
