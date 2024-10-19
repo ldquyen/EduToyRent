@@ -723,53 +723,6 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasKey("StatusId");
 
                     b.ToTable("StatusOrder");
-
-                    b.HasData(
-                        new
-                        {
-                            StatusId = 1,
-                            StatusName = "Wating for approvement"
-                        },
-                        new
-                        {
-                            StatusId = 2,
-                            StatusName = "Prepare to ship"
-                        },
-                        new
-                        {
-                            StatusId = 3,
-                            StatusName = "Shipping"
-                        },
-                        new
-                        {
-                            StatusId = 4,
-                            StatusName = "Shipped"
-                        },
-                        new
-                        {
-                            StatusId = 5,
-                            StatusName = "Returned"
-                        },
-                        new
-                        {
-                            StatusId = 6,
-                            StatusName = "Returned because of reason"
-                        },
-                        new
-                        {
-                            StatusId = 7,
-                            StatusName = "Complete get toy"
-                        },
-                        new
-                        {
-                            StatusId = 8,
-                            StatusName = "Completed"
-                        },
-                        new
-                        {
-                            StatusId = 9,
-                            StatusName = "Canceled"
-                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.Account", b =>
