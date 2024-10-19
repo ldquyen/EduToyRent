@@ -98,5 +98,25 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("voucher-information")]
+        public async Task<IActionResult> EditVoucherInformation([FromForm] int voucherid, [FromForm] EditVoucherDTO editVoucherDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _voucherService.EditVoucher(voucherid, editVoucherDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
