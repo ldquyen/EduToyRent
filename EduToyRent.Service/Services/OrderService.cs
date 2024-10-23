@@ -33,6 +33,10 @@ namespace EduToyRent.Service.Services
             {
                 return Result.Failure(ToyErrors.NotExistToy);
             }
+            foreach (var toy in createOrderDTO.ToyList)
+            {
+                if (await _unitOfWork.ToyRepository.CheckQuantity(toy.Quantity, toy.ToyId)) return Result.Failure(ToyErrors.QuantityHigher);
+            }
             if (createOrderDTO.IsRentalOrder)
             {
                 if (string.IsNullOrEmpty(createOrderDTO.RentalDate.ToString())
@@ -61,11 +65,14 @@ namespace EduToyRent.Service.Services
                     foreach (var odDetail in odList)
                     {
                         odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
+                        await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
                         await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
+                    order.FinalMoney = order.TotalMoney;
                     await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    await _unitOfWork.DepositOrderRepository.CreateDepositOrder(order, "123456", "tpbank");
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
                 }
@@ -80,10 +87,12 @@ namespace EduToyRent.Service.Services
                     foreach (var odDetail in odList)
                     {
                         odDetail.Price = await _unitOfWork.ToyRepository.GetMoneySaleByToyId(odDetail.ToyId, odDetail.Quantity);
+                        await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
                         await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
+                    order.FinalMoney = order.TotalMoney;
                     await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);

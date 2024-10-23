@@ -21,6 +21,7 @@ namespace EduToyRent.Repository.Interfaces
         IVoucherRepository VoucherRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }
         IAccountVoucherRepository AccountVoucherRepository { get; }
+        IDepositOrderRepository DepositOrderRepository { get; }
         Task SaveAsync();
     }
 }

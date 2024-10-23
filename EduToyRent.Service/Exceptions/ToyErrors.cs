@@ -17,5 +17,6 @@ namespace EduToyRent.Service.Exceptions
         public static Error CannotCreateToyRentOrder => new("Order toy fail", "Cannot create rent order");
         public static Error CannotCreateToySaleOrder => new("Order toy fail", "Cannot create sale order");
         public static Error CannotCreateToyOrder => new("Order toy fail", "Cannot create order");
+        public static Error QuantityHigher => new("Quantity is higher", "Quantity is higher than stock");
     }
 }

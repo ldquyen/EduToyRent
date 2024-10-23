@@ -176,5 +176,19 @@ namespace EduToyRent.Repository.Repositories
             }
             return totalRent * quantity;
         }
+
+        public async Task SubtractQuantity(int toyId, int quantity)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            toy.Stock -= quantity;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> CheckQuantity(int quantity, int toyId)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            if (quantity > toy.Stock) return true;
+            return false;
+        }
     }
 }
