@@ -18,9 +18,19 @@ namespace EduToyRent.API.Controllers
         }
 
         [HttpPost("create-sale-payment-link/{orderId}")]
-        public async Task<IActionResult> CreatePayment(int orderId)
+        public async Task<IActionResult> CreateSalePayment(int orderId)
         {
             var result = await _payOsService.CreatePaymentLinkForSale(orderId);
+
+            if (result.IsSuccess)
+                return Ok(result);
+            else
+                return BadRequest(result);
+        }
+        [HttpPost("create-rent-payment-link/{orderId}")]
+        public async Task<IActionResult> CreateRentPayment(int orderId)
+        {
+            var result = await _payOsService.CreatePaymentLinkForRent(orderId);
 
             if (result.IsSuccess)
                 return Ok(result);

@@ -76,6 +76,46 @@ namespace EduToyRent.Service.Services
             }
         }
 
+        public async Task<dynamic> CreatePaymentLinkForRent(int orderId)
+        {
+
+            var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
+            if (orderNow == null)
+                return Result.Failure(OrderErrors.OrderIsNull);
+            if (!orderNow.IsRentalOrder) return Result.Failure(PaymentErrors.WrongPayment);
+            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderNow.OrderId, includeProperties: "Toy", 1, 100);
+            var odRentList = _mapper.Map<List<ODRentDTO>>(odList);
+            List<ItemData> items = new List<ItemData>();
+            foreach (var odSale in odRentList)
+            {
+                ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.RentalPrice);
+                items.Add(item);
+            }
+            var domain = "http://localhost:7221";
+
+            PaymentData paymentData = new PaymentData(
+                orderCode: orderNow.OrderId,
+                amount: (int)orderNow.FinalMoney,
+                description: $"Payment for order rent {orderNow.OrderId}",
+                items: items,
+                cancelUrl: domain,
+                returnUrl: domain + "/swagger/index.html",
+
+                buyerName: orderNow.Account.AccountName
+                );
+            try
+            {
+                CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);
+
+
+                return Result.SuccessWithObject(createPayment.checkoutUrl);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(PaymentErrors.PaymentError);
+            }
+        }
         public async Task<dynamic> GetPaymentLinkInformation(int orderId)
         {
             PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);

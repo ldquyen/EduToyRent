@@ -11,7 +11,7 @@ namespace EduToyRent.Service.Interfaces
     public interface IPayOSService
     {
         Task<dynamic> CreatePaymentLinkForSale(int orderId);
-        //Task<dynamic> CreatePaymentLinkForRent(int orderId);
+        Task<dynamic> CreatePaymentLinkForRent(int orderId);
         Task<dynamic> GetPaymentLinkInformation(int orderId);
         Task<dynamic> CancelPaymentLink(int orderId);
     }
