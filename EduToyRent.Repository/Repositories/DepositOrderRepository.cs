@@ -21,14 +21,7 @@ namespace EduToyRent.Repository.Repositories
         {
             DepositOrder depositOrder = new DepositOrder();
             depositOrder.OrderId = order.OrderId;
-            if(order.FinalMoney >= 500)
-            {
-                depositOrder.TotalMoney = (order.FinalMoney / 2m);
-            }
-            else
-            {
-                depositOrder.TotalMoney = (order.FinalMoney * 0.2m);
-            }
+            depositOrder.TotalMoney = (order.FinalMoney / 2m);
             depositOrder.RefundMoney = 0;
             depositOrder.BankCode = bankcode;
             depositOrder.BankName = bankname;

@@ -11,6 +11,7 @@ using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.DAL.Entities;
 using EduToyRent.Service.DTOs.OrderDTO;
 using EduToyRent.Service.DTOs.CartDTO;
+using Net.payOS.Types;
 
 namespace EduToyRent.Service.Mappings
 {
@@ -68,6 +69,12 @@ namespace EduToyRent.Service.Mappings
 
             //cart
             CreateMap<CartItem, GetCartResponse>();
+
+            //Payment
+            CreateMap<ODRentDTO, ItemData>()
+            .ForMember(dest => dest.price, opt => opt.MapFrom(src => (int)(src.RentalPrice ?? 0)));
+            CreateMap<ODSaleDTO, ItemData>()
+           .ForMember(dest => dest.price, opt => opt.MapFrom(src => (int)(src.Price)));
         }
     }
 }

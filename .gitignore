@@ -399,3 +399,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 EduToyRent.API/appsettings.json
+EduToyRent.API/appsettings.json

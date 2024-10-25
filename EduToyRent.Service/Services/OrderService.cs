@@ -65,7 +65,7 @@ namespace EduToyRent.Service.Services
                     foreach (var odDetail in odList)
                     {
                         odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
-                        await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
+                        //await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
                         await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
@@ -87,7 +87,7 @@ namespace EduToyRent.Service.Services
                     foreach (var odDetail in odList)
                     {
                         odDetail.Price = await _unitOfWork.ToyRepository.GetMoneySaleByToyId(odDetail.ToyId, odDetail.Quantity);
-                        await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
+                        //await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
                         await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
