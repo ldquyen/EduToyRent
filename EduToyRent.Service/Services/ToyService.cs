@@ -115,6 +115,7 @@ namespace EduToyRent.Service.Services
                 RentPricePerDay = toy.RentPricePerDay,
                 RentPricePerWeek = toy.RentPricePerWeek,
                 RentPricePerTwoWeeks = toy.RentPricePerTwoWeeks,
+                Stock = toy.Stock,
                 SupplierName = toy.Supplier?.AccountName,
                 CategoryName = toy.Category?.CategoryName,
                 ImageUrl = toy.ImageUrl
@@ -137,6 +138,7 @@ namespace EduToyRent.Service.Services
                 ToyName = toy.ToyName,
                 Description = toy.Description,
                 BuyPrice = toy.BuyPrice,
+                Stock = toy.Stock,
                 SupplierName = toy.Supplier?.AccountName,
                 CategoryName = toy.Category?.CategoryName,
                 ImageUrl = toy.ImageUrl
@@ -163,6 +165,7 @@ namespace EduToyRent.Service.Services
                         ToyName = t.ToyName,
                         Description = t.Description,
                         RentPricePerDay = t.RentPricePerDay,
+                        Stock = t.Stock,
                         ImageUrl = t.ImageUrl
                     }).ToList()
                 };
@@ -196,6 +199,7 @@ namespace EduToyRent.Service.Services
                     ToyName = t.ToyName,
                     Description = t.Description,
                     RentPricePerDay = t.RentPricePerDay,
+                    Stock = t.Stock,
                     ImageUrl = t.ImageUrl
                 }).ToList()
             };
@@ -222,6 +226,7 @@ namespace EduToyRent.Service.Services
                         ToyName = t.ToyName,
                         Description = t.Description,
                         BuyPrice = t.BuyPrice,
+                        Stock = t.Stock,
                         ImageUrl = t.ImageUrl
                     }).ToList()
                 };
@@ -255,7 +260,8 @@ namespace EduToyRent.Service.Services
                     ToyName = t.ToyName,
                     Description = t.Description,
                     BuyPrice = t.BuyPrice,
-                    ImageUrl = t.ImageUrl
+                    ImageUrl = t.ImageUrl,
+                    Stock = t.Stock
                 }).ToList()
             };
 
