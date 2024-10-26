@@ -36,11 +36,11 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreatePaymentLinkForSale(int orderId)
         {
-           
+
             var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
             if (orderNow == null)
                 return Result.Failure(OrderErrors.OrderIsNull);
-            if(orderNow.IsRentalOrder) return Result.Failure(PaymentErrors.WrongPayment);
+            if (orderNow.IsRentalOrder) return Result.Failure(PaymentErrors.WrongPayment);
             var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderNow.OrderId, includeProperties: "Toy", 1, 100);
             var odSaleList = _mapper.Map<List<ODSaleDTO>>(odList);
             List<ItemData> items = new List<ItemData>();
@@ -49,16 +49,16 @@ namespace EduToyRent.Service.Services
                 ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.Price);
                 items.Add(item);
             }
-            var domain = "http://localhost:7221";
+            var domain = "http://localhost:3000/";
 
-           
+
             PaymentData paymentData = new PaymentData(
                 orderCode: orderNow.OrderId,
                 amount: (int)orderNow.FinalMoney,
-                description: $"Payment for order {orderNow.OrderId}",
+                description: $"Payment for order sale {orderNow.OrderId}",
                 items: items,
                 cancelUrl: domain,
-                returnUrl: domain + "/swagger/index.html",
+                returnUrl: domain,
 
                 buyerName: orderNow.Account.AccountName
                 );
@@ -66,8 +66,20 @@ namespace EduToyRent.Service.Services
             {
                 CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
                 PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);
-
-
+                Payment payment = new Payment()
+                {
+                    OrderId = orderId,
+                    AccountId = orderNow.Account.AccountId,
+                    Amount = orderNow.FinalMoney,
+                    PaymentMethod = "PayOS",
+                    Status = 0,
+                    TransactionId = paymentLinkInformation.id,
+                    TransactionDate = DateTime.Now,
+                    BankCode = "",
+                    ResponseCode = ""
+                };
+                await _unitOfWork.PaymentRepository.AddAsync(payment);
+                await _unitOfWork.SaveAsync();
                 return Result.SuccessWithObject(createPayment.checkoutUrl);
             }
             catch (Exception ex)
