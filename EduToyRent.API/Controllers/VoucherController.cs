@@ -1,4 +1,6 @@
-﻿using EduToyRent.DAL.Entities;
+﻿using EduToyRent.API.Helper;
+using EduToyRent.DAL.Entities;
+using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.CategoryDTO;
 using EduToyRent.Service.DTOs.VoucherDTO;
 using EduToyRent.Service.Interfaces;
@@ -118,11 +120,13 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
-        [HttpGet("/{accountId}")]
-        public async Task<IActionResult> GetVouchersForUser(int accountId)
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("for-account")]
+        public async Task<IActionResult> GetVouchersForUser()
         {
-            var result = await _voucherService.GetVoucherForUser(accountId);
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            var result = await _voucherService.GetVoucherForUser(currentUserObject.AccountId);
             return Ok(result);
         }
     }
