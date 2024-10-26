@@ -15,7 +15,7 @@ namespace EduToyRent.Service.Exceptions
         public static Error InvalidVoucherQuantity => new("Voucher", "Voucher has been used all");
         public static Error VoucherDeativated => new("Voucher", "Voucher has been deactivate");
         public static Error UsedAllCantActive => new("Voucher", "Voucher has been used all can not be activated");
-
+        public static Error CannotUseVoucher => new("Voucher", "Can not use this voucher");
 
     }
 }

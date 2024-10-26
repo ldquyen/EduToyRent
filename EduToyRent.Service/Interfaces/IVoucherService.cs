@@ -14,5 +14,6 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> GiveVoucherToAccount(int accountid, int voucherid);
         Task<dynamic> ActiveDeactiveVoucher(int voucherid, int flag);
         Task<dynamic> EditVoucher(int voucherid, EditVoucherDTO editVoucherDTO);
+        Task<dynamic> GetVoucherForUser(int userId);
     }
 }

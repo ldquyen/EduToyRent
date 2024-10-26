@@ -118,5 +118,12 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("/{accountId}")]
+        public async Task<IActionResult> GetVouchersForUser(int accountId)
+        {
+            var result = await _voucherService.GetVoucherForUser(accountId);
+            return Ok(result);
+        }
     }
 }

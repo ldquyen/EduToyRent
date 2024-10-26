@@ -12,6 +12,7 @@ using EduToyRent.DAL.Entities;
 using EduToyRent.Service.DTOs.OrderDTO;
 using EduToyRent.Service.DTOs.CartDTO;
 using Net.payOS.Types;
+using EduToyRent.Service.DTOs.VoucherDTO;
 
 namespace EduToyRent.Service.Mappings
 {
@@ -75,6 +76,14 @@ namespace EduToyRent.Service.Mappings
             .ForMember(dest => dest.price, opt => opt.MapFrom(src => (int)(src.RentalPrice ?? 0)));
             CreateMap<ODSaleDTO, ItemData>()
            .ForMember(dest => dest.price, opt => opt.MapFrom(src => (int)(src.Price)));
+
+            //voucher
+            CreateMap<AccountVoucher, VoucherForAccountDTO>()
+            .ForMember(dest => dest.VoucherId, opt => opt.MapFrom(src => src.Voucher.VoucherId))
+            .ForMember(dest => dest.VoucherName, opt => opt.MapFrom(src => src.Voucher.VoucherName))
+            .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Voucher.ExpiredDate))
+            .ForMember(dest => dest.Discount, opt => opt.MapFrom(src => src.Voucher.Discount))
+            .ForMember(dest => dest.IsUsed, opt => opt.MapFrom(src => src.IsUsed));
         }
     }
 }

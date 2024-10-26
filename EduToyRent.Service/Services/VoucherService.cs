@@ -155,6 +155,11 @@ namespace EduToyRent.Service.Services
                 return Result.Failure(VoucherErrors.InvalidVoucherId);
             }
         }
-
+        public async Task<dynamic> GetVoucherForUser(int accountId)
+        {
+            var avList = await _unitOfWork.AccountVoucherRepository.GetVoucherForUser(accountId);
+            var vouchers = _mapper.Map<List<VoucherForAccountDTO>>(avList);
+            return Result.SuccessWithObject(vouchers);
+        }
     }
 }

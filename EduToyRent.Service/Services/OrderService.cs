@@ -39,11 +39,13 @@ namespace EduToyRent.Service.Services
             }
             if (createOrderDTO.IsRentalOrder)
             {
-                if (string.IsNullOrEmpty(createOrderDTO.RentalDate.ToString())
-                    || string.IsNullOrEmpty(createOrderDTO.ReturnDate.ToString()))
-                {
+                if (string.IsNullOrEmpty(createOrderDTO.RentalDate.ToString()) || string.IsNullOrEmpty(createOrderDTO.ReturnDate.ToString()))
                     return Result.Failure(ToyErrors.RentalDateToyNull);
-                }
+            }
+            if (createOrderDTO.VoucherId != 0)
+            {
+                if (!await _unitOfWork.AccountVoucherRepository.CheckValidAccountVoucher(createOrderDTO.VoucherId, currentUserObject.AccountId))
+                    return Result.Failure(VoucherErrors.CannotUseVoucher);
             }
             var order = _mapper.Map<Order>(createOrderDTO);
             order.AccountId = currentUserObject.AccountId;
@@ -65,14 +67,20 @@ namespace EduToyRent.Service.Services
                     foreach (var odDetail in odList)
                     {
                         odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
-                        //await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
+                        await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
                         await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
-                    order.FinalMoney = order.TotalMoney;
+                    decimal discountMoney = await _unitOfWork.VoucherRepository.UseVoucherReturnPrice(createOrderDTO.VoucherId, order.TotalMoney);
+                    if (discountMoney != order.TotalMoney)
+                    {
+                        order.FinalMoney = discountMoney;
+                        await _unitOfWork.AccountVoucherRepository.UseVoucher(createOrderDTO.VoucherId, currentUserObject.AccountId);
+                    }
+                    else order.FinalMoney = order.TotalMoney;
                     await _unitOfWork.OrderRepository.UpdateAsync(order);
-                    await _unitOfWork.DepositOrderRepository.CreateDepositOrder(order, "123456", "tpbank");
+                    //await _unitOfWork.DepositOrderRepository.CreateDepositOrder(order, "123456", "tpbank");
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
                 }
@@ -87,12 +95,18 @@ namespace EduToyRent.Service.Services
                     foreach (var odDetail in odList)
                     {
                         odDetail.Price = await _unitOfWork.ToyRepository.GetMoneySaleByToyId(odDetail.ToyId, odDetail.Quantity);
-                        //await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
+                        await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
                         await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
-                    order.FinalMoney = order.TotalMoney;
+                    decimal discountMoney = await _unitOfWork.VoucherRepository.UseVoucherReturnPrice(createOrderDTO.VoucherId, order.TotalMoney);
+                    if (discountMoney != order.TotalMoney)
+                    {
+                        order.FinalMoney = discountMoney;
+                        await _unitOfWork.AccountVoucherRepository.UseVoucher(createOrderDTO.VoucherId, currentUserObject.AccountId);
+                    }
+                    else order.FinalMoney = order.TotalMoney;
                     await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
