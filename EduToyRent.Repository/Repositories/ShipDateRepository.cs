@@ -1,6 +1,7 @@
 ﻿using EduToyRent.DAL.Context;
 using EduToyRent.DAL.Entities;
 using EduToyRent.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,21 @@ namespace EduToyRent.Repository.Repositories
             };
             await _context.ShipDates.AddAsync(shipDate);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> CheckShip(int orderDetailId)
+        {
+            return await _context.ShipDates.AnyAsync(x => x.OrderDetailId == orderDetailId);   
+        }
+
+        public async Task<bool> CheckAllShip(List<int> orderDetailIds)
+        {
+            foreach (int id in orderDetailIds)
+            {
+                var sd = await _context.ShipDates.FirstOrDefaultAsync(x => x.OrderDetailId == id);
+                if (sd == null) return false;
+            }
+            return true;
         }
     }
 }

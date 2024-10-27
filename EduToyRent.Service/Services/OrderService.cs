@@ -238,7 +238,13 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> SupplierConfirmShip(int orderDetailId)
         {
             var od = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
-            await _unitOfWork.ShipDateRepository.CreateShipDate(od);
+            var listid = await _unitOfWork.OrderDetailRepository.GetOrderDetailIdByOrderId(od.OrderId);
+            if(!await _unitOfWork.ShipDateRepository.CheckShip(od.OrderDetailId))
+            {
+                await _unitOfWork.ShipDateRepository.CreateShipDate(od);
+                if(await _unitOfWork.ShipDateRepository.CheckAllShip(listid))
+                    await _unitOfWork.OrderRepository.UpdateOrderStatus(od.OrderId, 3);
+            }
             return Result.Success();
         }
     }

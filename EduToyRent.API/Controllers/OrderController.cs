@@ -54,23 +54,23 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [Authorize(Policy = "SupplierOnly")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Policy = "SupplierOnly")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("rent-details-for-supplier")]
         public async Task<IActionResult> ViewOrderRentDetailForSupplier()
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            var result = await _orderService.ViewOrderRentDetailForSupplier(currentUserObject.AccountId);
+            var result = await _orderService.ViewOrderRentDetailForSupplier(2);
             return Ok(result);
         }
 
-        [Authorize(Policy = "SupplierOnly")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Policy = "SupplierOnly")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("sale-details-for-supplier")]
         public async Task<IActionResult> ViewOrderSaleDetailForSupplier()
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            var result = await _orderService.ViewOrderSaleDetailForSupplier(currentUserObject.AccountId);
+            var result = await _orderService.ViewOrderSaleDetailForSupplier(2);
             return Ok(result);
         }
 

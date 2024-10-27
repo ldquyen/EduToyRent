@@ -50,12 +50,17 @@ namespace EduToyRent.Repository.Repositories
 
         public async Task<List<OrderDetail>> GetOrderRentDetailForSupplier(int supplierid)
         {
-            return await _context.OrderDetails.Where(x => x.Toy.SupplierId == supplierid && x.IsRental).OrderByDescending(x => x.Order.OrderDate).ToListAsync();
+            return await _context.OrderDetails.Where(x => x.Toy.SupplierId == supplierid && x.IsRental && x.Order.PaymentStatus).OrderByDescending(x => x.Order.OrderDate).ToListAsync();
         }
 
         public async Task<List<OrderDetail>> GetOrderSaleDetailForSupplier(int supplierid)
         {
-            return await _context.OrderDetails.Where(x => x.Toy.SupplierId == supplierid && !x.IsRental).OrderByDescending(x => x.Order.OrderDate).ToListAsync();
+            return await _context.OrderDetails.Where(x => x.Toy.SupplierId == supplierid && !x.IsRental && x.Order.PaymentStatus).OrderByDescending(x => x.Order.OrderDate).ToListAsync();
+        }
+
+        public async Task<List<int>> GetOrderDetailIdByOrderId(int orderid)
+        {
+            return await _context.OrderDetails.Where(x => x.OrderId == orderid).Select(x => x.OrderDetailId).ToListAsync();
         }
     }
 }

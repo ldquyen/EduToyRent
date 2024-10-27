@@ -14,5 +14,6 @@ namespace EduToyRent.Repository.Interfaces
         Task<List<OrderDetail>> GetOrderDetailsByOrderId(int orderid);
         Task<List<OrderDetail>> GetOrderRentDetailForSupplier(int supplierid);
         Task<List<OrderDetail>> GetOrderSaleDetailForSupplier(int supplierid);
+        Task<List<int>> GetOrderDetailIdByOrderId(int orderid); 
     }
 }
