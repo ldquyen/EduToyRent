@@ -28,5 +28,14 @@ namespace EduToyRent.Repository.Repositories
             await _context.OrderDetails.AddAsync(orderDetail);
             await _context.SaveChangesAsync();  
         }
+
+        public async Task UpdateOrderStatus(int orderId, int statusId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(x => x.OrderId == orderId);
+            order.StatusId = statusId;
+            if(statusId == 2) order.PaymentStatus = true;
+            _context.Update(order);
+            await _context.SaveChangesAsync();
+        }
     }
 }

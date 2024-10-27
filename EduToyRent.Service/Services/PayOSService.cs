@@ -146,10 +146,26 @@ namespace EduToyRent.Service.Services
             if (paymentLinkInformation != null)
             {
                 int status = 0;
-                if (paymentLinkInformation.status == "Pending") status = 0;
-                else if (paymentLinkInformation.status == "PAID") status = 1;
-                else if (paymentLinkInformation.status == "CANCELLED") status = 2;
-                else status = 3;
+                if (paymentLinkInformation.status == "Pending")
+                {
+                    status = 0;
+                    await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
+                }
+                else if (paymentLinkInformation.status == "PAID")
+                {
+                    status = 1;
+                    await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 2);
+                }
+                else if (paymentLinkInformation.status == "CANCELLED")
+                {
+                    status = 2;
+                    await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 9);
+                }
+                else
+                {
+                    status = 3; // ko xd dc
+                    await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
+                }
                 var order = await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
                 Payment payment = new Payment()
                 {
@@ -167,7 +183,7 @@ namespace EduToyRent.Service.Services
             }
             return Result.SuccessWithObject(paymentLinkInformation);
         }
-      
+
 
         public async Task<dynamic> CancelPaymentLink(int orderId)
         {

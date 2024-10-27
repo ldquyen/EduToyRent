@@ -11,5 +11,6 @@ namespace EduToyRent.Repository.Interfaces
     {
         Task<IEnumerable<OrderDetail>> GetByOrderIdAsync(int orderId);
         Task AddOrderDetailAsync(OrderDetail orderDetail);
+        Task UpdateOrderStatus(int orderId, int statusId);
     }
 }

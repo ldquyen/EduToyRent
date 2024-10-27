@@ -26,8 +26,8 @@ namespace EduToyRent.Repository.Repositories
         public IVoucherRepository VoucherRepository { get; set; }
         public IAccountVoucherRepository AccountVoucherRepository   { get; set; }
         public IDepositOrderRepository DepositOrderRepository { get; set; }
-
         public IPaymentRepository PaymentRepository { get; set; }
+        public IShipDateRepository ShipDateRepository {  get; set; }
 
         public UnitOfWork(EduToyRentDbContext context)
         {
@@ -46,6 +46,7 @@ namespace EduToyRent.Repository.Repositories
             AccountVoucherRepository = new AccountVoucherRepository(_context);
             DepositOrderRepository = new DepositOrderRepository(_context);
             PaymentRepository = new PaymentRepository(_context);
+            ShipDateRepository = new ShipDateRepository(_context);
         }
 
         public async Task SaveAsync()

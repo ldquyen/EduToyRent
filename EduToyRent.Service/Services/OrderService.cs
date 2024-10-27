@@ -234,5 +234,12 @@ namespace EduToyRent.Service.Services
             var list = _mapper.Map<List<ReponseOrderSaleForSupplierDTO>>(odList);
             return list;
         }
+
+        public async Task<dynamic> SupplierConfirmShip(int orderDetailId)
+        {
+            var od = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
+            await _unitOfWork.ShipDateRepository.CreateShipDate(od);
+            return Result.Success();
+        }
     }
 }

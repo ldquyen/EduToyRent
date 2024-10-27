@@ -74,5 +74,13 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
+
+        [HttpPut("supplier-confirm-ship/{orderDetailId}")]
+        public async Task<IActionResult> SupplierConfirmShip(int orderDetailId)
+        {
+            var result = await _orderService.SupplierConfirmShip(orderDetailId);
+            return Ok(result);
+
+        }
     }
 }
