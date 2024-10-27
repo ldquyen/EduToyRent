@@ -3,6 +3,8 @@ using EduToyRent.Service.Common;
 using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.OrderDTO;
 using EduToyRent.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,5 +53,26 @@ namespace EduToyRent.API.Controllers
             if (result.IsSuccess) return Ok(result);
             return BadRequest(result);
         }
+
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("rent-details-for-supplier")]
+        public async Task<IActionResult> ViewOrderRentDetailForSupplier()
+        {
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            var result = await _orderService.ViewOrderRentDetailForSupplier(currentUserObject.AccountId);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("sale-details-for-supplier")]
+        public async Task<IActionResult> ViewOrderSaleDetailForSupplier()
+        {
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            var result = await _orderService.ViewOrderSaleDetailForSupplier(currentUserObject.AccountId);
+            return Ok(result);
+        }
+
     }
 }

@@ -47,5 +47,15 @@ namespace EduToyRent.Repository.Repositories
         {
             return await _context.OrderDetails.Where(x => x.OrderId == orderid).ToListAsync();
         }
+
+        public async Task<List<OrderDetail>> GetOrderRentDetailForSupplier(int supplierid)
+        {
+            return await _context.OrderDetails.Where(x => x.Toy.SupplierId == supplierid && x.IsRental).OrderByDescending(x => x.Order.OrderDate).ToListAsync();
+        }
+
+        public async Task<List<OrderDetail>> GetOrderSaleDetailForSupplier(int supplierid)
+        {
+            return await _context.OrderDetails.Where(x => x.Toy.SupplierId == supplierid && !x.IsRental).OrderByDescending(x => x.Order.OrderDate).ToListAsync();
+        }
     }
 }

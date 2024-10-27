@@ -220,5 +220,19 @@ namespace EduToyRent.Service.Services
             else
                 return Result.Failure(OrderErrors.ConfirmStatus);
         }
+
+        public async Task<dynamic> ViewOrderRentDetailForSupplier(int accountId)
+        {
+            var odList = await _unitOfWork.OrderDetailRepository.GetOrderRentDetailForSupplier(accountId);
+            var list = _mapper.Map<List<ReponseOrderRentForSupplierDTO>>(odList);
+            return list;
+        }
+
+        public async Task<dynamic> ViewOrderSaleDetailForSupplier(int accountId)
+        {
+            var odList = await _unitOfWork.OrderDetailRepository.GetOrderSaleDetailForSupplier(accountId);
+            var list = _mapper.Map<List<ReponseOrderSaleForSupplierDTO>>(odList);
+            return list;
+        }
     }
 }
