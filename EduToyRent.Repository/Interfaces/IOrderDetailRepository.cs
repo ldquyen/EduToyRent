@@ -12,5 +12,7 @@ namespace EduToyRent.Repository.Interfaces
         Task<List<OrderDetail>> GetOrderForSupplier(int supplierId);
         Task<decimal> GetTotalMoney(int orderId);
         Task<List<OrderDetail>> GetOrderDetailsByOrderId(int orderid);
+        Task<List<OrderDetail>> GetOrderRentDetailForSupplier(int supplierid);
+        Task<List<OrderDetail>> GetOrderSaleDetailForSupplier(int supplierid);
     }
 }

@@ -68,6 +68,9 @@ namespace EduToyRent.Service.Mappings
             CreateMap<OrderDetail, ODSaleDTO>()
                 .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName));
 
+            CreateMap<OrderDetail, ReponseOrderSaleForSupplierDTO>();
+            CreateMap<OrderDetail, ReponseOrderRentForSupplierDTO>();
+
             //cart
             CreateMap<CartItem, GetCartResponse>();
 
