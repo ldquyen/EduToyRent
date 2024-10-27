@@ -20,17 +20,19 @@ namespace EduToyRent.Repository.Repositories
 
         public async Task UpdatePayment(Payment payment)
         {
-            var pay = await _context.Payments.FirstOrDefaultAsync(x => x.PaymentId == payment.PaymentId);
+            var pay = await _context.Payments.FirstOrDefaultAsync(x => x.TransactionId == payment.TransactionId);
             if (pay == null)
             {
                 await _context.Payments.AddAsync(payment);
+                await _context.SaveChangesAsync();
             }
             else
             {
                 pay.Status = payment.Status;
                 _context.Payments.Update(pay);
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+            
         }
 
     }

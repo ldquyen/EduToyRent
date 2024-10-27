@@ -70,11 +70,11 @@ namespace EduToyRent.Service.Services
                 {
                     OrderId = orderId,
                     AccountId = orderNow.Account.AccountId,
-                    Amount = orderNow.FinalMoney,
+                    Amount = paymentLinkInformation.amountPaid,
                     PaymentMethod = "PayOS",
                     Status = 0,
                     TransactionId = paymentLinkInformation.id,
-                    TransactionDate = DateTime.Now,
+                    TransactionDate = DateTime.Parse(paymentLinkInformation.createdAt),
                     BankCode = "",
                     ResponseCode = ""
                 };
@@ -119,8 +119,20 @@ namespace EduToyRent.Service.Services
             {
                 CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
                 PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);
-
-
+                Payment payment = new Payment()
+                {
+                    OrderId = orderId,
+                    AccountId = orderNow.Account.AccountId,
+                    Amount = paymentLinkInformation.amountPaid,
+                    PaymentMethod = "PayOS",
+                    Status = 0,
+                    TransactionId = paymentLinkInformation.id,
+                    TransactionDate = DateTime.Parse(paymentLinkInformation.createdAt),
+                    BankCode = "",
+                    ResponseCode = ""
+                };
+                await _unitOfWork.PaymentRepository.AddAsync(payment);
+                await _unitOfWork.SaveAsync();
                 return Result.SuccessWithObject(createPayment.checkoutUrl);
             }
             catch (Exception ex)
@@ -131,8 +143,31 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> GetPaymentLinkInformation(int orderId)
         {
             PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);
+            if (paymentLinkInformation != null)
+            {
+                int status = 0;
+                if (paymentLinkInformation.status == "Pending") status = 0;
+                else if (paymentLinkInformation.status == "PAID") status = 1;
+                else if (paymentLinkInformation.status == "CANCELLED") status = 2;
+                else status = 3;
+                var order = await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
+                Payment payment = new Payment()
+                {
+                    OrderId = orderId,
+                    AccountId = order.AccountId,
+                    Amount = paymentLinkInformation.amountPaid,
+                    PaymentMethod = "PayOS",
+                    Status = status,
+                    TransactionId = paymentLinkInformation.id,
+                    TransactionDate = DateTime.Parse(paymentLinkInformation.createdAt),
+                    BankCode = "",
+                    ResponseCode = ""
+                };
+                await _unitOfWork.PaymentRepository.UpdatePayment(payment);
+            }
             return Result.SuccessWithObject(paymentLinkInformation);
         }
+      
 
         public async Task<dynamic> CancelPaymentLink(int orderId)
         {
@@ -142,51 +177,3 @@ namespace EduToyRent.Service.Services
 
     }
 }
-
-/*
- http://localhost:7221/?
-code=00
-id=bf1b1e12945742a29dfdfec0b8069881
-cancel=false                                success
-status=PAID&
-orderCode=14
- */
-
-/* Payment Data
- 
-{
-  "orderCode": 0,
-  "amount": 0,
-  "description": "string",
-  "items": [
-    {
-      "name": "string",
-      "quantity": 0,
-      "price": 0
-    }
-  ],
-  "cancelUrl": "string",
-  "returnUrl": "string",
-  "signature": "string",
-  "buyerName": "string",
-  "buyerEmail": "string",
-  "buyerPhone": "string",
-  "buyerAddress": "string",
-  "expiredAt": 0
-}
- 
-orderCode	 :long
-amount		 :int
-description	 :String
-items	     :List<ItemData>
-cancelUrl    :String
-returnUrl    :String
-
-orderCode	Mã đơn hàng	                                                                                                        long
-amount	Số tiền thanh toán	                                                                                                    int
-description	Mô tả cho thanh toán, được dùng làm nội dung chuyển khoản	                                                        String
-items	Danh sách các sản phẩm	                                                                                                List<ItemData>
-cancelUrl	Đường dẫn sẽ được chuyển tiếp đến trang web hoặc ứng dụng của bạn khi người dùng bấm hủy đơn hàng	                String
-returnUrl	Đường dẫn sẽ được chuyển tiếp đến trang web hoặc ứng dụng của bạn khi người dùng đã thanh toán đơn hàng thành công	String
-
- */
