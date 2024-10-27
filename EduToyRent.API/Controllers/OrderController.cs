@@ -21,6 +21,8 @@ namespace EduToyRent.API.Controllers
             _orderService = orderService;
         }
 
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO createOrderDTO)
         {
@@ -38,6 +40,8 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("/staff")]
         public async Task<IActionResult> GetOrderForStaff(int page = 1)
         {
@@ -54,27 +58,28 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        //[Authorize(Policy = "SupplierOnly")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("rent-details-for-supplier")]
         public async Task<IActionResult> ViewOrderRentDetailForSupplier()
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            var result = await _orderService.ViewOrderRentDetailForSupplier(2);
+            var result = await _orderService.ViewOrderRentDetailForSupplier(currentUserObject.AccountId);
             return Ok(result);
         }
 
-        //[Authorize(Policy = "SupplierOnly")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("sale-details-for-supplier")]
         public async Task<IActionResult> ViewOrderSaleDetailForSupplier()
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            var result = await _orderService.ViewOrderSaleDetailForSupplier(2);
+            var result = await _orderService.ViewOrderSaleDetailForSupplier(currentUserObject.AccountId);
             return Ok(result);
         }
 
-
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("supplier-confirm-ship/{orderDetailId}")]
         public async Task<IActionResult> SupplierConfirmShip(int orderDetailId)
         {
