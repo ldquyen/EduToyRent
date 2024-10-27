@@ -1,6 +1,7 @@
 ﻿using EduToyRent.DAL.Context;
 using EduToyRent.DAL.Entities;
 using EduToyRent.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,21 @@ namespace EduToyRent.Repository.Repositories
         {
             _context = context;
         }
-    {
+
+        public async Task UpdatePayment(Payment payment)
+        {
+            var pay = await _context.Payments.FirstOrDefaultAsync(x => x.PaymentId == payment.PaymentId);
+            if (pay == null)
+            {
+                await _context.Payments.AddAsync(payment);
+            }
+            else
+            {
+                pay.Status = payment.Status;
+                _context.Payments.Update(pay);
+            }
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

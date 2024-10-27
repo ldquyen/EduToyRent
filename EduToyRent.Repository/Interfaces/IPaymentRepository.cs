@@ -9,5 +9,6 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IPaymentRepository : IRepository<Payment>
     {
+        Task UpdatePayment(Payment payment);
     }
 }
