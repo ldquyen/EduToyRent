@@ -146,10 +146,12 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsRental")
+                        .HasColumnType("bit");
+
                     b.HasKey("CartId");
 
-                    b.HasIndex("AccountId")
-                        .IsUnique();
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Cart");
                 });
@@ -292,11 +294,9 @@ namespace EduToyRent.DataAccess.Context.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Shipper")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShipperPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddress")
@@ -723,6 +723,53 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.HasKey("StatusId");
 
                     b.ToTable("StatusOrder");
+
+                    b.HasData(
+                        new
+                        {
+                            StatusId = 1,
+                            StatusName = "Wating for approvement"
+                        },
+                        new
+                        {
+                            StatusId = 2,
+                            StatusName = "Prepare to ship"
+                        },
+                        new
+                        {
+                            StatusId = 3,
+                            StatusName = "Shipping"
+                        },
+                        new
+                        {
+                            StatusId = 4,
+                            StatusName = "Shipped"
+                        },
+                        new
+                        {
+                            StatusId = 5,
+                            StatusName = "Returned"
+                        },
+                        new
+                        {
+                            StatusId = 6,
+                            StatusName = "Returned because of reason"
+                        },
+                        new
+                        {
+                            StatusId = 7,
+                            StatusName = "Complete get toy"
+                        },
+                        new
+                        {
+                            StatusId = 8,
+                            StatusName = "Completed"
+                        },
+                        new
+                        {
+                            StatusId = 9,
+                            StatusName = "Canceled"
+                        });
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.Account", b =>
@@ -756,8 +803,8 @@ namespace EduToyRent.DataAccess.Context.Migrations
             modelBuilder.Entity("EduToyRent.DAL.Entities.Cart", b =>
                 {
                     b.HasOne("EduToyRent.DAL.Entities.Account", "Account")
-                        .WithOne("Cart")
-                        .HasForeignKey("EduToyRent.DAL.Entities.Cart", "AccountId")
+                        .WithMany("Carts")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -952,8 +999,7 @@ namespace EduToyRent.DataAccess.Context.Migrations
                 {
                     b.Navigation("AccountVouchers");
 
-                    b.Navigation("Cart")
-                        .IsRequired();
+                    b.Navigation("Carts");
 
                     b.Navigation("Orders");
 

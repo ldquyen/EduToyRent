@@ -50,6 +50,7 @@ namespace EduToyRent.DAL.Context
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new StatusOrderConfiguration());
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Toys)
@@ -57,9 +58,9 @@ namespace EduToyRent.DAL.Context
                 .HasForeignKey(t => t.SupplierId);
 
             modelBuilder.Entity<Account>()
-                .HasOne(a => a.Cart)
-                .WithOne(c => c.Account)
-                .HasForeignKey<Cart>(c => c.AccountId);
+    .HasMany(a => a.Carts)
+    .WithOne(c => c.Account)
+    .HasForeignKey(c => c.AccountId);
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Orders)

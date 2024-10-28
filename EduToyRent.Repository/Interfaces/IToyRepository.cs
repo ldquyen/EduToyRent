@@ -9,12 +9,16 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IToyRepository : IRepository<Toy>
     {
+        Task<List<Toy>> GetAllToy();
+        Task<List<Toy>> GetToysForSale();
+        Task<List<Toy>> GetToysForRent();
         Task<Toy> GetToyById(int toyId);
         Task<bool> UpdateToy(Toy toy);
-        Task<int> GetCountAsync();
-        Task<IEnumerable<Toy>> GetAllAsync(int pageIndex, int pageSize);
-        Task<int> GetCountByName(string keyword);
-        Task<IEnumerable<Toy>> SearchByName(string keyword, int pageIndex, int pageSize);
-        Task<IEnumerable<Toy>> SortToy(string sortBy, int pageIndex, int pageSize);
+        Task<bool> CheckSameTypeOfToy(List<int> toyIds, bool isRent);
+        Task<bool> CheckExistToy(List<int> toyIds);
+        Task<decimal> GetMoneyRentByToyId(int toyId,int quantity, DateTime? RentalDate, DateTime? ReturnDate);
+        Task<decimal> GetMoneySaleByToyId(int toyId, int quantity);
+        Task SubtractQuantity(int toyId, int quantity);
+        Task<bool> CheckQuantity(int quantity, int toyId);
     }
 }

@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using EduToyRent.DataAccess.Context;
+using EduToyRent.Service.Configurations;
+using Microsoft.Extensions.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +20,7 @@ var connectionString = builder.Configuration.GetConnectionString("MyDb");
 builder.Services.AddEduToyRentDbContext(connectionString);
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "EduToyRent API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -92,6 +94,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddServicesConfiguration(builder.Configuration);                   //di
+builder.Services.Configure<PayOSSettings>(builder.Configuration.GetSection("PayOSSettings"));
 
 var app = builder.Build();
 

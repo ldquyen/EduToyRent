@@ -10,6 +10,9 @@ using EduToyRent.Service.DTOs.RequestFormDTO;
 using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.DAL.Entities;
 using EduToyRent.Service.DTOs.OrderDTO;
+using EduToyRent.Service.DTOs.CartDTO;
+using Net.payOS.Types;
+using EduToyRent.Service.DTOs.VoucherDTO;
 
 namespace EduToyRent.Service.Mappings
 {
@@ -22,21 +25,20 @@ namespace EduToyRent.Service.Mappings
                 .ForMember(x => x.AccountPassword, opt => opt.MapFrom(x => x.Password));
 
             CreateMap<Account, CurrentUserObject>().ReverseMap();
-
             CreateMap<SignupAccountDTO, Account>();
             CreateMap<ProfileDTO, Account>().ReverseMap();
-
-            CreateMap<AccountDTO , Account>().ReverseMap();
+            CreateMap<Account, AccountDTO>();
 
             //toy
             CreateMap<CreateRentalToyDTO, Toy>();
             CreateMap<CreateSaleToyDTO, Toy>();
             CreateMap<UpdateToyDTO, Toy>();
-            CreateMap<Toy, ViewToyDTO>().ReverseMap();
-            CreateMap<Toy, ViewToyDTO>().ReverseMap();
-            CreateMap<Toy, ViewToyDetailDTO>().ReverseMap();
-            //CreateMap<Toy, ResponseRentalToyDTO>();
-            //CreateMap<Toy, ResponseSaleToyDTO>();
+            CreateMap<Toy, ViewToyForRentDTO>().ReverseMap();
+            CreateMap<Toy, ViewToyForSaleDTO>().ReverseMap();
+            CreateMap<Toy, ViewToyForRentDetailDTO>().ReverseMap();
+            CreateMap<Toy, ViewToyForSaleDetailDTO>().ReverseMap();
+            CreateMap<Toy, ResponseRentalToyDTO>();
+            CreateMap<Toy, ResponseSaleToyDTO>();
 
             CreateMap<CreateNewCategoryDTO, Category>();
 
@@ -49,6 +51,42 @@ namespace EduToyRent.Service.Mappings
 
             //order
             CreateMap<CreateOrderDTO, Order>();
+            CreateMap<CreateRentOrderDetailDTO, OrderDetail>()
+                .ForMember(dest => dest.RentalDate, opt => opt.MapFrom(src => src.RentalDate))
+                .ForMember(dest => dest.ReturnDate, opt => opt.MapFrom(src => src.ReturnDate));
+            CreateMap<CreateSaleOrderDetailDTO, OrderDetail>();
+
+            CreateMap<Order, ResponseOrderRentForUserDTO>()
+                .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName))
+                .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
+            CreateMap<OrderDetail, ODRentDTO>()
+                .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName));
+
+            CreateMap<Order, ResponseOrderSaleForUserDTO>()
+                 .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName))
+                .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
+            CreateMap<OrderDetail, ODSaleDTO>()
+                .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName));
+
+            CreateMap<OrderDetail, ReponseOrderSaleForSupplierDTO>();
+            CreateMap<OrderDetail, ReponseOrderRentForSupplierDTO>();
+
+            //cart
+            CreateMap<CartItem, GetCartResponse>();
+
+            //Payment
+            CreateMap<ODRentDTO, ItemData>()
+            .ForMember(dest => dest.price, opt => opt.MapFrom(src => (int)(src.RentalPrice ?? 0)));
+            CreateMap<ODSaleDTO, ItemData>()
+           .ForMember(dest => dest.price, opt => opt.MapFrom(src => (int)(src.Price)));
+
+            //voucher
+            CreateMap<AccountVoucher, VoucherForAccountDTO>()
+            .ForMember(dest => dest.VoucherId, opt => opt.MapFrom(src => src.Voucher.VoucherId))
+            .ForMember(dest => dest.VoucherName, opt => opt.MapFrom(src => src.Voucher.VoucherName))
+            .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Voucher.ExpiredDate))
+            .ForMember(dest => dest.Discount, opt => opt.MapFrom(src => src.Voucher.Discount))
+            .ForMember(dest => dest.IsUsed, opt => opt.MapFrom(src => src.IsUsed));
         }
     }
 }

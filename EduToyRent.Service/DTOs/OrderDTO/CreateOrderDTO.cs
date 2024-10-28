@@ -17,21 +17,32 @@ namespace EduToyRent.Service.DTOs.OrderDTO
         public string ReceivePhoneNumber { get; set; }
         [Required]
         public bool IsRentalOrder { get; set; }
+        [Required]
+        public List<CartToyDTO> ToyList { get; set; }
+        public DateTime? RentalDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
+        public int VoucherId { get; set; } 
+    }
+
+    public class CartToyDTO
+    {
+        public int ToyId { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    public class CreateRentOrderDetailDTO
+    {
+        [Required]
+        public int OrderId { get; set; }
+        [Required]
+        public DateTime? RentalDate { get; set; }
+        [Required]
+        public DateTime? ReturnDate { get; set; }
+    }
+    public class CreateSaleOrderDetailDTO
+    {
+        [Required]
+        public int OrderId { get; set; }
     }
 }
 
-/*
- public int OrderId { get; set; }
-        public int AccountId { get; set; }
-        public int StatusId { get; set; }
-        public bool PaymentStatus { get; set; }
-        public string ShippingAddress { get; set; }
-        public decimal TotalMoney { get; set; }
-        public int? Discount { get; set; }
-        public decimal FinalMoney { get; set; }
-        public DateTime OrderDate { get; set; }
-        public bool IsRentalOrder { get; set; }
-        public string ReceivePhoneNumber { get; set; }
-        public string Shipper { get; set; }
-        public string ShipperPhone { get; set; }
- */

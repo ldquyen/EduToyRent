@@ -1,7 +1,10 @@
-﻿using EduToyRent.Service.DTOs.ToyDTO;
+﻿using EduToyRent.Service.Common;
+using EduToyRent.Service.DTOs;
+using EduToyRent.Service.DTOs.ToyDTO;
 using EduToyRent.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduToyRent.API.Controllers
 {
@@ -32,32 +35,37 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("view")]
-        public async Task<IActionResult> ViewToys(int pageIndex = 0, int pageSize = 10)
+        [HttpGet("detail/rent/{toyId}")]
+        public async Task<IActionResult> ViewToyDetailForRent(int toyId)
         {
-            var result = await _toyService.ViewToys(pageIndex, pageSize);
+            var result = await _toyService.ViewToyDetailForRent(toyId);
             return Ok(result);
         }
 
-        [HttpGet("detail/{id}")]
-        public async Task<IActionResult> ViewToyDetail(int id)
+        [HttpGet("detail/sale/{toyId}")]
+        public async Task<IActionResult> ViewToyDetailForSale(int toyId)
         {
-            var result = await _toyService.ViewToyDetail(id);
-            if (result == null) return NotFound();
+            var result = await _toyService.ViewToyDetailForSale(toyId);
             return Ok(result);
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchToys(string keyword, int pageIndex = 0, int pageSize = 10)
+        [HttpGet("view-toys/rent")]
+        public async Task<ActionResult<Pagination<ViewToyForRentDTO>>> ViewToysForRent([FromQuery] string search = null,
+        [FromQuery] string sort = null,
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 10)
         {
-            var result = await _toyService.SearchToys(keyword, pageIndex, pageSize);
+            var result = await _toyService.ViewToysForRent(search, sort, pageIndex, pageSize);
             return Ok(result);
         }
 
-        [HttpGet("sort")]
-        public async Task<IActionResult> SortToys(string sortBy, int pageIndex = 0, int pageSize = 10)
+        [HttpGet("view-toys/sale")]
+        public async Task<ActionResult<Pagination<ViewToyForSaleDTO>>> ViewToysForSale([FromQuery] string search = null,
+        [FromQuery] string sort = null,
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 10)
         {
-            var result = await _toyService.SortToys(sortBy, pageIndex, pageSize);
+            var result = await _toyService.ViewToysForSale(search, sort, pageIndex, pageSize);
             return Ok(result);
         }
     }

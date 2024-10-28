@@ -71,7 +71,7 @@ namespace EduToyRent.API.Controllers
             return Ok(createToyResult);
         }
 
-        [HttpGet("requests")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllRequests(int page = 1)
         {
             var requests = await _requestFromService.GetAllsRequest(page, 10);
@@ -92,26 +92,26 @@ namespace EduToyRent.API.Controllers
             return Ok(requests);
         }
 
-        [HttpGet("request/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRequest(int id)
         {
             var requests = await _requestFromService.GetRequestById(id);
             return Ok(requests);
         }
 
-
-        [HttpPut("update-status")]
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("status")]
         public async Task<IActionResult> UpdateRequestStatus([FromBody] UpdateRequestDTO updateRequestDTO)
         {
-            //CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            int staffId = 3;
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var updateResult = await _requestFromService.UppdateRequestStatus(updateRequestDTO, staffId);
+            var updateResult = await _requestFromService.UppdateRequestStatus(updateRequestDTO, currentUserObject.AccountId);
 
             if (!updateResult.IsSuccess)
                 return BadRequest(updateResult);
@@ -120,3 +120,4 @@ namespace EduToyRent.API.Controllers
         }
     }
 }
+// chỉnh tên  api request 

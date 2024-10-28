@@ -22,5 +22,6 @@ namespace EduToyRent.DAL.Entities
 
         [ForeignKey("ToyId")]
         public virtual Toy Toy { get; set; }
+		
     }
 }

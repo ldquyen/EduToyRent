@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+appsettings.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -397,3 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+EduToyRent.API/appsettings.json
+EduToyRent.API/appsettings.json
+EduToyRent.API/appsettings.json
