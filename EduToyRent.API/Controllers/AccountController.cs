@@ -63,6 +63,28 @@ namespace EduToyRent.API.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("sign-up-staff")]
+        public async Task<IActionResult> SignUpStaff([FromBody] SignupAccountDTO signupAccountDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _accountService.SignUpStaffToySupplier(signupAccountDTO);
+                if (result.IsSuccess)
+                    return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [Authorize(Policy = "UserOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("edit-profile")]
@@ -129,8 +151,8 @@ namespace EduToyRent.API.Controllers
         }
 
 
-        //[Authorize(Policy = "StaffOnly")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> GetViewAll(int page = 1 )
         {
@@ -149,10 +171,10 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "StaffOnly")]
-        [HttpPut("banAccount")]
+        [Authorize(Policy = "AdminOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> BanAccount(int account)
+        [HttpGet("staff-list")]
+        public async Task<IActionResult> GetStaffAccount(int page = 1)
         {
             if (!ModelState.IsValid)
             {
@@ -160,7 +182,49 @@ namespace EduToyRent.API.Controllers
             }
             try
             {
-                var result = await _accountService.BanAccount(account);
+                var result = await _accountService.ViewAllStaffAccount(page);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "StaffOnly")]
+        [HttpPut("ban-user/{accountId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> BanAccount(int accountId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            { 
+                var result = await _accountService.BanUserAccount(accountId);
+                if (result != null)
+                    return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut("ban-staff/{accountId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> BanStaffAccount(int accountId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _accountService.BanStaffAccount(accountId);
                 if (result != null)
                     return Ok(result);
                 return BadRequest(result);

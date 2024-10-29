@@ -16,8 +16,12 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject);
 
         Task<dynamic> ViewAllAccount(int page);
-        Task<dynamic> BanAccount(int accountDTO);
+        Task<dynamic> ViewAllStaffAccount(int page);
+        Task<dynamic> BanUserAccount(int userId);
+        Task<dynamic> BanStaffAccount(int userId);
 
         Task<dynamic> SignUpAccountToySupplier(SignupAccountDTO signupAccountDTO);
+        Task<dynamic> SignUpStaffToySupplier(SignupAccountDTO signupAccountDTO);
+        
     }
 }
