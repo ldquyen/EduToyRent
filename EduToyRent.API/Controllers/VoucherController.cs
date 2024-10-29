@@ -120,7 +120,8 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize(Policy = "UserOnly")]
+
+        [Authorize(Policy = "UserOnly")]    //.get voucher
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("for-account")]
         public async Task<IActionResult> GetVouchersForUser()

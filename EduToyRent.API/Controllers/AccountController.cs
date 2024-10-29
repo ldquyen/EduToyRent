@@ -21,7 +21,7 @@ namespace EduToyRent.API.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost("sign-up")]
+        [HttpPost("sign-up")]       //.sign up
         public async Task<IActionResult> SignUp([FromBody] SignupAccountDTO signupAccountDTO)
         {
             if (!ModelState.IsValid)

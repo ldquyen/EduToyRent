@@ -17,7 +17,7 @@ namespace EduToyRent.API.Controllers
             _payOsService = payOsService;
         }
 
-        [HttpPost("create-sale-payment-link/{orderId}")]
+        [HttpPost("create-sale-payment-link/{orderId}")]    //.paay rent order
         public async Task<IActionResult> CreateSalePayment(int orderId)
         {
             var result = await _payOsService.CreatePaymentLinkForSale(orderId);
@@ -27,7 +27,8 @@ namespace EduToyRent.API.Controllers
             else
                 return BadRequest(result);
         }
-        [HttpPost("create-rent-payment-link/{orderId}")]
+
+        [HttpPost("create-rent-payment-link/{orderId}")]    //.pay sale order
         public async Task<IActionResult> CreateRentPayment(int orderId)
         {
             var result = await _payOsService.CreatePaymentLinkForRent(orderId);
@@ -38,20 +39,21 @@ namespace EduToyRent.API.Controllers
                 return BadRequest(result);
         }
 
-        [HttpGet("payment-link-info/{orderId}")]
+        [HttpGet("payment-link-info/{orderId}")]        //.pay info
         public async Task<IActionResult> GetPaymentLinkInformation(int orderId)
         {
             var result = await _payOsService.GetPaymentLinkInformation(orderId);
             return Ok(result);
         }
-        [HttpPost("cancel-payment-link/{orderId}")]
+
+        [HttpPost("cancel-payment-link/{orderId}")]     //.cancel payment
         public async Task<IActionResult> CancelPaymentLink(int orderId)
         {
             var result = await _payOsService.CancelPaymentLink(orderId);
             return Ok(result);
         }
 
-        [HttpGet("payment/callback")]
+        [HttpGet("payment/callback")]           //.test
         public async Task<IActionResult> PaymentCallback(WebhookType webhookData)
         {
             return Ok();

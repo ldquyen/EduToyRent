@@ -1,4 +1,5 @@
 ﻿using EduToyRent.API.Helper;
+using EduToyRent.DAL.Entities;
 using EduToyRent.Service.Common;
 using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.OrderDTO;
@@ -21,7 +22,7 @@ namespace EduToyRent.API.Controllers
             _orderService = orderService;
         }
 
-        [Authorize(Policy = "UserOnly")]
+        [Authorize(Policy = "UserOnly")]    //.Create order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO createOrderDTO)
@@ -33,14 +34,17 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
+        [Authorize(Policy = "UserOnly")]    //.View order of that user
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("user")]
         public async Task<IActionResult> GetOrderOfAccount([FromQuery] bool isRent, int status)
         {
-            var result = await _orderService.GetOrderOfAccount(1, isRent, status);
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            var result = await _orderService.GetOrderOfAccount(currentUserObject.AccountId, isRent, status);
             return Ok(result);
         }
 
-        [Authorize(Policy = "UserOnly")]
+        [Authorize(Policy = "UserOnly")]    //.View detail that order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("order-detail/user/{orderId}")]
         public async Task<IActionResult> GetOrderDetailForUser(int orderId)
@@ -50,7 +54,7 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "StaffOnly")]   //.Staff view all new order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("staff")]
         public async Task<IActionResult> GetOrderForStaff(int page = 1)
@@ -59,6 +63,8 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "StaffOnly")]   //.Staff confirm that order(status == 1) is oke or cancel that order
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("staff/confirm")]
         public async Task<IActionResult> ConfirmOrder([FromForm] ConfirmOrderDTO confirmOrderDTO)
         {
@@ -68,7 +74,7 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(Policy = "SupplierOnly")]    //.Supplier view rent order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("rent-details-for-supplier")]
         public async Task<IActionResult> ViewOrderRentDetailForSupplier()
@@ -78,7 +84,7 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
-        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(Policy = "SupplierOnly")]    //.Supplier view sale order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("sale-details-for-supplier")]
         public async Task<IActionResult> ViewOrderSaleDetailForSupplier()
@@ -88,7 +94,7 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
-        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(Policy = "SupplierOnly")]    //.Supplier confirm order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("supplier-confirm-ship/{orderDetailId}")]
         public async Task<IActionResult> SupplierConfirmShip(int orderDetailId)
@@ -96,6 +102,16 @@ namespace EduToyRent.API.Controllers
             var result = await _orderService.SupplierConfirmShip(orderDetailId);
             return Ok(result);
 
+        }
+
+        [Authorize(Policy = "UserOnly")]    //.User complete order
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
+        [HttpPut("user-complete-order/{orderId}")]
+        public async Task<IActionResult> UserCompleteOrder(int orderId)
+        {
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            var result = await _orderService.CompleteOrder(orderId, currentUserObject.AccountId);
+            return Ok(result);
         }
     }
 }

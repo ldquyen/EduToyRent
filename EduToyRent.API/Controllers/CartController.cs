@@ -23,7 +23,7 @@ namespace EduToyRent.API.Controllers
 		{
 			_cartService = cartService;
 		}
-        [Authorize(Policy = "UserOnly")]
+        [Authorize(Policy = "UserOnly")]        //.get rent cart
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("rental-cart")]
 		public async Task<IActionResult> GetCartForRent()
@@ -41,7 +41,8 @@ namespace EduToyRent.API.Controllers
 			}
 			
 		}
-        [Authorize(Policy = "UserOnly")]
+
+        [Authorize(Policy = "UserOnly")]        //.get sale cart
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("sale-cart")]
         public async Task<IActionResult> GetCartForSale()
@@ -60,6 +61,8 @@ namespace EduToyRent.API.Controllers
 
         }
 
+        [Authorize(Policy = "UserOnly")]        //.add item to cart
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("add-item-to-cart")]
 		public async Task<IActionResult> AddItemToCart([FromForm] GetCartRequest request)
 		{
@@ -76,7 +79,9 @@ namespace EduToyRent.API.Controllers
 			
 		}
 
-		[HttpDelete("remove-items-from-cart")]
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete("remove-items-from-cart")]
         public async Task<IActionResult> RemoveItemsFromCart([FromBody] List<int> itemIdList)
         {
 			bool result = await _cartService.RemoveItemsFromCart(itemIdList);

@@ -143,7 +143,7 @@ namespace EduToyRent.Service.Services
             else
                 return false;
         }
-        
+
         private async Task<bool> CreateOrderDetailForSale(CreateOrderDTO createOrderDTO, int orderId)
         {
             if (createOrderDTO.ToyList != null)
@@ -170,12 +170,12 @@ namespace EduToyRent.Service.Services
                 return false;
         }
 
-        public async Task<dynamic> GetOrderDetailForUser( int orderId, int accountId)
+        public async Task<dynamic> GetOrderDetailForUser(int orderId, int accountId)
         {
             var order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
             if (order.AccountId != accountId)
                 return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
-            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderId, includeProperties: "Toy", 1 , 20);
+            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderId, includeProperties: "Toy", 1, 20);
             if (order.IsRentalOrder)
             {
                 var responseOrderDTO = _mapper.Map<ResponseOrderRentDetailForUserDTO>(order);
@@ -217,22 +217,24 @@ namespace EduToyRent.Service.Services
         {
             Order order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == confirmOrderDTO.OrderId);
             if (order == null) return Result.Failure(OrderErrors.OrderIsNull);
-            if (confirmOrderDTO.StatusId == 9)
+            if (order.StatusId == 1)
             {
-                order.StatusId = confirmOrderDTO.StatusId;
-                await _unitOfWork.SaveAsync();
-                return Result.Success();
-            }
-            if (confirmOrderDTO.StatusId == 2)
-            {
-                if (string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
-                    return Result.Failure(OrderErrors.ShiperInfo);
-                order.Shipper = confirmOrderDTO.Shipper;
-                order.ShipperPhone = confirmOrderDTO.ShipperPhone;
-                order.StatusId = confirmOrderDTO.StatusId;
-                await _unitOfWork.OrderRepository.UpdateAsync(order);
-                await _unitOfWork.SaveAsync();
-                return Result.Success();
+                if (confirmOrderDTO.StatusId == 9)
+                {
+                    order.StatusId = confirmOrderDTO.StatusId;
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
+                }else if (confirmOrderDTO.StatusId == 2)
+                {
+                    if (string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
+                        return Result.Failure(OrderErrors.ShiperInfo);
+                    order.Shipper = confirmOrderDTO.Shipper;
+                    order.ShipperPhone = confirmOrderDTO.ShipperPhone;
+                    order.StatusId = confirmOrderDTO.StatusId;
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
+                }else return Result.Failure(OrderErrors.ConfirmStatus);
             }
             else
                 return Result.Failure(OrderErrors.ConfirmStatus);
@@ -256,13 +258,36 @@ namespace EduToyRent.Service.Services
         {
             var od = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
             var listid = await _unitOfWork.OrderDetailRepository.GetOrderDetailIdByOrderId(od.OrderId);
-            if(!await _unitOfWork.ShipDateRepository.CheckShip(od.OrderDetailId))
+            if (!await _unitOfWork.ShipDateRepository.CheckShip(od.OrderDetailId))
             {
                 await _unitOfWork.ShipDateRepository.CreateShipDate(od);
-                if(await _unitOfWork.ShipDateRepository.CheckAllShip(listid))
+                if (await _unitOfWork.ShipDateRepository.CheckAllShip(listid))
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(od.OrderId, 3);
             }
             return Result.Success();
+        }
+
+        public async Task<dynamic> CompleteOrder(int orderId, int accountId)
+        {
+            var od = await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
+            if (od.AccountId != accountId)
+            {
+                return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
+            }
+            else
+            {
+                if (od.StatusId == 3 || od.StatusId == 4)
+                {
+                    od.StatusId = 8;
+                    await _unitOfWork.OrderRepository.UpdateAsync(od);
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
+                }
+                else
+                {
+                    return Result.Failure(OrderErrors.WrongOrderStatus);
+                }
+            }
         }
     }
 }
