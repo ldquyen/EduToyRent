@@ -170,24 +170,41 @@ namespace EduToyRent.Service.Services
                 return false;
         }
 
-        public async Task<dynamic> GetOrderDetailForUser( int orderId)
+        public async Task<dynamic> GetOrderDetailForUser( int orderId, int accountId)
         {
             var order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
+            if (order.AccountId != accountId)
+                return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
             var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderId, includeProperties: "Toy", 1 , 20);
             if (order.IsRentalOrder)
             {
-                var responseOrderDTO = _mapper.Map<ResponseOrderRentForUserDTO>(order);
+                var responseOrderDTO = _mapper.Map<ResponseOrderRentDetailForUserDTO>(order);
                 responseOrderDTO.OrdersDetail = _mapper.Map<List<ODRentDTO>>(odList);
                 return Result.SuccessWithObject(responseOrderDTO);
             }
             else
             {
-                var responseOrderDTO = _mapper.Map<ResponseOrderSaleForUserDTO>(order);
+                var responseOrderDTO = _mapper.Map<ResponseOrderSaleDetailForUserDTO>(order);
                 responseOrderDTO.OrdersDetail = _mapper.Map<List<ODSaleDTO>>(odList);
                 return Result.SuccessWithObject(responseOrderDTO);
             }
         }
 
+        public async Task<dynamic> GetOrderOfAccount(int accountId, bool isRent, int status)
+        {
+            if (isRent)
+            {
+                var orders = await _unitOfWork.OrderRepository.GetOrderRentForUser(accountId, status);
+                var list = _mapper.Map<List<ResponseOrderForUser>>(orders);
+                return Result.SuccessWithObject(list);
+            }
+            else
+            {
+                var orders = await _unitOfWork.OrderRepository.GetOrderSaleForUser(accountId, status);
+                var list = _mapper.Map<List<ResponseOrderForUser>>(orders);
+                return Result.SuccessWithObject(list);
+            }
+        }
 
         public async Task<dynamic> GetAllOrderForStaff(int page)
         {

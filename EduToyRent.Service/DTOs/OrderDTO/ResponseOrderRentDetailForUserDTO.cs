@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.Service.DTOs.OrderDTO
 {
-    public class ResponseOrderRentForUserDTO
+    public class ResponseOrderRentDetailForUserDTO
     {
         public string AccountName { get; set; }
         public string ShippingAddress { get; set; }

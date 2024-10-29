@@ -37,5 +37,14 @@ namespace EduToyRent.Repository.Repositories
             _context.Update(order);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Order>> GetOrderRentForUser(int accountId, int status)
+        {
+            return await _context.Orders.Where(x => x.AccountId == accountId && x.IsRentalOrder && x.StatusId == status).Include(x => x.StatusOrder).OrderByDescending(x => x.OrderDate).ToListAsync();
+        }
+        public async Task<List<Order>> GetOrderSaleForUser(int accountId, int status)
+        {
+            return await _context.Orders.Where(x => x.AccountId == accountId && !x.IsRentalOrder && x.StatusId == status).Include(x => x.StatusOrder).OrderByDescending(x => x.OrderDate).ToListAsync();
+        }
     }
 }

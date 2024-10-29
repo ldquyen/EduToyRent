@@ -33,23 +33,33 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("/user/{orderId}")]
-        public async Task<IActionResult> GetOrderForUser(int orderId)
+        [HttpGet("user")]
+        public async Task<IActionResult> GetOrderOfAccount([FromQuery] bool isRent, int status)
         {
-            Result result = await _orderService.GetOrderDetailForUser(orderId);
+            var result = await _orderService.GetOrderOfAccount(1, isRent, status);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "UserOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("order-detail/user/{orderId}")]
+        public async Task<IActionResult> GetOrderDetailForUser(int orderId)
+        {
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            Result result = await _orderService.GetOrderDetailForUser(orderId, currentUserObject.AccountId);
             return Ok(result);
         }
 
         [Authorize(Policy = "StaffOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("/staff")]
+        [HttpGet("staff")]
         public async Task<IActionResult> GetOrderForStaff(int page = 1)
         {
             Result result = await _orderService.GetAllOrderForStaff(page);
             return Ok(result);
         }
 
-        [HttpPut("confirm")]
+        [HttpPut("staff/confirm")]
         public async Task<IActionResult> ConfirmOrder([FromForm] ConfirmOrderDTO confirmOrderDTO)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

@@ -9,8 +9,8 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO);
         Task<dynamic> GetAllOrderForStaff(int page);
         Task<dynamic> ConfirmOrder(ConfirmOrderDTO confirmOrderDTO);
-        Task<dynamic> GetOrderDetailForUser( int orderId);
-
+        Task<dynamic> GetOrderDetailForUser( int orderId, int accountId);
+        Task<dynamic> GetOrderOfAccount(int accountId, bool isRent, int status);
         Task<dynamic> ViewOrderRentDetailForSupplier(int accountId);
         Task<dynamic> ViewOrderSaleDetailForSupplier(int accountId);
         Task<dynamic> SupplierConfirmShip(int orderDetailId);
