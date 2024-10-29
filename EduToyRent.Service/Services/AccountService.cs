@@ -91,27 +91,61 @@ namespace EduToyRent.Service.Services
             {
                 return Result.Failure(ChangePasswordErrors.WrongOldPassword);
             }
-            
+
         }
 
 
         public async Task<dynamic> ViewAllAccount(int page)
         {
-            var accounts = await _unitOfWork.AccountRepository.GetAllAsync(x => x.RoleId == 1 || x.RoleId == 2, null,page,10);
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync(x => x.RoleId == 1 || x.RoleId == 2, null, page, 10);
             var list = _mapper.Map<List<AccountDTO>>(accounts);
-          return Result.SuccessWithObject(list);
+            return Result.SuccessWithObject(list);
+        }
+
+        public async Task<dynamic> ViewAllStaffAccount(int page)
+        {
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync(x => x.RoleId == 3 , null, page, 10);
+            var list = _mapper.Map<List<AccountDTO>>(accounts);
+            return Result.SuccessWithObject(list);
         }
 
 
 
-        public async Task<dynamic> BanAccount(int accountDTO)
+
+        public async Task<dynamic> BanUserAccount(int userId)
         {
 
-            var account = await _unitOfWork.AccountRepository.GetByIdAsync(accountDTO);
-            account.IsBan = true;
-            await _unitOfWork.AccountRepository.UpdateAsync(account);
-            await _unitOfWork.SaveAsync();
-            return Result.Success();
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(userId);
+            if (account.RoleId == 1 || account.RoleId == 2)
+            {
+                account.IsBan = true;
+                await _unitOfWork.AccountRepository.UpdateAsync(account);
+                await _unitOfWork.SaveAsync();
+                return Result.Success();
+            }
+            else
+            {
+                return Result.Failure(AccountError.Cannotban);
+            }
+            
+        }
+
+        public async Task<dynamic> BanStaffAccount(int userId)
+        {
+
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(userId);
+            if (account.RoleId ==  3)
+            {
+                account.IsBan = true;
+                await _unitOfWork.AccountRepository.UpdateAsync(account);
+                await _unitOfWork.SaveAsync();
+                return Result.Success();
+            }
+            else
+            {
+                return Result.Failure(AccountError.Cannotban);
+            }
+
         }
 
         public async Task<dynamic> SignUpAccountToySupplier(SignupAccountDTO signupAccountDTO)
@@ -133,5 +167,26 @@ namespace EduToyRent.Service.Services
             //await _unitOfWork.SaveAsync();
             return Result.Success();
         }
+
+        public async Task<dynamic> SignUpStaffToySupplier(SignupAccountDTO signupAccountDTO)
+        {
+            var account = _mapper.Map<Account>(signupAccountDTO);
+            if (await _unitOfWork.AccountRepository.CheckEmailExistAsync(account.AccountEmail)) return Result.Failure(SignupErrors.DuplicateEmail);
+            if (await _unitOfWork.AccountRepository.CheckPhoneExistAsync(account.PhoneNumber)) return Result.Failure(SignupErrors.DuplicatePhone);
+            account.AccountPassword = await HashPassword.HassPass(account.AccountPassword);
+            account.RoleId = 3;
+            account.IsBan = false;
+            await _unitOfWork.AccountRepository.AddAsync(account);
+            await _unitOfWork.SaveAsync();
+
+            //var cart = new Cart
+            //{
+            //    AccountId = account.AccountId
+            //};
+            //await _unitOfWork.CartRepository.AddAsync(cart);
+            //await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
+        
     }
 }
