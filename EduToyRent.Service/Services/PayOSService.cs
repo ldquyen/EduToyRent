@@ -103,7 +103,7 @@ namespace EduToyRent.Service.Services
                 ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.RentalPrice);
                 items.Add(item);
             }
-            var domain = "http://localhost:7221";
+            var domain = "http://localhost:3000";
 
             PaymentData paymentData = new PaymentData(
                 orderCode: orderNow.OrderId,
@@ -111,7 +111,7 @@ namespace EduToyRent.Service.Services
                 description: $"Payment for order rent {orderNow.OrderId}",
                 items: items,
                 cancelUrl: domain,
-                returnUrl: domain + "/swagger/index.html",
+                returnUrl: domain + "/paymentinfo",
 
                 buyerName: orderNow.Account.AccountName
                 );
