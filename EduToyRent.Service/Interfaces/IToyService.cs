@@ -1,4 +1,5 @@
 ﻿using EduToyRent.Service.Common;
+using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.ToyDTO;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,9 @@ namespace EduToyRent.Service.Interfaces
         Task<ViewToyForSaleDetailDTO> ViewToyDetailForSale(int toyId);
         Task<Pagination<ViewToyForSaleDTO>> ViewToysForSale(string search, string sort, int pageIndex, int pageSize);
         Task<Pagination<ViewToyForRentDTO>> ViewToysForRent(string search, string sort, int pageIndex, int pageSize);
+        Task<Pagination<ViewToyForRentSupplier>> ViewToysForRentAccount(string search, string sort, int pageIndex, int pageSize, CurrentUserObject currentUserObject);
+        Task<Pagination<ViewToyForSellSupplier>> ViewToysForSellAccount(string search, string sort, int pageIndex, int pageSize, CurrentUserObject currentUserObject);
+
+
     }
 }

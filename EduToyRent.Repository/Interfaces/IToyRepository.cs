@@ -20,5 +20,7 @@ namespace EduToyRent.Repository.Interfaces
         Task<decimal> GetMoneySaleByToyId(int toyId, int quantity);
         Task SubtractQuantity(int toyId, int quantity);
         Task<bool> CheckQuantity(int quantity, int toyId);
+        Task<List<Toy>> GetToysForSaleAccount(int accId);
+        Task<List<Toy>> GetToysForRentAccount(int accId);
     }
 }

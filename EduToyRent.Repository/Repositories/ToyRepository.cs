@@ -117,5 +117,18 @@ namespace EduToyRent.Repository.Repositories
                 .Where(t => !t.IsRental)
                 .ToListAsync();
         }
+        public async Task<List<Toy>> GetToysForRentAccount(int accId)
+        {
+            return await _context.Toys
+                .Where(t => t.IsRental && t.SupplierId == accId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Toy>> GetToysForSaleAccount(int accId)
+        {
+            return await _context.Toys
+                .Where(t => !t.IsRental && t.SupplierId == accId)
+                .ToListAsync();
+        }
     }
 }

@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EduToyRent.Service.Exceptions;
 using EduToyRent.Repository.Repositories;
+using EduToyRent.Service.DTOs.AccountDTO;
 
 namespace EduToyRent.Service.Services
 {
@@ -262,6 +263,138 @@ namespace EduToyRent.Service.Services
                     BuyPrice = t.BuyPrice,
                     ImageUrl = t.ImageUrl,
                     Stock = t.Stock
+                }).ToList()
+            };
+
+            return paginationResult;
+        }
+        public async Task<Pagination<ViewToyForSellSupplier>> ViewToysForSellAccount(string search, string sort, int pageIndex, int pageSize, CurrentUserObject currentUserObject)
+        {
+            var toys = await _unitOfWork.ToyRepository.GetToysForSaleAccount(currentUserObject.AccountId);
+            if (string.IsNullOrEmpty(search) && string.IsNullOrEmpty(sort))
+            {
+                var totalToysCount = toys.Count;
+                toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+                return new Pagination<ViewToyForSellSupplier>
+                {
+                    TotalItemsCount = totalToysCount,
+                    PageSize = pageSize,
+                    PageIndex = pageIndex,
+                    Items = toys.Select(t => new ViewToyForSellSupplier
+                    {
+                        ToyId = t.ToyId,
+                        ToyName = t.ToyName,
+                        Description = t.Description,
+                        BuyPrice = t.BuyPrice,
+                        Stock = t.Stock,
+                        ImageUrl = t.ImageUrl,
+                        CategoryName = t.Category.CategoryName,
+                        IsActive = t.IsActive
+                    }).ToList()
+                };
+            }
+            if (!string.IsNullOrEmpty(search))
+            {
+                toys = toys.Where(t => t.ToyName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            toys = sort switch
+            {
+                "price_asc" => toys.OrderBy(t => t.BuyPrice).ToList(),
+                "price_desc" => toys.OrderByDescending(t => t.BuyPrice).ToList(),
+                "name_asc" => toys.OrderBy(t => t.ToyName).ToList(),
+                "name_desc" => toys.OrderByDescending(t => t.ToyName).ToList(),
+                _ => toys.OrderBy(t => t.ToyName).ToList()
+            };
+
+            int totalItemsCount = toys.Count;
+
+            toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            var paginationResult = new Pagination<ViewToyForSellSupplier>
+            {
+                TotalItemsCount = totalItemsCount,
+                PageSize = pageSize,
+                PageIndex = pageIndex,
+                Items = toys.Select(t => new ViewToyForSellSupplier
+                {
+                    ToyId = t.ToyId,
+                    ToyName = t.ToyName,
+                    Description = t.Description,
+                    BuyPrice = t.BuyPrice,
+                    Stock = t.Stock,
+                    ImageUrl = t.ImageUrl,
+                    CategoryName = t.Category.CategoryName,
+                    IsActive = t.IsActive
+                }).ToList()
+            };
+
+            return paginationResult;
+        }
+        public async Task<Pagination<ViewToyForRentSupplier>> ViewToysForRentAccount(string search, string sort, int pageIndex, int pageSize, CurrentUserObject currentUserObject)
+        {
+            var toys = await _unitOfWork.ToyRepository.GetToysForRentAccount(currentUserObject.AccountId);
+            if (string.IsNullOrEmpty(search) && string.IsNullOrEmpty(sort))
+            {
+                var totalToysCount = toys.Count;
+                toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+                return new Pagination<ViewToyForRentSupplier>
+                {
+                    TotalItemsCount = totalToysCount,
+                    PageSize = pageSize,
+                    PageIndex = pageIndex,
+                    Items = toys.Select(t => new ViewToyForRentSupplier
+                    {
+                        ToyId = t.ToyId,
+                        ToyName = t.ToyName,
+                        Description = t.Description,
+                        RentPricePerDay = t.RentPricePerDay,
+                        RentPricePerTwoWeeks = t.RentPricePerTwoWeeks,
+                        RentPricePerWeek = t.RentPricePerWeek,
+                        Stock = t.Stock,
+                        ImageUrl = t.ImageUrl,
+                        CategoryName = t.Category?.CategoryName,
+                        IsActive = t.IsActive
+                    }).ToList()
+                };
+            }
+            if (!string.IsNullOrEmpty(search))
+            {
+                toys = toys.Where(t => t.ToyName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            toys = sort switch
+            {
+                "price_asc" => toys.OrderBy(t => t.BuyPrice).ToList(),
+                "price_desc" => toys.OrderByDescending(t => t.BuyPrice).ToList(),
+                "name_asc" => toys.OrderBy(t => t.ToyName).ToList(),
+                "name_desc" => toys.OrderByDescending(t => t.ToyName).ToList(),
+                _ => toys.OrderBy(t => t.ToyName).ToList()
+            };
+
+            int totalItemsCount = toys.Count;
+
+            toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            var paginationResult = new Pagination<ViewToyForRentSupplier>
+            {
+                TotalItemsCount = totalItemsCount,
+                PageSize = pageSize,
+                PageIndex = pageIndex,
+                Items = toys.Select(t => new ViewToyForRentSupplier
+                {
+                    ToyId = t.ToyId,
+                    ToyName = t.ToyName,
+                    Description = t.Description,
+                    RentPricePerDay = t.RentPricePerDay,
+                    RentPricePerTwoWeeks = t.RentPricePerTwoWeeks,
+                    RentPricePerWeek = t.RentPricePerWeek,
+                    Stock = t.Stock,
+                    ImageUrl = t.ImageUrl,
+                    CategoryName = t.Category?.CategoryName,
+                    IsActive = t.IsActive
                 }).ToList()
             };
 
