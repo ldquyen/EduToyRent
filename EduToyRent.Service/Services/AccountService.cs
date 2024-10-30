@@ -139,59 +139,69 @@ namespace EduToyRent.Service.Services
 
 		public async Task<dynamic> SendPasswordResetOTP(ForgotPasswordDto request)
 		{
-			bool isEmailExist = await _unitOfWork.AccountRepository.CheckEmailExistAsync(request.Email);
-			if (!isEmailExist) return Result.Failure(ResetPasswordErrors.EmailNotFound);
-
-			ResetPasswordOTP? otp = await _unitOfWork.ResetPasswordOTPRepository.GetAsync
-				(q => q.Email == request.Email);
-
-            if (otp != null) // refresh OTP entity
-            {
-				otp.OTP = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)).Substring(0,5);
-				otp.expires = DateTime.Now.AddDays(1);
-				await _unitOfWork.ResetPasswordOTPRepository.UpdateAsync(otp);
-			}
-			else //create new OTP entity
+			try
 			{
-				otp = new()
+				bool isEmailExist = await _unitOfWork.AccountRepository.CheckEmailExistAsync(request.Email);
+				if (!isEmailExist) return Result.Failure(ResetPasswordErrors.EmailNotFound);
+
+				ResetPasswordOTP? otp = await _unitOfWork.ResetPasswordOTPRepository.GetAsync
+					(q => q.Email == request.Email);
+
+				if (otp != null) // refresh OTP entity
 				{
-					Email = request.Email,
-					OTP = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)).Substring(0, 5),
-					expires = DateTime.Now.AddDays(1)
-				};
-				await _unitOfWork.ResetPasswordOTPRepository.AddAsync(otp);
+					otp.OTP = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)).Substring(0, 5);
+					otp.expires = DateTime.Now.AddDays(1);
+					await _unitOfWork.ResetPasswordOTPRepository.UpdateAsync(otp);
+				}
+				else //create new OTP entity
+				{
+					otp = new()
+					{
+						Email = request.Email,
+						OTP = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)).Substring(0, 5),
+						expires = DateTime.Now.AddDays(1)
+					};
+					await _unitOfWork.ResetPasswordOTPRepository.AddAsync(otp);
+				}
+
+				await _unitOfWork.SaveAsync();
+
+				return Result.Success();
 			}
-
-            await _unitOfWork.SaveAsync();
-
-			return Result.Success();
+			catch (Exception ex)
+			{
+				return null;
+			}
+			
 		}
 
 		public async Task<dynamic> ResetPasswordUsingOTP(ResetPasswordDto request)
 		{
-			ResetPasswordOTP? otp = await _unitOfWork.ResetPasswordOTPRepository.GetAsync
+
+			try
+			{
+				ResetPasswordOTP? otp = await _unitOfWork.ResetPasswordOTPRepository.GetAsync
 				(q => q.OTP == request.OTP && q.Email.Equals(request.Email));
 
-			if (otp == null) 
-				return Result.Failure(ResetPasswordErrors.IncorrectOTP);
+				if (otp == null)
+					return Result.Failure(ResetPasswordErrors.IncorrectOTP);
 
-			if (otp.expires < DateTime.Now)
-				return Result.Failure(ResetPasswordErrors.OTPExpired);
+				if (otp.expires < DateTime.Now)
+					return Result.Failure(ResetPasswordErrors.OTPExpired);
 
-			await _unitOfWork.ResetPasswordOTPRepository.DeleteAsync(otp);
+				await _unitOfWork.ResetPasswordOTPRepository.DeleteAsync(otp);
 
-			Account? account = await _unitOfWork.AccountRepository.GetAsync(a => a.AccountEmail == request.Email);
-			if (account == null) 
-				return Result.Failure(ResetPasswordErrors.EmailNotFound);
+				Account? account = await _unitOfWork.AccountRepository.GetAsync(a => a.AccountEmail == request.Email);
+				if (account == null)
+					return Result.Failure(ResetPasswordErrors.EmailNotFound);
 
-			account.AccountPassword = await HashPassword.HassPass(request.NewPassword);
-			await _unitOfWork.AccountRepository.UpdateAsync(account);
-			await _unitOfWork.SaveAsync();
+				account.AccountPassword = await HashPassword.HassPass(request.NewPassword);
+				await _unitOfWork.AccountRepository.UpdateAsync(account);
+				await _unitOfWork.SaveAsync();
 
-			return Result.Success();
-
-
-		}
-			
+				return Result.Success();
+			}
+			catch (Exception ex) { return null; }
+		}		
 	}
 }
