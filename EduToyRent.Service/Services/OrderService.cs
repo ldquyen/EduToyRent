@@ -274,9 +274,24 @@ namespace EduToyRent.Service.Services
             {
                 return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
             }
-            else
+
+            if (!od.IsRentalOrder)
             {
                 if (od.StatusId == 3 || od.StatusId == 4)
+                {
+                    od.StatusId = 8;
+                    await _unitOfWork.OrderRepository.UpdateAsync(od);
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
+                }
+                else
+                {
+                    return Result.Failure(OrderErrors.WrongOrderStatus);
+                }
+            }
+            else
+            {
+                if (od.StatusId == 5 || od.StatusId == 7)
                 {
                     od.StatusId = 8;
                     await _unitOfWork.OrderRepository.UpdateAsync(od);
