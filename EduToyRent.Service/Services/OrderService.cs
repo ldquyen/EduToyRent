@@ -55,7 +55,7 @@ namespace EduToyRent.Service.Services
             order.Discount = 0;
             order.FinalMoney = 0;
             order.OrderDate = DateTime.Now;
-            await _unitOfWork.OrderRepository.AddAsync(order);
+            var save = await _unitOfWork.OrderRepository.AddAsync(order);
             await _unitOfWork.SaveAsync();
             int id = order.OrderId;
 
@@ -68,7 +68,7 @@ namespace EduToyRent.Service.Services
                     {
                         odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
                         await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
-                        await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
+                        var update1 = await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
@@ -79,7 +79,7 @@ namespace EduToyRent.Service.Services
                         await _unitOfWork.AccountVoucherRepository.UseVoucher(createOrderDTO.VoucherId, currentUserObject.AccountId);
                     }
                     else order.FinalMoney = order.TotalMoney;
-                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    var update2 = await _unitOfWork.OrderRepository.UpdateAsync(order);
                     //await _unitOfWork.DepositOrderRepository.CreateDepositOrder(order, "123456", "tpbank");
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
@@ -96,7 +96,7 @@ namespace EduToyRent.Service.Services
                     {
                         odDetail.Price = await _unitOfWork.ToyRepository.GetMoneySaleByToyId(odDetail.ToyId, odDetail.Quantity);
                         await _unitOfWork.ToyRepository.SubtractQuantity(odDetail.ToyId, odDetail.Quantity);
-                        await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
+                        var update3 = await _unitOfWork.OrderDetailRepository.UpdateAsync(odDetail);
                     }
                     await _unitOfWork.SaveAsync();
                     order.TotalMoney = await _unitOfWork.OrderDetailRepository.GetTotalMoney(id);
@@ -107,7 +107,7 @@ namespace EduToyRent.Service.Services
                         await _unitOfWork.AccountVoucherRepository.UseVoucher(createOrderDTO.VoucherId, currentUserObject.AccountId);
                     }
                     else order.FinalMoney = order.TotalMoney;
-                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    var update4 = await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
                 }
@@ -135,7 +135,7 @@ namespace EduToyRent.Service.Services
                         ReturnDate = createOrderDTO.ReturnDate,
                         RentalPrice = 0,
                     };
-                    await _unitOfWork.OrderDetailRepository.AddAsync(od);
+                    var save = await _unitOfWork.OrderDetailRepository.AddAsync(od);
                 }
                 await _unitOfWork.SaveAsync();
                 return true;
@@ -161,7 +161,7 @@ namespace EduToyRent.Service.Services
                         ReturnDate = createOrderDTO.ReturnDate,
                         RentalPrice = 0,
                     };
-                    await _unitOfWork.OrderDetailRepository.AddAsync(od);
+                    var save = await _unitOfWork.OrderDetailRepository.AddAsync(od);
                 }
                 await _unitOfWork.SaveAsync();
                 return true;
@@ -231,7 +231,7 @@ namespace EduToyRent.Service.Services
                     order.Shipper = confirmOrderDTO.Shipper;
                     order.ShipperPhone = confirmOrderDTO.ShipperPhone;
                     order.StatusId = confirmOrderDTO.StatusId;
-                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    var update = await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
                     return Result.Success();
                 }else return Result.Failure(OrderErrors.ConfirmStatus);
@@ -280,7 +280,7 @@ namespace EduToyRent.Service.Services
                 if (od.StatusId == 3 || od.StatusId == 4)
                 {
                     od.StatusId = 8;
-                    await _unitOfWork.OrderRepository.UpdateAsync(od);
+                    var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
                     await _unitOfWork.SaveAsync();
                     return Result.Success();
                 }
@@ -294,7 +294,7 @@ namespace EduToyRent.Service.Services
                 if (od.StatusId == 5 || od.StatusId == 7)
                 {
                     od.StatusId = 8;
-                    await _unitOfWork.OrderRepository.UpdateAsync(od);
+                    var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
                     await _unitOfWork.SaveAsync();
                     return Result.Success();
                 }

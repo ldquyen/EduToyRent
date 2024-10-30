@@ -43,7 +43,7 @@ namespace EduToyRent.Service.Services
             rentalToy.IsRental = true;
             rentalToy.IsActive = false;
             rentalToy.IsDelete = false;
-            await _unitOfWork.ToyRepository.AddAsync(rentalToy);
+            var save = await _unitOfWork.ToyRepository.AddAsync(rentalToy);
             await _unitOfWork.SaveAsync();
             CreateRentalRequestDTO createRentalRequestDTO = new CreateRentalRequestDTO();
             createRentalRequestDTO.ToyId = rentalToy.ToyId;
@@ -59,7 +59,7 @@ namespace EduToyRent.Service.Services
             saleToy.IsRental = false;
             saleToy.IsActive = false;
             saleToy.IsDelete = false;
-            await _unitOfWork.ToyRepository.AddAsync(saleToy);
+            var save = await _unitOfWork.ToyRepository.AddAsync(saleToy);
             await _unitOfWork.SaveAsync();
             CreateSaleRequestDTO createSaleRequestDTO = new CreateSaleRequestDTO();
             createSaleRequestDTO.ToyId = saleToy.ToyId;

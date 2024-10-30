@@ -36,7 +36,7 @@ namespace EduToyRent.Service.Services
                 Used = 0,
                 IsActive = true
             };
-            await _unitOfWork.VoucherRepository.AddAsync(voucher);
+            var save = await _unitOfWork.VoucherRepository.AddAsync(voucher);
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
@@ -81,8 +81,8 @@ namespace EduToyRent.Service.Services
                     {
                         reducevoucher.IsActive = false;
                     }
-                    await _unitOfWork.VoucherRepository.UpdateAsync(reducevoucher);
-                    await _unitOfWork.AccountVoucherRepository.AddAsync(accountVoucher);
+                    var update = await _unitOfWork.VoucherRepository.UpdateAsync(reducevoucher);
+                    var save = await _unitOfWork.AccountVoucherRepository.AddAsync(accountVoucher);
                     await _unitOfWork.SaveAsync();
                     return Result.Success();
                 }
@@ -109,14 +109,14 @@ namespace EduToyRent.Service.Services
                         if (flag == 0)
                         {
                             voucher.IsActive = false;
-                            await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
+                            var update = await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
                             await _unitOfWork.SaveAsync();
                             return Result.Success();
                         }
                         else
                         {
                             voucher.IsActive = true;
-                            await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
+                            var update = await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
                             await _unitOfWork.SaveAsync();
                             return Result.Success();
                         }
@@ -146,7 +146,7 @@ namespace EduToyRent.Service.Services
                 voucher.ExpiredDate = editVoucherDTO.ExpiredDate;
                 voucher.Discount = editVoucherDTO.Discount;
                 voucher.Quantity = editVoucherDTO.Quantity;
-                await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
+                var update = await _unitOfWork.VoucherRepository.UpdateAsync(voucher);
                 await _unitOfWork.SaveAsync();
                 return Result.Success();
             }

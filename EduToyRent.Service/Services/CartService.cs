@@ -66,7 +66,7 @@ namespace EduToyRent.Service.Services
 						ToyId = request.toyId,
 						Quantity = request.quantity < toy.Stock ? request.quantity : toy.Stock,
 					};
-					await _unitOfWork.CartItemRepository.AddAsync(item);
+					var save = await _unitOfWork.CartItemRepository.AddAsync(item);
 				}
 				else
 				{
@@ -77,7 +77,7 @@ namespace EduToyRent.Service.Services
 					}
 					else item.Quantity += request.quantity;
 
-					await _unitOfWork.CartItemRepository.UpdateAsync(item);
+					var update = await _unitOfWork.CartItemRepository.UpdateAsync(item);
 				}
 				await _unitOfWork.SaveAsync();
 				return Result.Success();

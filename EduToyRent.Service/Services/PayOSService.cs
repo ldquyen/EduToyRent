@@ -78,7 +78,7 @@ namespace EduToyRent.Service.Services
                     BankCode = "",
                     ResponseCode = ""
                 };
-                await _unitOfWork.PaymentRepository.AddAsync(payment);
+                var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
                 await _unitOfWork.SaveAsync();
                 return Result.SuccessWithObject(createPayment.checkoutUrl);
             }
@@ -131,7 +131,7 @@ namespace EduToyRent.Service.Services
                     BankCode = "",
                     ResponseCode = ""
                 };
-                await _unitOfWork.PaymentRepository.AddAsync(payment);
+                var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
                 await _unitOfWork.SaveAsync();
                 return Result.SuccessWithObject(createPayment.checkoutUrl);
             }

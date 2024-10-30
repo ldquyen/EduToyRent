@@ -16,7 +16,7 @@ namespace EduToyRent.Repository.Interfaces
        int size = 10);
         Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null);
         Task<T> GetByIdAsync(int id);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
+        Task<bool> AddAsync(T entity);
+        Task<bool> UpdateAsync(T entity);
     }
 }

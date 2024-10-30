@@ -35,7 +35,7 @@ namespace EduToyRent.Service.Services
 			account.AccountPassword = await HashPassword.HassPass(account.AccountPassword);
 			account.RoleId = 1;
 			account.IsBan = false;
-			await _unitOfWork.AccountRepository.AddAsync(account);
+			var save = await _unitOfWork.AccountRepository.AddAsync(account);
 			await _unitOfWork.SaveAsync();
 
 			var cart = new Cart
@@ -62,7 +62,7 @@ namespace EduToyRent.Service.Services
 			account.AccountName = editAccountProfileDTO.AccountName;
 			account.PhoneNumber = editAccountProfileDTO.PhoneNumber;
 			account.Address = editAccountProfileDTO.Address;
-			await _unitOfWork.AccountRepository.UpdateAsync(account);
+			var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
 			await _unitOfWork.SaveAsync();
 			return Result.Success();
 		}
@@ -86,7 +86,7 @@ namespace EduToyRent.Service.Services
 			if (account.AccountPassword == oldPassword)
 			{
 				account.AccountPassword = await HashPassword.HassPass(password.AccountPassword);
-				await _unitOfWork.AccountRepository.UpdateAsync(account);
+				var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
 				await _unitOfWork.SaveAsync();
 				return Result.Success();
 			}
@@ -122,7 +122,7 @@ namespace EduToyRent.Service.Services
 			if (account.RoleId == 1 || account.RoleId == 2)
 			{
 				account.IsBan = true;
-				await _unitOfWork.AccountRepository.UpdateAsync(account);
+				var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
 				await _unitOfWork.SaveAsync();
 				return Result.Success();
 			}
@@ -140,7 +140,7 @@ namespace EduToyRent.Service.Services
 			if (account.RoleId == 3)
 			{
 				account.IsBan = true;
-				await _unitOfWork.AccountRepository.UpdateAsync(account);
+				var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
 				await _unitOfWork.SaveAsync();
 				return Result.Success();
 			}
@@ -159,7 +159,7 @@ namespace EduToyRent.Service.Services
 			account.AccountPassword = await HashPassword.HassPass(account.AccountPassword);
 			account.RoleId = 2;
 			account.IsBan = false;
-			await _unitOfWork.AccountRepository.AddAsync(account);
+			var save = await _unitOfWork.AccountRepository.AddAsync(account);
 			await _unitOfWork.SaveAsync();
 
 			//var cart = new Cart
@@ -185,7 +185,7 @@ namespace EduToyRent.Service.Services
 				{
 					otp.OTP = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)).Substring(0, 5);
 					otp.expires = DateTime.Now.AddDays(1);
-					await _unitOfWork.ResetPasswordOTPRepository.UpdateAsync(otp);
+					var update = await _unitOfWork.ResetPasswordOTPRepository.UpdateAsync(otp);
 				}
 				else //create new OTP entity
 				{
@@ -195,7 +195,7 @@ namespace EduToyRent.Service.Services
 						OTP = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)).Substring(0, 5),
 						expires = DateTime.Now.AddDays(1)
 					};
-					await _unitOfWork.ResetPasswordOTPRepository.AddAsync(otp);
+					var save = await _unitOfWork.ResetPasswordOTPRepository.AddAsync(otp);
 				}
 
 				await _unitOfWork.SaveAsync();
@@ -230,7 +230,7 @@ namespace EduToyRent.Service.Services
 					return Result.Failure(ResetPasswordErrors.EmailNotFound);
 
 				account.AccountPassword = await HashPassword.HassPass(request.NewPassword);
-				await _unitOfWork.AccountRepository.UpdateAsync(account);
+				var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
 				await _unitOfWork.SaveAsync();
 
 				return Result.Success();
@@ -247,7 +247,7 @@ namespace EduToyRent.Service.Services
 			account.AccountPassword = await HashPassword.HassPass(account.AccountPassword);
 			account.RoleId = 3;
 			account.IsBan = false;
-			await _unitOfWork.AccountRepository.AddAsync(account);
+			var save = await _unitOfWork.AccountRepository.AddAsync(account);
 			await _unitOfWork.SaveAsync();
 
 			//var cart = new Cart
