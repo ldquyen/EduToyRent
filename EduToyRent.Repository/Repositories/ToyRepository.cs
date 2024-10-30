@@ -121,6 +121,7 @@ namespace EduToyRent.Repository.Repositories
         {
             return await _context.Toys
                 .Where(t => t.IsRental && t.SupplierId == accId)
+                .Include(t => t.Category)
                 .ToListAsync();
         }
 
@@ -128,6 +129,7 @@ namespace EduToyRent.Repository.Repositories
         {
             return await _context.Toys
                 .Where(t => !t.IsRental && t.SupplierId == accId)
+                .Include(t => t.Category)
                 .ToListAsync();
         }
     }

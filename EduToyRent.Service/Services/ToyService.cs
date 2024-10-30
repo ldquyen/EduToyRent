@@ -289,8 +289,9 @@ namespace EduToyRent.Service.Services
                         BuyPrice = t.BuyPrice,
                         Stock = t.Stock,
                         ImageUrl = t.ImageUrl,
-                        CategoryName = t.Category.CategoryName,
-                        IsActive = t.IsActive
+                        CategoryName = t.Category?.CategoryName,
+                        IsActive = t.IsActive                     
+                        
                     }).ToList()
                 };
             }
