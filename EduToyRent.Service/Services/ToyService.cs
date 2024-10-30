@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EduToyRent.Service.Exceptions;
+using EduToyRent.Repository.Repositories;
 
 namespace EduToyRent.Service.Services
 {
@@ -97,35 +98,6 @@ namespace EduToyRent.Service.Services
                 return Result.Failure(new Error("UpdateFailed", "Failed to update toy information"));
             return Result.Success();
         }
-        public async Task<Pagination<ViewToyForRentDTO>> ViewToysForRent(int pageIndex, int pageSize)
-        {
-            var totalItemsCount = await _unitOfWork.ToyRepository.GetRentCount();
-            var toys = await _unitOfWork.ToyRepository.ViewToysForRent(pageIndex, pageSize);
-
-            var toyDTOs = _mapper.Map<IEnumerable<ViewToyForRentDTO>>(toys);
-            return new Pagination<ViewToyForRentDTO>
-            {
-                TotalItemsCount = totalItemsCount,
-                PageSize = pageSize,
-                PageIndex = pageIndex,
-                Items = toyDTOs.ToList()
-            };
-        }
-
-        public async Task<Pagination<ViewToyForSaleDTO>> ViewToysForSale(int pageIndex, int pageSize)
-        {
-            var totalItemsCount = await _unitOfWork.ToyRepository.GetSaleCount();
-            var toys = await _unitOfWork.ToyRepository.ViewToysForSale(pageIndex, pageSize);
-
-            var toyDTOs = _mapper.Map<IEnumerable<ViewToyForSaleDTO>>(toys);
-            return new Pagination<ViewToyForSaleDTO>
-            {
-                TotalItemsCount = totalItemsCount,
-                PageSize = pageSize,
-                PageIndex = pageIndex,
-                Items = toyDTOs.ToList()
-            };
-        }
 
         public async Task<ViewToyForRentDetailDTO> ViewToyDetailForRent(int toyId)
         {
@@ -143,6 +115,7 @@ namespace EduToyRent.Service.Services
                 RentPricePerDay = toy.RentPricePerDay,
                 RentPricePerWeek = toy.RentPricePerWeek,
                 RentPricePerTwoWeeks = toy.RentPricePerTwoWeeks,
+                Stock = toy.Stock,
                 SupplierName = toy.Supplier?.AccountName,
                 CategoryName = toy.Category?.CategoryName,
                 ImageUrl = toy.ImageUrl
@@ -165,6 +138,7 @@ namespace EduToyRent.Service.Services
                 ToyName = toy.ToyName,
                 Description = toy.Description,
                 BuyPrice = toy.BuyPrice,
+                Stock = toy.Stock,
                 SupplierName = toy.Supplier?.AccountName,
                 CategoryName = toy.Category?.CategoryName,
                 ImageUrl = toy.ImageUrl
@@ -172,66 +146,126 @@ namespace EduToyRent.Service.Services
 
             return detailDTO;
         }
-
-        public async Task<Pagination<ViewToyForRentDTO>> SearchRentByName(string keyword, int pageIndex, int pageSize)
+        public async Task<Pagination<ViewToyForRentDTO>> ViewToysForRent(string search, string sort, int pageIndex, int pageSize)
         {
-            pageIndex = pageIndex < 1 ? 1 : pageIndex;
-            var totalItemsCount = await _unitOfWork.ToyRepository.GetCountByToyName(keyword, true);
-            var toys = await _unitOfWork.ToyRepository.SearchToysByName(keyword, true, pageIndex, pageSize);
-            var toyDTOs = _mapper.Map<IEnumerable<ViewToyForRentDTO>>(toys);
+            var toys = await _unitOfWork.ToyRepository.GetToysForRent();
+            if (string.IsNullOrEmpty(search) && string.IsNullOrEmpty(sort))
+            {
+                var totalToysCount = toys.Count;
+                toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
-            return new Pagination<ViewToyForRentDTO>
+                return new Pagination<ViewToyForRentDTO>
+                {
+                    TotalItemsCount = totalToysCount,
+                    PageSize = pageSize,
+                    PageIndex = pageIndex,
+                    Items = toys.Select(t => new ViewToyForRentDTO
+                    {
+                        ToyId = t.ToyId,
+                        ToyName = t.ToyName,
+                        Description = t.Description,
+                        RentPricePerDay = t.RentPricePerDay,
+                        Stock = t.Stock,
+                        ImageUrl = t.ImageUrl
+                    }).ToList()
+                };
+            }
+            if (!string.IsNullOrEmpty(search))
+            {
+                toys = toys.Where(t => t.ToyName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            toys = sort switch
+            {
+                "price_asc" => toys.OrderBy(t => t.RentPricePerDay).ToList(),
+                "price_desc" => toys.OrderByDescending(t => t.RentPricePerDay).ToList(),
+                "name_asc" => toys.OrderBy(t => t.ToyName).ToList(),
+                "name_desc" => toys.OrderByDescending(t => t.ToyName).ToList(),
+                _ => toys.OrderBy(t => t.ToyName).ToList()
+            };
+
+            int totalItemsCount = toys.Count;
+
+            toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            var paginationResult = new Pagination<ViewToyForRentDTO>
             {
                 TotalItemsCount = totalItemsCount,
                 PageSize = pageSize,
                 PageIndex = pageIndex,
-                Items = toyDTOs.ToList()
+                Items = toys.Select(t => new ViewToyForRentDTO
+                {
+                    ToyId = t.ToyId,
+                    ToyName = t.ToyName,
+                    Description = t.Description,
+                    RentPricePerDay = t.RentPricePerDay,
+                    Stock = t.Stock,
+                    ImageUrl = t.ImageUrl
+                }).ToList()
             };
+
+            return paginationResult;
         }
 
-        public async Task<Pagination<ViewToyForSaleDTO>> SearchSaleByName(string keyword, int pageIndex, int pageSize)
+        public async Task<Pagination<ViewToyForSaleDTO>> ViewToysForSale(string search, string sort, int pageIndex, int pageSize)
         {
-            pageIndex = pageIndex < 1 ? 1 : pageIndex;
-            var totalItemsCount = await _unitOfWork.ToyRepository.GetCountByToyName(keyword, false);
-            var toys = await _unitOfWork.ToyRepository.SearchToysByName(keyword, false, pageIndex, pageSize);
-            var toyDTOs = _mapper.Map<IEnumerable<ViewToyForSaleDTO>>(toys);
+            var toys = await _unitOfWork.ToyRepository.GetToysForSale();
+            if (string.IsNullOrEmpty(search) && string.IsNullOrEmpty(sort))
+            {
+                var totalToysCount = toys.Count;
+                toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
-            return new Pagination<ViewToyForSaleDTO>
+                return new Pagination<ViewToyForSaleDTO>
+                {
+                    TotalItemsCount = totalToysCount,
+                    PageSize = pageSize,
+                    PageIndex = pageIndex,
+                    Items = toys.Select(t => new ViewToyForSaleDTO
+                    {
+                        ToyId = t.ToyId,
+                        ToyName = t.ToyName,
+                        Description = t.Description,
+                        BuyPrice = t.BuyPrice,
+                        Stock = t.Stock,
+                        ImageUrl = t.ImageUrl
+                    }).ToList()
+                };
+            }
+            if (!string.IsNullOrEmpty(search))
+            {
+                toys = toys.Where(t => t.ToyName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            toys = sort switch
+            {
+                "price_asc" => toys.OrderBy(t => t.BuyPrice).ToList(),
+                "price_desc" => toys.OrderByDescending(t => t.BuyPrice).ToList(),
+                "name_asc" => toys.OrderBy(t => t.ToyName).ToList(),
+                "name_desc" => toys.OrderByDescending(t => t.ToyName).ToList(),
+                _ => toys.OrderBy(t => t.ToyName).ToList()
+            };
+
+            int totalItemsCount = toys.Count;
+
+            toys = toys.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            var paginationResult = new Pagination<ViewToyForSaleDTO>
             {
                 TotalItemsCount = totalItemsCount,
                 PageSize = pageSize,
                 PageIndex = pageIndex,
-                Items = toyDTOs.ToList()
+                Items = toys.Select(t => new ViewToyForSaleDTO
+                {
+                    ToyId = t.ToyId,
+                    ToyName = t.ToyName,
+                    Description = t.Description,
+                    BuyPrice = t.BuyPrice,
+                    ImageUrl = t.ImageUrl,
+                    Stock = t.Stock
+                }).ToList()
             };
-        }
 
-        public async Task<Pagination<ViewToyForRentDTO>> SortToysForRent(string sortBy, int pageIndex, int pageSize)
-        {
-            var totalItemsCount = await _unitOfWork.ToyRepository.GetRentCount();
-            var toys = await _unitOfWork.ToyRepository.SortToysForRent(sortBy, pageIndex, pageSize);
-            var toyDtos = _mapper.Map<ICollection<ViewToyForRentDTO>>(toys);
-            return new Pagination<ViewToyForRentDTO>
-            {
-                TotalItemsCount = totalItemsCount,
-                PageSize = pageSize,
-                PageIndex = pageIndex,
-                Items = toyDtos
-            };
+            return paginationResult;
         }
-
-        public async Task<Pagination<ViewToyForSaleDTO>> SortToysForSale(string sortBy, int pageIndex, int pageSize)
-        {
-            var totalItemsCount = await _unitOfWork.ToyRepository.GetSaleCount();
-            var toys = await _unitOfWork.ToyRepository.SortToysForSale(sortBy, pageIndex, pageSize);
-            var toyDtos = _mapper.Map<ICollection<ViewToyForSaleDTO>>(toys);
-            return new Pagination<ViewToyForSaleDTO>
-            {
-                TotalItemsCount = totalItemsCount,
-                PageSize = pageSize,
-                PageIndex = pageIndex,
-                Items = toyDtos
-            };
-        }
-
     }
 }

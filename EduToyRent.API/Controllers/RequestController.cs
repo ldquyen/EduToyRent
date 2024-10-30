@@ -71,7 +71,7 @@ namespace EduToyRent.API.Controllers
             return Ok(createToyResult);
         }
 
-        [HttpGet("requests")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllRequests(int page = 1)
         {
             var requests = await _requestFromService.GetAllsRequest(page, 10);
@@ -92,7 +92,7 @@ namespace EduToyRent.API.Controllers
             return Ok(requests);
         }
 
-        [HttpGet("request/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRequest(int id)
         {
             var requests = await _requestFromService.GetRequestById(id);
@@ -101,7 +101,7 @@ namespace EduToyRent.API.Controllers
 
         [Authorize(Policy = "StaffOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("update-status")]
+        [HttpPut("status")]
         public async Task<IActionResult> UpdateRequestStatus([FromBody] UpdateRequestDTO updateRequestDTO)
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
@@ -120,3 +120,4 @@ namespace EduToyRent.API.Controllers
         }
     }
 }
+// chỉnh tên  api request 

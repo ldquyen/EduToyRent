@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace EduToyRent.Repository.Interfaces
 {
-    public interface IVoucherRepository : IRepository<Voucher>
+    public interface IDepositOrderRepository
     {
-        Task<decimal> UseVoucherReturnPrice(int voucherId, decimal price);
+        Task CreateDepositOrder(Order order, string bankcode, string bankname);
     }
 }

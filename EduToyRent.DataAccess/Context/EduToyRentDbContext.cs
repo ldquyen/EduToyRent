@@ -50,6 +50,7 @@ namespace EduToyRent.DAL.Context
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new StatusOrderConfiguration());
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Toys)
