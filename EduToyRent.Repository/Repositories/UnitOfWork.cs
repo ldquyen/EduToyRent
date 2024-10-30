@@ -14,6 +14,7 @@ namespace EduToyRent.Repository.Repositories
     {
         private readonly EduToyRentDbContext _context;
         public IAccountRepository AccountRepository { get; set; }
+		public IResetPasswordOTPRepository ResetPasswordOTPRepository { get; set; }
         public IRefreshTokenRepository RefreshTokenRepository { get; set; }
         public ICartRepository CartRepository { get; set; }
         public ICartItemRepository CartItemRepository {  get; set; }
@@ -33,6 +34,7 @@ namespace EduToyRent.Repository.Repositories
         {
             _context = context;
             AccountRepository = new AccountRepository(_context);
+			ResetPasswordOTPRepository = new ResetPasswordOTPRepository(_context);
             RefreshTokenRepository = new RefreshTokenRepository(_context);  
             CartRepository = new CartRepository(_context);
             CartItemRepository = new CartItemRepository(_context);

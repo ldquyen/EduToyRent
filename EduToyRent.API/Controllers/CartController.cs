@@ -67,7 +67,9 @@ namespace EduToyRent.API.Controllers
 		public async Task<IActionResult> AddItemToCart([FromForm] GetCartRequest request)
 		{
 			try
-			{
+			{ 
+				if (!ModelState.IsValid) return BadRequest(ModelState);
+
 				CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
 				Result result = await _cartService.AddItemToCart(request, currentUserObject.AccountId);
                 if (result.IsSuccess) return Ok(result);
@@ -84,6 +86,8 @@ namespace EduToyRent.API.Controllers
         [HttpDelete("remove-items-from-cart")]
         public async Task<IActionResult> RemoveItemsFromCart([FromBody] List<int> itemIdList)
         {
+			if (!ModelState.IsValid) return BadRequest(ModelState);
+
 			bool result = await _cartService.RemoveItemsFromCart(itemIdList);
 			if (!result) return StatusCode(500);
 			return Ok();

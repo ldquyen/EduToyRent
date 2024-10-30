@@ -29,51 +29,61 @@ namespace EduToyRent.Service.Services
 
         public async Task<dynamic> AddItemToCart(GetCartRequest request, int accountId)
         {
+			try
+			{
+				Toy toy = await _unitOfWork.ToyRepository.GetByIdAsync(request.toyId);
+				if (toy == null) return Result.Failure(ToyErrors.ToyIsNull);
 
-            Toy toy = await _unitOfWork.ToyRepository.GetByIdAsync(request.toyId);
-            if (toy == null) return Result.Failure(ToyErrors.ToyIsNull);
+				var carts = await _unitOfWork.CartRepository.GetByAccountIdAsync(accountId);
+				if (carts == null)
+				{
+					Cart cartrent = new()
+					{
+						AccountId = accountId,
+						IsRental = true,
+					};
+					await _unitOfWork.CartRepository.AddCartAsync(cartrent);
+					Cart cartsale = new()
+					{
+						AccountId = accountId,
+						IsRental = false,
+					};
+					await _unitOfWork.CartRepository.AddCartAsync(cartsale);
+				}
+				Cart cart = new Cart();
+				if (toy.IsRental)
+					cart = await _unitOfWork.CartRepository.GetRentCart(accountId);
+				else
+					cart = await _unitOfWork.CartRepository.GetSaleCart(accountId);
 
-            var carts = await _unitOfWork.CartRepository.GetByAccountIdAsync(accountId);
-            if (carts == null)
-            {
-                Cart cartrent = new()
-                {
-                    AccountId = accountId,
-                    IsRental = true,
-                };
-                await _unitOfWork.CartRepository.AddCartAsync(cartrent);
-                Cart cartsale = new()
-                {
-                    AccountId = accountId,
-                    IsRental = false,
-                };
-                await _unitOfWork.CartRepository.AddCartAsync(cartsale);
-            }
-            Cart cart = new Cart();
-            if (toy.IsRental)
-                cart = await _unitOfWork.CartRepository.GetRentCart(accountId);
-            else
-                cart = await _unitOfWork.CartRepository.GetSaleCart(accountId);
-            
-                
-            CartItem? item = await _unitOfWork.CartItemRepository.GetCartItem(request.toyId, cart.CartId);
-            if (item == null)
-            { // add
-                item = new()
-                {
-                    CartId = cart.CartId,
-                    ToyId = request.toyId,
-                    Quantity = request.quantity
-                };
-                await _unitOfWork.CartItemRepository.AddAsync(item);
-                await _unitOfWork.SaveAsync();
-                return Result.Success();
-            }
-            //update
-            item.Quantity += request.quantity;
 
-            await _unitOfWork.SaveAsync();
-            return Result.Success();
+				CartItem? item = await _unitOfWork.CartItemRepository.GetCartItem(request.toyId, cart.CartId);
+				if (item == null)
+				{ // add
+					item = new()
+					{
+						CartId = cart.CartId,
+						ToyId = request.toyId,
+						Quantity = request.quantity < toy.Stock ? request.quantity : toy.Stock,
+					};
+					await _unitOfWork.CartItemRepository.AddAsync(item);
+				}
+				else
+				{
+					//update
+					if (item.Quantity + request.quantity > toy.Stock)
+					{
+						item.Quantity = toy.Stock;
+					}
+					else item.Quantity += request.quantity;
+
+					await _unitOfWork.CartItemRepository.UpdateAsync(item);
+				}
+				await _unitOfWork.SaveAsync();
+				return Result.Success();
+			} catch (Exception ex) {
+				return null;
+			}
         }
 
 
@@ -115,8 +125,17 @@ namespace EduToyRent.Service.Services
 
         public async Task<bool> RemoveItemsFromCart(List<int> itemIdList)
         {
-            bool result = await _unitOfWork.CartItemRepository.DeleteAsync(itemIdList);
-            return result;
+			try
+			{
+				bool result = await _unitOfWork.CartItemRepository.DeleteAsync(itemIdList);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return false;
+			}
+            
         }
     }
 }

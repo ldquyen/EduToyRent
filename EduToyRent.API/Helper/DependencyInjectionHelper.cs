@@ -14,6 +14,7 @@ namespace EduToyRent.API.Helper
             //repository
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+			services.AddScoped<IResetPasswordOTPRepository, ResetPasswordOTPRepository>();
 			services.AddScoped<ICartRepository, CartRepository>();
 			services.AddScoped<ICartItemRepository, CartItemRepository>();
 
