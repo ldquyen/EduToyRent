@@ -30,7 +30,8 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IOrderService, OrderService>();  
             services.AddScoped<IVoucherService, VoucherService>();
             services.AddScoped<IPayOSService, PayOSService>();
-			return services;
+            services.AddScoped<IReportService, ReportService>();
+            return services;
         }
 
 

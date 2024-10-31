@@ -31,7 +31,7 @@ namespace EduToyRent.API.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPut("{id}")]
+        [HttpPut("update{id}")]
         public async Task<IActionResult> UpdateToyInfo(int id, [FromBody] UpdateToyDTO updateToyDTO)
         {
             var result = await _toyService.UpdateToyInfo(id, updateToyDTO);
