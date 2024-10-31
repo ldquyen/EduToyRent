@@ -13,6 +13,8 @@ using EduToyRent.Service.DTOs.OrderDTO;
 using EduToyRent.Service.DTOs.CartDTO;
 using Net.payOS.Types;
 using EduToyRent.Service.DTOs.VoucherDTO;
+using EduToyRent.DataAccess.Entities;
+using EduToyRent.Service.DTOs.ReportDTO;
 
 namespace EduToyRent.Service.Mappings
 {
@@ -90,6 +92,11 @@ namespace EduToyRent.Service.Mappings
             .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Voucher.ExpiredDate))
             .ForMember(dest => dest.Discount, opt => opt.MapFrom(src => src.Voucher.Discount))
             .ForMember(dest => dest.IsUsed, opt => opt.MapFrom(src => src.IsUsed));
+
+            //report
+            CreateMap<CreateReportDTO, Report>()
+                .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "Pending"));
         }
     }
 }
