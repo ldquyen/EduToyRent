@@ -204,7 +204,7 @@ namespace EduToyRent.Service.Services
 			}
 			catch (Exception ex)
 			{
-				return null;
+				return Result.Failure(new Error("500", ex.ToString()));
 			}
 
 		}
@@ -235,7 +235,7 @@ namespace EduToyRent.Service.Services
 
 				return Result.Success();
 			}
-			catch (Exception ex) { return null; }
+			catch (Exception ex) { return Result.Failure(new Error("500", ex.ToString())); }
 
 		}
 
