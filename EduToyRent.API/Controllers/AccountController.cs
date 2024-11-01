@@ -237,7 +237,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-		[HttpPost("forgot-password")]
+		[HttpPost("forgot-password")] // (hieu) gui yeu cau reset password
 		[AllowAnonymous]
 		public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto request)
 		{
@@ -250,7 +250,7 @@ namespace EduToyRent.API.Controllers
 			return Ok();
 		}
 
-		[HttpPost("reset-password")]
+		[HttpPost("reset-password")] // (hieu) dung OTP reset password
 		[AllowAnonymous]
 		public async Task<IActionResult> ResetPassword(ResetPasswordDto request)
 		{
