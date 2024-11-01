@@ -15,7 +15,7 @@ namespace EduToyRent.API.Controllers
             _reportService = reportService;
         }
 
-        [HttpPost("create-report")]
+        [HttpPost("create-report")] //Create Report for User - Phu
         public async Task<IActionResult> CreateReport([FromQuery] CreateReportDTO dto)
         {
             var result = await _reportService.CreateReportAsync(dto);
@@ -24,14 +24,14 @@ namespace EduToyRent.API.Controllers
 
             return BadRequest(result.Error);
         }
-        [HttpGet("get-report")]
+        [HttpGet("get-report")] //Get Reports for Staff - Phu
         public async Task<IActionResult> GetReports(int pageIndex = 0, int pageSize = 10)
         {
             var paginatedReports = await _reportService.GetReports(pageIndex, pageSize);
             return Ok(paginatedReports);
         }
 
-        [HttpPut("change-report-status")]
+        [HttpPut("change-report-status")] //Update Report status - Phu
         public async Task<IActionResult> ChangeReportStatus([FromQuery] ChangeReportStatusDTO dto)
         {
             var result = await _reportService.ChangeReportStatus(dto);

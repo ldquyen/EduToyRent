@@ -31,7 +31,7 @@ namespace EduToyRent.API.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPut("update{id}")]
+        [HttpPut("update{id}")] //Update Toy Information - Phu
         public async Task<IActionResult> UpdateToyInfo(int id, [FromBody] UpdateToyDTO updateToyDTO)
         {
             var result = await _toyService.UpdateToyInfo(id, updateToyDTO);
@@ -40,21 +40,21 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("detail/rent/{toyId}")]
+        [HttpGet("detail/rent/{toyId}")] //View Toy Sale/Rent Detail - Phu
         public async Task<IActionResult> ViewToyDetailForRent(int toyId)
         {
             var result = await _toyService.ViewToyDetailForRent(toyId);
             return Ok(result);
         }
 
-        [HttpGet("detail/sale/{toyId}")]
+        [HttpGet("detail/sale/{toyId}")] //View Toy Sale/Rent Detail - Phu
         public async Task<IActionResult> ViewToyDetailForSale(int toyId)
         {
             var result = await _toyService.ViewToyDetailForSale(toyId);
             return Ok(result);
         }
 
-        [HttpGet("view-toys/rent")]
+        [HttpGet("view-toys/rent")] //Get Toys Sale/Rent - Phu 
         public async Task<ActionResult<Pagination<ViewToyForRentDTO>>> ViewToysForRent([FromQuery] string search = null,
         [FromQuery] string sort = null,
         [FromQuery] int pageIndex = 0,
@@ -64,7 +64,7 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("view-toys/sale")]
+        [HttpGet("view-toys/sale")] //Get Toys Sale/Rent - Phu 
         public async Task<ActionResult<Pagination<ViewToyForSaleDTO>>> ViewToysForSale([FromQuery] string search = null,
         [FromQuery] string sort = null,
         [FromQuery] int pageIndex = 0,
