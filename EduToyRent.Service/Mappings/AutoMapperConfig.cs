@@ -15,6 +15,7 @@ using Net.payOS.Types;
 using EduToyRent.Service.DTOs.VoucherDTO;
 using EduToyRent.DataAccess.Entities;
 using EduToyRent.Service.DTOs.ReportDTO;
+using EduToyRent.Service.DTOs.ReviewDTO;
 
 namespace EduToyRent.Service.Mappings
 {
@@ -43,7 +44,7 @@ namespace EduToyRent.Service.Mappings
             //CreateMap<Toy, ResponseSaleToyDTO>();
 
             CreateMap<CreateNewCategoryDTO, Category>();
-
+            CreateMap<CreateReviewDTO, Review>();
             //request
             CreateMap<CreateRentalRequestDTO, RequestForm>();
             CreateMap<CreateSaleRequestDTO, RequestForm>();

@@ -30,6 +30,8 @@ namespace EduToyRent.Repository.Repositories
         public IPaymentRepository PaymentRepository { get; set; }
         public IShipDateRepository ShipDateRepository {  get; set; }
         public IReportRepository ReportRepository { get; set; }
+        public IReviewRepository ReviewRepository { get; set; }
+
 
         public UnitOfWork(EduToyRentDbContext context)
         {
