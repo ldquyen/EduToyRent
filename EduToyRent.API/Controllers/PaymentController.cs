@@ -17,7 +17,7 @@ namespace EduToyRent.API.Controllers
             _payOsService = payOsService;
         }
 
-        [HttpPost("create-sale-payment-link/{orderId}")]    //.paay rent order
+        [HttpPost("create-sale-payment-link/{orderId}")]    //.paay sale  order
         public async Task<IActionResult> CreateSalePayment(int orderId)
         {
             var result = await _payOsService.CreatePaymentLinkForSale(orderId);
@@ -28,10 +28,21 @@ namespace EduToyRent.API.Controllers
                 return BadRequest(result);
         }
 
-        [HttpPost("create-rent-payment-link/{orderId}")]    //.pay sale order
+        [HttpPost("create-rent-payment-link/{orderId}")]    //.pay rent order
         public async Task<IActionResult> CreateRentPayment(int orderId)
         {
             var result = await _payOsService.CreatePaymentLinkForRent(orderId);
+
+            if (result.IsSuccess)
+                return Ok(result);
+            else
+                return BadRequest(result);
+        }
+
+        [HttpPost("create-rent-payment2-link/{orderId}")]    //.pay rent order
+        public async Task<IActionResult> CreateRent2Payment(int orderId)
+        {
+            var result = await _payOsService.CreatePaymentLinkForRent2(orderId);
 
             if (result.IsSuccess)
                 return Ok(result);

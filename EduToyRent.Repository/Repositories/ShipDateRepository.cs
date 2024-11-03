@@ -18,7 +18,7 @@ namespace EduToyRent.Repository.Repositories
             _context = context;
         }
 
-        public async Task CreateShipDate(OrderDetail orderDetail)
+        public async Task<bool> CreateShipDate(OrderDetail orderDetail)
         {
             ShipDate shipDate = new ShipDate()
             {
@@ -29,6 +29,7 @@ namespace EduToyRent.Repository.Repositories
             };
             await _context.ShipDates.AddAsync(shipDate);
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> CheckShip(int orderDetailId)

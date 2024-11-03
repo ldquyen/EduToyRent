@@ -14,6 +14,7 @@ using EduToyRent.Service.Common;
 using EduToyRent.Service.DTOs.OrderDTO;
 using EduToyRent.Service.Exceptions;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Google.Apis.Storage.v1.Data;
 
 namespace EduToyRent.Service.Services
 {
@@ -36,7 +37,11 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreatePaymentLinkForSale(int orderId)
         {
-
+            var paymentSale = await _unitOfWork.PaymentRepository.GetAllAsync(x => x.PaymentId == orderId);
+            if (paymentSale != null)
+            {
+                return Result.Failure(PaymentErrors.PaymentError);
+            }
             var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
             if (orderNow == null)
                 return Result.Failure(OrderErrors.OrderIsNull);
@@ -51,34 +56,37 @@ namespace EduToyRent.Service.Services
             }
             var domain = "http://localhost:3000/";
 
+            Payment payment = new Payment()
+            {
+                OrderId = orderId,
+                AccountId = orderNow.Account.AccountId,
+                Amount = orderNow.FinalMoney,
+                PaymentMethod = "Pay all",
+                Status = 0,
+                TransactionId = "o",
+                TransactionDate = DateTime.Now,
+                BankCode = "",
+                ResponseCode = ""
+            };
+            var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
+            await _unitOfWork.SaveAsync();
 
             PaymentData paymentData = new PaymentData(
-                orderCode: orderNow.OrderId,
-                amount: (int)orderNow.FinalMoney,
-                description: $"Payment for order sale {orderNow.OrderId}",
+                orderCode: payment.PaymentId,
+                amount: (int)payment.Amount,
+                description: $"Order sale paymentId:{payment.PaymentId}",
                 items: items,
                 cancelUrl: domain,
-                returnUrl: domain,
+                returnUrl: domain + "/paymentinfo",
 
                 buyerName: orderNow.Account.AccountName
                 );
             try
             {
                 CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);
-                Payment payment = new Payment()
-                {
-                    OrderId = orderId,
-                    AccountId = orderNow.Account.AccountId,
-                    Amount = paymentLinkInformation.amountPaid,
-                    PaymentMethod = "PayOS",
-                    Status = 0,
-                    TransactionId = paymentLinkInformation.id,
-                    TransactionDate = DateTime.Parse(paymentLinkInformation.createdAt),
-                    BankCode = "",
-                    ResponseCode = ""
-                };
-                var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
+                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment.PaymentId);
+                payment.TransactionId = paymentLinkInformation.id;      //update lai transactiondId
+                await _unitOfWork.PaymentRepository.UpdateAsync(payment);
                 await _unitOfWork.SaveAsync();
                 return Result.SuccessWithObject(createPayment.checkoutUrl);
             }
@@ -90,7 +98,11 @@ namespace EduToyRent.Service.Services
 
         public async Task<dynamic> CreatePaymentLinkForRent(int orderId)
         {
-
+            var paymentSale = await _unitOfWork.PaymentRepository.GetAllAsync(x => x.PaymentId == orderId);
+            if (paymentSale != null && paymentSale.Any())
+            {
+                return Result.Failure(PaymentErrors.PaymentError);
+            }
             var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
             if (orderNow == null)
                 return Result.Failure(OrderErrors.OrderIsNull);
@@ -105,10 +117,26 @@ namespace EduToyRent.Service.Services
             }
             var domain = "http://localhost:3000";
 
+            Payment payment1 = new Payment()
+            {
+                OrderId = orderId,
+                AccountId = orderNow.Account.AccountId,
+                Amount = orderNow.FinalMoney / 2,
+                PaymentMethod = "Pay 1",
+                Status = 0,
+                TransactionId = "o",
+                TransactionDate = DateTime.Now,
+                BankCode = "",
+                ResponseCode = ""
+            };
+            decimal last = orderNow.FinalMoney - payment1.Amount;
+            var save = await _unitOfWork.PaymentRepository.AddAsync(payment1);
+            await _unitOfWork.SaveAsync();
+
             PaymentData paymentData = new PaymentData(
-                orderCode: orderNow.OrderId,
-                amount: (int)orderNow.FinalMoney,
-                description: $"Payment for order rent {orderNow.OrderId}",
+                orderCode: payment1.PaymentId,
+                amount: (int)payment1.Amount,
+                description: $"Order rent1 paymentId:{payment1.PaymentId}",
                 items: items,
                 cancelUrl: domain,
                 returnUrl: domain + "/paymentinfo",
@@ -118,20 +146,24 @@ namespace EduToyRent.Service.Services
             try
             {
                 CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);
-                Payment payment = new Payment()
+                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment1.PaymentId);
+                payment1.TransactionId = paymentLinkInformation.id;
+                await _unitOfWork.PaymentRepository.UpdateAsync(payment1);
+                await _unitOfWork.DepositOrderRepository.CreateDepositOrder(orderNow, "000", "bank"); // dat coc
+                await _unitOfWork.SaveAsync();
+                Payment payment2 = new Payment()
                 {
                     OrderId = orderId,
                     AccountId = orderNow.Account.AccountId,
-                    Amount = paymentLinkInformation.amountPaid,
-                    PaymentMethod = "PayOS",
+                    Amount = last,
+                    PaymentMethod = "Pay 2",
                     Status = 0,
-                    TransactionId = paymentLinkInformation.id,
-                    TransactionDate = DateTime.Parse(paymentLinkInformation.createdAt),
+                    TransactionId = "o",
+                    TransactionDate = DateTime.Now,
                     BankCode = "",
                     ResponseCode = ""
                 };
-                var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
+                var save2 = await _unitOfWork.PaymentRepository.AddAsync(payment2);
                 await _unitOfWork.SaveAsync();
                 return Result.SuccessWithObject(createPayment.checkoutUrl);
             }
@@ -140,11 +172,46 @@ namespace EduToyRent.Service.Services
                 return Result.Failure(PaymentErrors.PaymentError);
             }
         }
-        public async Task<dynamic> GetPaymentLinkInformation(int orderId)
+
+        public async Task<dynamic> CreatePaymentLinkForRent2(int orderId)
         {
-            PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(orderId);
+            var domain = "http://localhost:3000/";
+            List<ItemData> items = new List<ItemData>();
+            Payment payment2 = await _unitOfWork.PaymentRepository.GetAsync(x => x.OrderId == orderId && x.PaymentMethod == "Pay 2" && x.TransactionId == "o");
+            if (payment2 == null)
+            {
+                return Result.Failure(PaymentErrors.PaymentError);
+            }
+            PaymentData paymentData = new PaymentData(
+                orderCode: payment2.PaymentId,
+                amount: (int)payment2.Amount,
+                description: $"Order rent2 paymentId:{payment2.PaymentId}",
+                items: items,
+                cancelUrl: domain,
+                returnUrl: domain + "/paymentinfo"
+                );
+            try
+            {
+                CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment2.PaymentId);
+                payment2.TransactionId = paymentLinkInformation.id;    
+                await _unitOfWork.PaymentRepository.UpdateAsync(payment2);
+                await _unitOfWork.SaveAsync();
+                return Result.SuccessWithObject(createPayment.checkoutUrl);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(PaymentErrors.PaymentError);
+            }
+        }
+       
+        public async Task<dynamic> GetPaymentLinkInformation(int paymentId)
+        {
+            PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(paymentId);
             if (paymentLinkInformation != null)
             {
+                var payment = await _unitOfWork.PaymentRepository.GetAsync(x => x.PaymentId == paymentId);
+                int orderId = payment.OrderId;
                 int status = 0;
                 if (paymentLinkInformation.status == "Pending")
                 {
@@ -166,20 +233,6 @@ namespace EduToyRent.Service.Services
                     status = 3; // ko xd dc
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
                 }
-                var order = await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
-                Payment payment = new Payment()
-                {
-                    OrderId = orderId,
-                    AccountId = order.AccountId,
-                    Amount = paymentLinkInformation.amountPaid,
-                    PaymentMethod = "PayOS",
-                    Status = status,
-                    TransactionId = paymentLinkInformation.id,
-                    TransactionDate = DateTime.Parse(paymentLinkInformation.createdAt),
-                    BankCode = "",
-                    ResponseCode = ""
-                };
-                await _unitOfWork.PaymentRepository.UpdatePayment(payment);
             }
             return Result.SuccessWithObject(paymentLinkInformation);
         }

@@ -16,5 +16,6 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> SupplierConfirmShip(int orderDetailId);
         Task<dynamic> CompleteOrder(int orderId, int accountId);
         Task<dynamic> ReturnOrderRent(int orderId, int accountId);
+        Task<dynamic> GetReturnOrderForStaff();
     }
 }

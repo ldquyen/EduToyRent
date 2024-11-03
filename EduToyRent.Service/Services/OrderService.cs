@@ -63,7 +63,7 @@ namespace EduToyRent.Service.Services
             {
                 if (await CreateOrderDetailForRent(createOrderDTO, id))
                 {
-                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 10);
+                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 100);
                     foreach (var odDetail in odList)
                     {
                         odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
@@ -80,7 +80,6 @@ namespace EduToyRent.Service.Services
                     }
                     else order.FinalMoney = order.TotalMoney;
                     var update2 = await _unitOfWork.OrderRepository.UpdateAsync(order);
-                    //await _unitOfWork.DepositOrderRepository.CreateDepositOrder(order, "123456", "tpbank");
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
                 }
@@ -267,7 +266,7 @@ namespace EduToyRent.Service.Services
 
             if (!od.IsRentalOrder)
             {
-                if (od.StatusId == 3 || od.StatusId == 4)
+                if (od.StatusId == 3)
                 {
                     od.StatusId = 8;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
@@ -281,9 +280,9 @@ namespace EduToyRent.Service.Services
             }
             else
             {
-                if (od.StatusId == 5 || od.StatusId == 7)
+                if (od.StatusId == 3)
                 {
-                    od.StatusId = 8;
+                    od.StatusId = 7;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
                     await _unitOfWork.SaveAsync();
                     return Result.Success();
@@ -301,7 +300,7 @@ namespace EduToyRent.Service.Services
                 return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
             if (od.IsRentalOrder)
             {
-                if(od.StatusId == 3 || od.StatusId == 4)
+                if(od.StatusId == 7)
                 {
                     od.StatusId = 5;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
@@ -315,6 +314,11 @@ namespace EduToyRent.Service.Services
             }
             else
                 return Result.Failure(OrderErrors.WrongOrderStatus);
+        }
+
+        public async Task<dynamic> GetReturnOrderForStaff()
+        {
+            return 0;
         }
 
     }
