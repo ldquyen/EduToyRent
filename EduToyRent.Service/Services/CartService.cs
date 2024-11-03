@@ -81,46 +81,56 @@ namespace EduToyRent.Service.Services
 				}
 				await _unitOfWork.SaveAsync();
 				return Result.Success();
-			} catch (Exception ex) {
-				return null;
+			} catch (Exception ex) 
+			{
+				Console.WriteLine(ex.Message);
+				return Result.Failure(new Error("500", ex.Message));
 			}
         }
 
 
         public async Task<dynamic> GetCart(int accountId, bool isRent)
         {
-            Cart cart = new Cart();
-            if (isRent)
-            {
-                cart = await _unitOfWork.CartRepository.GetRentCart(accountId);
-                if (cart == null)
-                {
-                    Cart cartrent = new()
-                    {
-                        AccountId = accountId,
-                        IsRental = true,
-                    };
-                    await _unitOfWork.CartRepository.AddCartAsync(cartrent);
-                    return Result.Success();
-                }
-            }
-            else
-            {
-                cart = await _unitOfWork.CartRepository.GetSaleCart(accountId);
-                if (cart == null)
-                {
-                    Cart cartsale = new()
-                    {
-                        AccountId = accountId,
-                        IsRental = false,
-                    };
-                    await _unitOfWork.CartRepository.AddCartAsync(cartsale);
-                    return Result.Success();
-                }
-            }
-            List<CartItem>? items = await _unitOfWork.CartItemRepository.GetByCartIdAsync(cart.CartId);
-            var response = _mapper.Map<List<GetCartResponse>>(items);
-            return Result.SuccessWithObject(response);
+			try
+			{
+				Cart cart = new Cart();
+				if (isRent)
+				{
+					cart = await _unitOfWork.CartRepository.GetRentCart(accountId);
+					if (cart == null)
+					{
+						Cart cartrent = new()
+						{
+							AccountId = accountId,
+							IsRental = true,
+						};
+						await _unitOfWork.CartRepository.AddCartAsync(cartrent);
+						return Result.Success();
+					}
+				}
+				else
+				{
+					cart = await _unitOfWork.CartRepository.GetSaleCart(accountId);
+					if (cart == null)
+					{
+						Cart cartsale = new()
+						{
+							AccountId = accountId,
+							IsRental = false,
+						};
+						await _unitOfWork.CartRepository.AddCartAsync(cartsale);
+						return Result.Success();
+					}
+				}
+				List<CartItem>? items = await _unitOfWork.CartItemRepository.GetByCartIdAsync(cart.CartId);
+				var response = _mapper.Map<List<GetCartResponse>>(items);
+				return Result.SuccessWithObject(response);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return Result.Failure(new Error("500", ex.Message));
+			}
         }
 
         public async Task<bool> RemoveItemsFromCart(List<int> itemIdList)

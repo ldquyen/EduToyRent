@@ -170,8 +170,26 @@ namespace EduToyRent.Service.Services
 			//await _unitOfWork.SaveAsync();
 			return Result.Success();
 		}
+        public async Task<dynamic> SignUpStaffToySupplier(SignupAccountDTO signupAccountDTO)
+        {
+            var account = _mapper.Map<Account>(signupAccountDTO);
+            if (await _unitOfWork.AccountRepository.CheckEmailExistAsync(account.AccountEmail)) return Result.Failure(SignupErrors.DuplicateEmail);
+            if (await _unitOfWork.AccountRepository.CheckPhoneExistAsync(account.PhoneNumber)) return Result.Failure(SignupErrors.DuplicatePhone);
+            account.AccountPassword = await HashPassword.HassPass(account.AccountPassword);
+            account.RoleId = 3;
+            account.IsBan = false;
+            var save = await _unitOfWork.AccountRepository.AddAsync(account);
+            await _unitOfWork.SaveAsync();
 
-		public async Task<dynamic> SendPasswordResetOTP(ForgotPasswordDto request)
+            //var cart = new Cart
+            //{
+            //    AccountId = account.AccountId
+            //};
+            //await _unitOfWork.CartRepository.AddAsync(cart);
+            //await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
+        public async Task<dynamic> SendPasswordResetOTP(ForgotPasswordDto request)
 		{
 			try
 			{
@@ -204,7 +222,8 @@ namespace EduToyRent.Service.Services
 			}
 			catch (Exception ex)
 			{
-				return null;
+				Console.WriteLine(ex.Message);
+				return Result.Failure(new Error("500", ex.Message));
 			}
 
 		}
@@ -235,29 +254,15 @@ namespace EduToyRent.Service.Services
 
 				return Result.Success();
 			}
-			catch (Exception ex) { return null; }
+			catch (Exception ex) 
+			{
+				Console.WriteLine(ex.Message);
+				return Result.Failure(new Error("500", ex.Message)); 
+			}
 
 		}
 
-		public async Task<dynamic> SignUpStaffToySupplier(SignupAccountDTO signupAccountDTO)
-		{
-			var account = _mapper.Map<Account>(signupAccountDTO);
-			if (await _unitOfWork.AccountRepository.CheckEmailExistAsync(account.AccountEmail)) return Result.Failure(SignupErrors.DuplicateEmail);
-			if (await _unitOfWork.AccountRepository.CheckPhoneExistAsync(account.PhoneNumber)) return Result.Failure(SignupErrors.DuplicatePhone);
-			account.AccountPassword = await HashPassword.HassPass(account.AccountPassword);
-			account.RoleId = 3;
-			account.IsBan = false;
-			var save = await _unitOfWork.AccountRepository.AddAsync(account);
-			await _unitOfWork.SaveAsync();
-
-			//var cart = new Cart
-			//{
-			//    AccountId = account.AccountId
-			//};
-			//await _unitOfWork.CartRepository.AddAsync(cart);
-			//await _unitOfWork.SaveAsync();
-			return Result.Success();
-		}
+		
 
 	}
 

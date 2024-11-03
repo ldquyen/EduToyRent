@@ -65,7 +65,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "AdminOnly")]  // khac tri (tao tk staff)
+        [Authorize(Policy = "AdminOnly")]  // khac tri (admin tao tk staff)
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sign-up-staff")]
         public async Task<IActionResult> SignUpStaff([FromBody] SignupAccountDTO signupAccountDTO)
@@ -237,7 +237,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-		[HttpPost("forgot-password")]
+		[HttpPost("forgot-password")] // (hieu) gui yeu cau reset password
 		[AllowAnonymous]
 		public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto request)
 		{
@@ -250,7 +250,7 @@ namespace EduToyRent.API.Controllers
 			return Ok();
 		}
 
-		[HttpPost("reset-password")]
+		[HttpPost("reset-password")] // (hieu) dung OTP reset password
 		[AllowAnonymous]
 		public async Task<IActionResult> ResetPassword(ResetPasswordDto request)
 		{
