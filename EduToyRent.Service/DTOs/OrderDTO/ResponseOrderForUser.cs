@@ -8,6 +8,7 @@ namespace EduToyRent.Service.DTOs.OrderDTO
 {
     public class ResponseOrderForUser
     {
+        public int OrderId { get; set; }
         public DateTime OrderDate { get; set; }
         public string ShippingAddress { get; set; }
         public string ReceivePhoneNumber { get; set; }
