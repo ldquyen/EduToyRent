@@ -175,7 +175,7 @@ namespace EduToyRent.Service.Services
 
         public async Task<dynamic> CreatePaymentLinkForRent2(int orderId)
         {
-            var domain = "http://localhost:3000/";
+            var domain = "http://localhost:3000";
             List<ItemData> items = new List<ItemData>();
             Payment payment2 = await _unitOfWork.PaymentRepository.GetAsync(x => x.OrderId == orderId && x.PaymentMethod == "Pay 2" && x.TransactionId == "o");
             if (payment2 == null)
