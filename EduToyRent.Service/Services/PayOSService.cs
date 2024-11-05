@@ -37,8 +37,8 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreatePaymentLinkForSale(int orderId)
         {
-            var paymentSale = await _unitOfWork.PaymentRepository.GetAllAsync(x => x.PaymentId == orderId);
-            if (paymentSale != null)
+            var paymentSale = await _unitOfWork.PaymentRepository.GetAllAsync(x => x.OrderId == orderId);
+            if (paymentSale != null && paymentSale.Any())
             {
                 return Result.Failure(PaymentErrors.PaymentError);
             }
@@ -54,7 +54,7 @@ namespace EduToyRent.Service.Services
                 ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.Price);
                 items.Add(item);
             }
-            var domain = "http://localhost:3000/";
+            var domain = "http://localhost:3000";
 
             Payment payment = new Payment()
             {
@@ -76,7 +76,7 @@ namespace EduToyRent.Service.Services
                 amount: (int)payment.Amount,
                 description: $"Order sale paymentId:{payment.PaymentId}",
                 items: items,
-                cancelUrl: domain,
+                cancelUrl: domain + "/paymentinfo",
                 returnUrl: domain + "/paymentinfo",
 
                 buyerName: orderNow.Account.AccountName
@@ -98,7 +98,7 @@ namespace EduToyRent.Service.Services
 
         public async Task<dynamic> CreatePaymentLinkForRent(int orderId)
         {
-            var paymentSale = await _unitOfWork.PaymentRepository.GetAllAsync(x => x.PaymentId == orderId);
+            var paymentSale = await _unitOfWork.PaymentRepository.GetAllAsync(x => x.OrderId == orderId);
             if (paymentSale != null && paymentSale.Any())
             {
                 return Result.Failure(PaymentErrors.PaymentError);
@@ -138,7 +138,7 @@ namespace EduToyRent.Service.Services
                 amount: (int)payment1.Amount,
                 description: $"Order rent1 paymentId:{payment1.PaymentId}",
                 items: items,
-                cancelUrl: domain,
+                cancelUrl: domain + "/paymentinfo",
                 returnUrl: domain + "/paymentinfo",
 
                 buyerName: orderNow.Account.AccountName
@@ -187,7 +187,7 @@ namespace EduToyRent.Service.Services
                 amount: (int)payment2.Amount,
                 description: $"Order rent2 paymentId:{payment2.PaymentId}",
                 items: items,
-                cancelUrl: domain,
+                cancelUrl: domain + "/paymentinfo",
                 returnUrl: domain + "/paymentinfo"
                 );
             try
