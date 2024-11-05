@@ -221,7 +221,10 @@ namespace EduToyRent.Service.Services
                 else if (paymentLinkInformation.status == "PAID")
                 {
                     status = 1; // thanh toan xong
-                    await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 2);
+                    if (payment.PaymentMethod == "Pay 1" || payment.PaymentMethod == "Pay all")
+                    {
+                        await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 2);
+                    }
                 }
                 else if (paymentLinkInformation.status == "CANCELLED")
                 {
@@ -233,7 +236,9 @@ namespace EduToyRent.Service.Services
                     status = 3; // ko xd dc
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
                 }
+                payment.Status = status;
                 await _unitOfWork.PaymentRepository.UpdatePayment(payment); // update lai status trong payment
+                await _unitOfWork.SaveAsync();
             }
             return Result.SuccessWithObject(paymentLinkInformation);
         }
