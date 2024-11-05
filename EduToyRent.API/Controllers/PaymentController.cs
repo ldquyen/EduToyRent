@@ -81,6 +81,12 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("order-id/{paymentId}")]
+        public async Task<IActionResult> GetOrderIdByPaymentId(int paymentId)
+        {
+            var result = await _payOsService.GetOrderIdByPaymentId(paymentId);
+            return Ok(result);
+        }
     }
 }
 

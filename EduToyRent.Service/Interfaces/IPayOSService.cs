@@ -17,5 +17,6 @@ namespace EduToyRent.Service.Interfaces
         Task<dynamic> CancelPaymentLink(int orderId);
 
         Task<dynamic> GetAllPaymentForStaff(int status);
+        Task<dynamic> GetOrderIdByPaymentId(int paymentId);
     }
 }

@@ -256,5 +256,12 @@ namespace EduToyRent.Service.Services
 
             return Result.SuccessWithObject(payments);
         }
+
+        public async Task<dynamic> GetOrderIdByPaymentId(int paymentId)
+        { 
+            var paymemt = await _unitOfWork.PaymentRepository.GetAsync(x => x.PaymentId == paymentId);
+            int orderId = paymemt.OrderId;
+            return Result.SuccessWithObject(orderId);
+        }
     }
 }
