@@ -244,5 +244,11 @@ namespace EduToyRent.Service.Services
             return Result.Success();
         }
 
+        public async Task<dynamic> GetAllPaymentForStaff(int status)
+        {
+            var payments = await _unitOfWork.PaymentRepository.GetPaymentForStaff(status);
+
+            return Result.SuccessWithObject(payments);
+        }
     }
 }

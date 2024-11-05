@@ -1,5 +1,7 @@
 ﻿using EduToyRent.Service.Interfaces;
 using EduToyRent.Service.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS.Types;
@@ -68,6 +70,15 @@ namespace EduToyRent.API.Controllers
         public async Task<IActionResult> PaymentCallback(WebhookType webhookData)
         {
             return Ok();
+        }
+
+        [Authorize(Policy = "StaffOnly")]      
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("staff/{status}")]
+        public async Task<IActionResult> GetPaymentForStaff(int status)
+        {
+            var result = await _payOsService.GetAllPaymentForStaff(status);
+            return Ok(result);
         }
 
     }

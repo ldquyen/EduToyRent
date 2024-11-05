@@ -67,10 +67,10 @@ namespace EduToyRent.Repository.Repositories
         {
             return await _dbSet.FindAsync(id);
         }
-        public async Task<bool> AddAsync(T entity)
+        public async Task<T> AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            return true;
+            return entity;
             //await _context.SaveChangesAsync();
         }
         public async Task AddRangeAsync(IEnumerable<T> entities)

@@ -236,13 +236,13 @@ namespace EduToyRent.Service.Services
         {
             var odList = await _unitOfWork.OrderDetailRepository.GetOrderRentDetailForSupplier(accountId);
             var list = _mapper.Map<List<ReponseOrderRentForSupplierDTO>>(odList);
-            return list;
+            return Result.SuccessWithObject(list);
         }
         public async Task<dynamic> ViewOrderSaleDetailForSupplier(int accountId)
         {
             var odList = await _unitOfWork.OrderDetailRepository.GetOrderSaleDetailForSupplier(accountId);
             var list = _mapper.Map<List<ReponseOrderSaleForSupplierDTO>>(odList);
-            return list;
+            return Result.SuccessWithObject(list);
         }
         public async Task<dynamic> SupplierConfirmShip(int orderDetailId)
         {
@@ -302,6 +302,7 @@ namespace EduToyRent.Service.Services
             {
                 if(od.StatusId == 7)
                 {
+
                     od.StatusId = 5;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
                     await _unitOfWork.SaveAsync();
