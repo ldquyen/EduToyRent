@@ -26,6 +26,10 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
         {
+            if (!Validator.IsValidPhone(createOrderDTO.ReceivePhoneNumber))
+            {
+                return Result.Failure(OrderErrors.InvalidPhoneNumber);
+            }
             var toyIds = createOrderDTO.ToyList.Select(x => x.ToyId).ToList();
             if (!await _unitOfWork.ToyRepository.CheckExistToy(toyIds))
                 return Result.Failure(ToyErrors.NotExistToy);
