@@ -215,17 +215,17 @@ namespace EduToyRent.Service.Services
                 int status = 0;
                 if (paymentLinkInformation.status == "Pending")
                 {
-                    status = 0;
+                    status = 0; // chua thanh toan
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
                 }
                 else if (paymentLinkInformation.status == "PAID")
                 {
-                    status = 1;
+                    status = 1; // thanh toan xong
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 2);
                 }
                 else if (paymentLinkInformation.status == "CANCELLED")
                 {
-                    status = 2;
+                    status = 2; // huy don
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 9);
                 }
                 else
@@ -233,6 +233,7 @@ namespace EduToyRent.Service.Services
                     status = 3; // ko xd dc
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
                 }
+                await _unitOfWork.PaymentRepository.UpdatePayment(payment); // update lai status trong payment
             }
             return Result.SuccessWithObject(paymentLinkInformation);
         }
