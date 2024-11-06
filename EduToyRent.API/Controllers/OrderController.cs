@@ -113,5 +113,14 @@ namespace EduToyRent.API.Controllers
             var result = await _orderService.CompleteOrder(orderId, currentUserObject.AccountId);
             return Ok(result);
         }
+        [Authorize(Policy = "UserOnly")]    //.User return order
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("user-return-order/{orderId}")]
+        public async Task<IActionResult> UserReturnOrder(int orderId)
+        {
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            var result = await _orderService.ReturnOrderRent(orderId, currentUserObject.AccountId);
+            return Ok(result);
+        }
     }
 }

@@ -107,14 +107,14 @@ namespace EduToyRent.Repository.Repositories
         public async Task<List<Toy>> GetToysForRent()
         {
             return await _context.Toys
-                .Where(t => t.IsRental)
+                .Where(t => t.IsRental && t.IsActive && !t.IsDelete)
                 .ToListAsync();
         }
 
         public async Task<List<Toy>> GetToysForSale()
         {
             return await _context.Toys
-                .Where(t => !t.IsRental)
+                .Where(t => !t.IsRental && t.IsActive && !t.IsDelete)
                 .ToListAsync();
         }
         public async Task<List<Toy>> GetToysForRentAccount(int accId)

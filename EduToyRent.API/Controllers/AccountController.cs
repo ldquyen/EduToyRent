@@ -43,7 +43,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "StaffOnly")]  //khac tri (Staff tao tk cua supplier )
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sign-up-supplier")]
         public async Task<IActionResult> SignUpSupplier([FromBody] SignupAccountDTO signupAccountDTO)
@@ -65,7 +65,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]  // khac tri (admin tao tk staff)
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sign-up-staff")]
         public async Task<IActionResult> SignUpStaff([FromBody] SignupAccountDTO signupAccountDTO)
@@ -153,7 +153,7 @@ namespace EduToyRent.API.Controllers
         }
 
 
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "StaffOnly")]  // khac tri (staff xem danh sach cua customer va supplier)
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> GetViewAll(int page = 1 )
@@ -173,7 +173,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]  //khac tri (Admin xem tat ca tk cua staff)
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("staff-list")]
         public async Task<IActionResult> GetStaffAccount(int page = 1)
@@ -193,7 +193,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "StaffOnly")]  //khac tri (staff ban tk supplier va customer)
         [HttpPut("ban-user/{accountId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> BanAccount(int accountId)
@@ -215,7 +215,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")] //khac tri (admin ban tk cua staff)
         [HttpPut("ban-staff/{accountId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> BanStaffAccount(int accountId)
@@ -237,7 +237,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-		[HttpPost("forgot-password")]
+		[HttpPost("forgot-password")] // (hieu) gui yeu cau reset password
 		[AllowAnonymous]
 		public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto request)
 		{
@@ -250,7 +250,7 @@ namespace EduToyRent.API.Controllers
 			return Ok();
 		}
 
-		[HttpPost("reset-password")]
+		[HttpPost("reset-password")] // (hieu) dung OTP reset password
 		[AllowAnonymous]
 		public async Task<IActionResult> ResetPassword(ResetPasswordDto request)
 		{

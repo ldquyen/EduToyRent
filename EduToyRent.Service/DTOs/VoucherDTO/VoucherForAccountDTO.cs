@@ -13,5 +13,6 @@ namespace EduToyRent.Service.DTOs.VoucherDTO
         public string VoucherName { get; set; }
         public DateTime ExpiredDate { get; set; }
         public float Discount { get; set; }
+        public bool IsActive { get; set; }
     }
 }

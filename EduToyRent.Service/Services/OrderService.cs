@@ -26,6 +26,10 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
         {
+            if (!Validator.IsValidPhone(createOrderDTO.ReceivePhoneNumber))
+            {
+                return Result.Failure(OrderErrors.InvalidPhoneNumber);
+            }
             var toyIds = createOrderDTO.ToyList.Select(x => x.ToyId).ToList();
             if (!await _unitOfWork.ToyRepository.CheckExistToy(toyIds))
                 return Result.Failure(ToyErrors.NotExistToy);
@@ -63,7 +67,7 @@ namespace EduToyRent.Service.Services
             {
                 if (await CreateOrderDetailForRent(createOrderDTO, id))
                 {
-                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 10);
+                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 100);
                     foreach (var odDetail in odList)
                     {
                         odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
@@ -80,7 +84,6 @@ namespace EduToyRent.Service.Services
                     }
                     else order.FinalMoney = order.TotalMoney;
                     var update2 = await _unitOfWork.OrderRepository.UpdateAsync(order);
-                    //await _unitOfWork.DepositOrderRepository.CreateDepositOrder(order, "123456", "tpbank");
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
                 }
@@ -117,7 +120,6 @@ namespace EduToyRent.Service.Services
             else
                 return Result.Failure(ToyErrors.CannotCreateToyOrder);
         }
-
         private async Task<bool> CreateOrderDetailForRent(CreateOrderDTO createOrderDTO, int orderId)
         {
             if (createOrderDTO.ToyList != null)
@@ -143,7 +145,6 @@ namespace EduToyRent.Service.Services
             else
                 return false;
         }
-
         private async Task<bool> CreateOrderDetailForSale(CreateOrderDTO createOrderDTO, int orderId)
         {
             if (createOrderDTO.ToyList != null)
@@ -169,7 +170,6 @@ namespace EduToyRent.Service.Services
             else
                 return false;
         }
-
         public async Task<dynamic> GetOrderDetailForUser(int orderId, int accountId)
         {
             var order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
@@ -189,7 +189,6 @@ namespace EduToyRent.Service.Services
                 return Result.SuccessWithObject(responseOrderDTO);
             }
         }
-
         public async Task<dynamic> GetOrderOfAccount(int accountId, bool isRent, int status)
         {
             if (isRent)
@@ -205,14 +204,12 @@ namespace EduToyRent.Service.Services
                 return Result.SuccessWithObject(list);
             }
         }
-
         public async Task<dynamic> GetAllOrderForStaff(int page)
         {
             var orderList = await _unitOfWork.OrderRepository.GetAllAsync(null, null, page, 10);
             var list = _mapper.Map<List<ResponseOrderForStaff>>(orderList);
             return Result.SuccessWithObject(list);
         }
-
         public async Task<dynamic> ConfirmOrder(ConfirmOrderDTO confirmOrderDTO)
         {
             Order order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == confirmOrderDTO.OrderId);
@@ -239,21 +236,18 @@ namespace EduToyRent.Service.Services
             else
                 return Result.Failure(OrderErrors.ConfirmStatus);
         }
-
         public async Task<dynamic> ViewOrderRentDetailForSupplier(int accountId)
         {
             var odList = await _unitOfWork.OrderDetailRepository.GetOrderRentDetailForSupplier(accountId);
             var list = _mapper.Map<List<ReponseOrderRentForSupplierDTO>>(odList);
-            return list;
+            return Result.SuccessWithObject(list);
         }
-
         public async Task<dynamic> ViewOrderSaleDetailForSupplier(int accountId)
         {
             var odList = await _unitOfWork.OrderDetailRepository.GetOrderSaleDetailForSupplier(accountId);
             var list = _mapper.Map<List<ReponseOrderSaleForSupplierDTO>>(odList);
-            return list;
+            return Result.SuccessWithObject(list);
         }
-
         public async Task<dynamic> SupplierConfirmShip(int orderDetailId)
         {
             var od = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
@@ -266,7 +260,6 @@ namespace EduToyRent.Service.Services
             }
             return Result.Success();
         }
-
         public async Task<dynamic> CompleteOrder(int orderId, int accountId)
         {
             var od = await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
@@ -277,7 +270,7 @@ namespace EduToyRent.Service.Services
 
             if (!od.IsRentalOrder)
             {
-                if (od.StatusId == 3 || od.StatusId == 4)
+                if (od.StatusId == 3)
                 {
                     od.StatusId = 8;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
@@ -291,18 +284,47 @@ namespace EduToyRent.Service.Services
             }
             else
             {
-                if (od.StatusId == 5 || od.StatusId == 7)
+                if (od.StatusId == 3)
                 {
-                    od.StatusId = 8;
+                    od.StatusId = 7;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
                     await _unitOfWork.SaveAsync();
                     return Result.Success();
                 }
                 else
                 {
-                    return Result.Failure(OrderErrors.WrongOrderStatus);
+                    return Result.Failure(OrderErrors.OrderMustbeReturn);
                 }
             }
         }
+        public async Task<dynamic> ReturnOrderRent(int orderId, int accountId)
+        {
+            var od = await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
+            if (od.AccountId != accountId)
+                return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
+            if (od.IsRentalOrder)
+            {
+                if(od.StatusId == 7)
+                {
+
+                    od.StatusId = 5;
+                    var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
+                }
+                else
+                {
+                    return Result.Failure(OrderErrors.OrderMustbeReturn);
+                }
+            }
+            else
+                return Result.Failure(OrderErrors.WrongOrderStatus);
+        }
+
+        public async Task<dynamic> GetReturnOrderForStaff()
+        {
+            return 0;
+        }
+
     }
 }

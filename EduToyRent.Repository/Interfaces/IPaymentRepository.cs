@@ -10,5 +10,6 @@ namespace EduToyRent.Repository.Interfaces
     public interface IPaymentRepository : IRepository<Payment>
     {
         Task UpdatePayment(Payment payment);
+        Task<List<Payment>> GetPaymentForStaff(int status);
     }
 }
