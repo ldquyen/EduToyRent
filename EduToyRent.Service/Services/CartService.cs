@@ -42,13 +42,13 @@ namespace EduToyRent.Service.Services
 						AccountId = accountId,
 						IsRental = true,
 					};
-					await _unitOfWork.CartRepository.AddCartAsync(cartrent);
+					var cr = await _unitOfWork.CartRepository.AddCartAsync(cartrent);
 					Cart cartsale = new()
 					{
 						AccountId = accountId,
 						IsRental = false,
 					};
-					await _unitOfWork.CartRepository.AddCartAsync(cartsale);
+					var cs = await _unitOfWork.CartRepository.AddCartAsync(cartsale);
 				}
 				Cart cart = new Cart();
 				if (toy.IsRental)

@@ -26,6 +26,10 @@ namespace EduToyRent.Service.Services
         }
         public async Task<dynamic> CreateOrder(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
         {
+            if (!Validator.IsValidPhone(createOrderDTO.ReceivePhoneNumber))
+            {
+                return Result.Failure(OrderErrors.InvalidPhoneNumber);
+            }
             var toyIds = createOrderDTO.ToyList.Select(x => x.ToyId).ToList();
             if (!await _unitOfWork.ToyRepository.CheckExistToy(toyIds))
                 return Result.Failure(ToyErrors.NotExistToy);
@@ -63,7 +67,7 @@ namespace EduToyRent.Service.Services
             {
                 if (await CreateOrderDetailForRent(createOrderDTO, id))
                 {
-                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 10);
+                    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == id, null, 1, 100);
                     foreach (var odDetail in odList)
                     {
                         odDetail.RentalPrice = await _unitOfWork.ToyRepository.GetMoneyRentByToyId(odDetail.ToyId, odDetail.Quantity, createOrderDTO.RentalDate, createOrderDTO.ReturnDate);
@@ -80,7 +84,6 @@ namespace EduToyRent.Service.Services
                     }
                     else order.FinalMoney = order.TotalMoney;
                     var update2 = await _unitOfWork.OrderRepository.UpdateAsync(order);
-                    //await _unitOfWork.DepositOrderRepository.CreateDepositOrder(order, "123456", "tpbank");
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
                 }
@@ -237,13 +240,13 @@ namespace EduToyRent.Service.Services
         {
             var odList = await _unitOfWork.OrderDetailRepository.GetOrderRentDetailForSupplier(accountId);
             var list = _mapper.Map<List<ReponseOrderRentForSupplierDTO>>(odList);
-            return list;
+            return Result.SuccessWithObject(list);
         }
         public async Task<dynamic> ViewOrderSaleDetailForSupplier(int accountId)
         {
             var odList = await _unitOfWork.OrderDetailRepository.GetOrderSaleDetailForSupplier(accountId);
             var list = _mapper.Map<List<ReponseOrderSaleForSupplierDTO>>(odList);
-            return list;
+            return Result.SuccessWithObject(list);
         }
         public async Task<dynamic> SupplierConfirmShip(int orderDetailId)
         {
@@ -267,7 +270,7 @@ namespace EduToyRent.Service.Services
 
             if (!od.IsRentalOrder)
             {
-                if (od.StatusId == 3 || od.StatusId == 4)
+                if (od.StatusId == 3)
                 {
                     od.StatusId = 8;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
@@ -281,9 +284,9 @@ namespace EduToyRent.Service.Services
             }
             else
             {
-                if (od.StatusId == 5 || od.StatusId == 7)
+                if (od.StatusId == 3)
                 {
-                    od.StatusId = 8;
+                    od.StatusId = 7;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
                     await _unitOfWork.SaveAsync();
                     return Result.Success();
@@ -301,8 +304,9 @@ namespace EduToyRent.Service.Services
                 return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
             if (od.IsRentalOrder)
             {
-                if(od.StatusId == 3 || od.StatusId == 4)
+                if(od.StatusId == 7)
                 {
+
                     od.StatusId = 5;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(od);
                     await _unitOfWork.SaveAsync();
@@ -315,6 +319,11 @@ namespace EduToyRent.Service.Services
             }
             else
                 return Result.Failure(OrderErrors.WrongOrderStatus);
+        }
+
+        public async Task<dynamic> GetReturnOrderForStaff()
+        {
+            return 0;
         }
 
     }

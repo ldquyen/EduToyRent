@@ -35,6 +35,7 @@ namespace EduToyRent.DAL.Entities
         public virtual DepositOrder DepositOrders { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
 
+
     }
 
 }

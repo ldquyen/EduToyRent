@@ -113,7 +113,7 @@ namespace EduToyRent.API.Controllers
             var result = await _orderService.CompleteOrder(orderId, currentUserObject.AccountId);
             return Ok(result);
         }
-        [Authorize(Policy = "UserOnly")]    //.User complete order
+        [Authorize(Policy = "UserOnly")]    //.User return order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("user-return-order/{orderId}")]
         public async Task<IActionResult> UserReturnOrder(int orderId)

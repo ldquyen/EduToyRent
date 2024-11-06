@@ -33,10 +33,11 @@ namespace EduToyRent.Repository.Repositories
             return await _context.Carts.FirstOrDefaultAsync(c => c.AccountId == accountId && c.IsRental == false);
         }
 
-        public async Task AddCartAsync(Cart cart) 
+        public async Task<Cart> AddCartAsync(Cart cart) 
         {
-            var result = await _context.Carts.AddAsync(cart);
+            await _context.Carts.AddAsync(cart);
             await _context.SaveChangesAsync();
+            return cart;
         }
     }
 }

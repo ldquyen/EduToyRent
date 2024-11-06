@@ -35,5 +35,10 @@ namespace EduToyRent.Repository.Repositories
             
         }
 
+        public async Task<List<Payment>> GetPaymentForStaff(int status)
+        {
+            return await _context.Payments.Where(x => x.Status == status).ToListAsync();
+        }
+
     }
 }

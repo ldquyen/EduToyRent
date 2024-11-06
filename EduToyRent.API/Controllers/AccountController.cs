@@ -65,7 +65,7 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "AdminOnly")]  // khac tri (tao tk staff)
+        [Authorize(Policy = "AdminOnly")]  // khac tri (admin tao tk staff)
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sign-up-staff")]
         public async Task<IActionResult> SignUpStaff([FromBody] SignupAccountDTO signupAccountDTO)
