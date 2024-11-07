@@ -10,6 +10,7 @@ namespace EduToyRent.Repository.Interfaces
     public interface IUnitOfWork
     {
         IAccountRepository AccountRepository { get; } 
+		IResetPasswordOTPRepository ResetPasswordOTPRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; } 
         ICartRepository CartRepository { get; } 
 		ICartItemRepository CartItemRepository { get; }
@@ -21,6 +22,10 @@ namespace EduToyRent.Repository.Interfaces
         IVoucherRepository VoucherRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }
         IAccountVoucherRepository AccountVoucherRepository { get; }
+        IDepositOrderRepository DepositOrderRepository { get; }
+        IPaymentRepository PaymentRepository { get; }
+        IShipDateRepository ShipDateRepository { get; }
+        IReportRepository ReportRepository { get; }
         Task SaveAsync();
     }
 }

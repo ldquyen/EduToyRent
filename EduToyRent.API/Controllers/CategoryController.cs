@@ -17,7 +17,7 @@ namespace EduToyRent.API.Controllers
         }
         [Authorize(Policy = "StaffOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost("category")]
+        [HttpPost()]
         public async Task<IActionResult> CreateCategory(CreateNewCategoryDTO createNewCategoryDTO)
         {
             if (!ModelState.IsValid)
@@ -35,9 +35,10 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [Authorize(Policy = "SupplierAndStaffOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("categories")]
+        [HttpGet()]
         public async Task<IActionResult> GetCategories()
         {
             try
@@ -51,9 +52,10 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [Authorize(Policy = "StaffOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("category")]
+        [HttpPut()]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryDTO updateCategoryDTO)
         {
             try

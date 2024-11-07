@@ -9,5 +9,6 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IVoucherRepository : IRepository<Voucher>
     {
+        Task<decimal> UseVoucherReturnPrice(int voucherId, decimal price);
     }
 }

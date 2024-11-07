@@ -19,7 +19,7 @@ namespace EduToyRent.API.Controllers
             _tokenService = tokenService;
         }
         
-        [HttpPost("sign-in")]
+        [HttpPost("sign-in")]       //.login
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
@@ -35,7 +35,7 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("renew-token")]
+        [HttpPost("renew-token")]   //.renew
         public async Task<IActionResult> RenewToken(RenewTokenDTO renewTokenDTO)
         {
             var token = await _tokenService.RenewTokenAsync(renewTokenDTO);

@@ -26,7 +26,7 @@ namespace EduToyRent.API.Controllers
             _firebaseService = firebaseService;
         }
 
-        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(Policy = "SupplierOnly")]        //.create rent req
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("rental")]
         public async Task<IActionResult> CreateRental([FromForm] CreateRentalToyDTO createRentalToyDTO)
@@ -48,7 +48,8 @@ namespace EduToyRent.API.Controllers
                 return BadRequest(createToyResult);
             return Ok(createToyResult);           
         }
-        [Authorize(Policy = "SupplierOnly")]
+
+        [Authorize(Policy = "SupplierOnly")]        //.craete sale req
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSale([FromForm] CreateSaleToyDTO createSaleToyDTO)
@@ -71,13 +72,17 @@ namespace EduToyRent.API.Controllers
             return Ok(createToyResult);
         }
 
-        [HttpGet("requests")]
+        [Authorize(Policy = "StaffOnly")]       //.get all req
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet()]
         public async Task<IActionResult> GetAllRequests(int page = 1)
         {
             var requests = await _requestFromService.GetAllsRequest(page, 10);
             return Ok(requests);
         }
 
+        [Authorize(Policy = "StaffOnly")]       //.get un ans req
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("unanswered-requests")]
         public async Task<IActionResult> GetUnansweredRequests(int page = 1)
         {
@@ -85,6 +90,8 @@ namespace EduToyRent.API.Controllers
             return Ok(requests);
         }
 
+        [Authorize(Policy = "StaffOnly")]       //.get ans req
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("answered-requests")]
         public async Task<IActionResult> GetAnsweredRequests(int page = 1)
         {
@@ -92,16 +99,18 @@ namespace EduToyRent.API.Controllers
             return Ok(requests);
         }
 
-        [HttpGet("request/{id}")]
+        [Authorize(Policy = "StaffOnly")]       //.get req detail
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRequest(int id)
         {
             var requests = await _requestFromService.GetRequestById(id);
             return Ok(requests);
         }
 
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "StaffOnly")]       //.update status
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("update-status")]
+        [HttpPut("status")]
         public async Task<IActionResult> UpdateRequestStatus([FromBody] UpdateRequestDTO updateRequestDTO)
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);

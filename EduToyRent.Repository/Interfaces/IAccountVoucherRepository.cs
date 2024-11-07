@@ -9,5 +9,8 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IAccountVoucherRepository : IRepository<AccountVoucher>
     {
+        Task<bool> CheckValidAccountVoucher(int voucherId, int accountId);
+        Task UseVoucher(int voucherId, int accountId);
+        Task<List<AccountVoucher>> GetVoucherForUser(int accountId);
     }
 }

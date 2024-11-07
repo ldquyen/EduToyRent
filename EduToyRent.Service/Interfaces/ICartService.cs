@@ -11,7 +11,7 @@ namespace EduToyRent.Service.Interfaces
 {
     public interface ICartService
     {
-        public Task<dynamic> GetCart(int accountId);
+        public Task<dynamic> GetCart(int accountId, bool isRent);
 
         public Task<dynamic> AddItemToCart(GetCartRequest request, int accountId);
 
