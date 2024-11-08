@@ -61,6 +61,7 @@ namespace EduToyRent.Service.DTOs.ToyDTO
         public int Stock { get; set; }
         public string CategoryName { get; set; }
         public string ImageUrl { get; set; }
+        public bool IsDelete { get; set; }
         public bool IsActive { get; set; }
 
     }
@@ -73,6 +74,7 @@ namespace EduToyRent.Service.DTOs.ToyDTO
         public int Stock { get; set; }
         public string CategoryName { get; set; }
         public string ImageUrl { get; set; }
+        public bool IsDelete { get; set; }
         public bool IsActive { get; set; }
 
     }
