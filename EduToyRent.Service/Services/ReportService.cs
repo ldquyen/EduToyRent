@@ -48,18 +48,20 @@ namespace EduToyRent.Service.Services
             };
         }
 
-        public async Task<Result> ChangeReportStatus(ChangeReportStatusDTO dto)
+        public async Task<Result> ChangeReportStatus(int reportId)
         {
-            var report = await _unitOfWork.ReportRepository.GetReportById(dto.ReportId);
+            var report = await _unitOfWork.ReportRepository.GetReportById(reportId);
+            var toy = await _unitOfWork.ToyRepository.GetByIdAsync(report.ToyId);
             if (report == null)
             {
                 return Result.Failure(Result.CreateError("404", "Report not found"));
             }
 
-            if ((report.Status == Pending && dto.NewStatus == Processing) ||
-                (report.Status == Processing && dto.NewStatus == Processed))
+            if (report.Status == Pending)
             {
-                report.Status = dto.NewStatus;
+                report.Status = Processed;
+                toy.IsActive = false;
+                await _unitOfWork.ToyRepository.UpdateAsync(toy);
                 await _unitOfWork.ReportRepository.UpdateReport(report);
                 return Result.Success();
             }
