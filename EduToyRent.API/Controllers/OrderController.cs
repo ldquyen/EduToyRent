@@ -85,7 +85,7 @@ namespace EduToyRent.API.Controllers
         }
 
         [Authorize(Policy = "SupplierOnly")]    //.Supplier view sale order
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] //fix
         [HttpGet("sale-details-for-supplier")]
         public async Task<IActionResult> ViewOrderSaleDetailForSupplier()
         {
