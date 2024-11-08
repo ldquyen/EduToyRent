@@ -224,9 +224,13 @@ namespace EduToyRent.Service.Services
                     };
                     var save = await _unitOfWork.ResetPasswordOTPRepository.AddAsync(otp);
                 }
-                await _unitOfWork.SaveAsync();
-				SendOTPEmail(request.Email, otp.OTP);
-                return Result.Success();
+                
+				if (!SendOTPEmail(request.Email, otp.OTP))
+				{
+					return Result.Failure(new Error("500", "Cannot send email"));
+				}
+				await _unitOfWork.SaveAsync();
+				return Result.Success();
             }
             catch (Exception ex)
             {
@@ -235,7 +239,7 @@ namespace EduToyRent.Service.Services
             }
         }
 
-		private void SendOTPEmail(string email, string code) 
+		private bool SendOTPEmail(string email, string code) 
 		{
 			try
 			{
@@ -244,13 +248,14 @@ namespace EduToyRent.Service.Services
 					ReceiverEmail = email,
 					EmailSubject = "EduToyRent Password Reset Code",
 					IsHtml = true,
-					EmailBody = $"<div style=\"font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2\">\r\n  <div style=\"margin:50px auto;width:70%;padding:20px 0\">\r\n    <div style=\"border-bottom:1px solid #eee\">\r\n      <a href=\"\" style=\"font-size:1.4em;color: #ee0000;text-decoration:none;font-weight:600\">EduToyRent Platform</a>\r\n    </div>\r\n    <p style=\"font-size:1.1em\">Hi,</p>\r\n    <p>This is your password reset code. This code will expire in 1 hour.</p>\r\n    <h2 style=\"background: #aa0000;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;\">{code}</h2>\r\n    <p style=\"font-size:0.9em;\">Regards,<br />EduToyRent Staff</p>\r\n    <hr style=\"border:none;border-top:1px solid #eee\" />\r\n    <div style=\"float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300\">\r\n      <p>EduToyRent Platform</p>\r\n      <p>Ho Chi Minh City</p>\r\n      <p>Vietnam</p>\r\n    </div>\r\n  </div>\r\n</div>"
+					EmailBody = $"<div style=\"font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2\">\r\n  <div style=\"margin:50px auto;width:70%;padding:20px 0\">\r\n    <div style=\"border-bottom:1px solid #eee\">\r\n      <a href=\"\" style=\"font-size:1.4em;color: #ee0000;text-decoration:none;font-weight:600\">EduToyRent Platform</a>\r\n    </div>\r\n    <p style=\"font-size:1.1em\">Hi,</p>\r\n    <p>This is your password reset code. This code will expire in 24 hours.</p>\r\n    <h2 style=\"background: #aa0000;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;\">{code}</h2>\r\n    <p style=\"font-size:0.9em;\">Regards,<br />EduToyRent Staff</p>\r\n    <hr style=\"border:none;border-top:1px solid #eee\" />\r\n    <div style=\"float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300\">\r\n      <p>EduToyRent Platform</p>\r\n      <p>Ho Chi Minh City</p>\r\n      <p>Vietnam</p>\r\n    </div>\r\n  </div>\r\n</div>"
 				};
-				_mailSender.SendEmailSingle(request);
+				return _mailSender.SendEmailSingle(request);
 			}
 			catch (Exception ex) 
 			{
                 Console.WriteLine(ex.Message);
+				return false;
 			}
 		}
 
