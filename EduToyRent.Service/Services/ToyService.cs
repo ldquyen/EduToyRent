@@ -368,8 +368,12 @@ namespace EduToyRent.Service.Services
 
             toys = sort switch
             {
-                "price_asc" => toys.OrderBy(t => t.BuyPrice).ToList(),
-                "price_desc" => toys.OrderByDescending(t => t.BuyPrice).ToList(),
+                "dayprice_asc" => toys.OrderBy(t => t.RentPricePerDay).ToList(),
+                "dayprice_desc" => toys.OrderByDescending(t => t.RentPricePerDay).ToList(),
+                "twoweekprice_asc" => toys.OrderBy(t => t.RentPricePerTwoWeeks).ToList(),
+                "twowekprice_desc" => toys.OrderByDescending(t => t.RentPricePerTwoWeeks).ToList(),
+                "weekyprice_asc" => toys.OrderBy(t => t.RentPricePerWeek).ToList(),
+                "weekprice_desc" => toys.OrderByDescending(t => t.RentPricePerWeek).ToList(),
                 "name_asc" => toys.OrderBy(t => t.ToyName).ToList(),
                 "name_desc" => toys.OrderByDescending(t => t.ToyName).ToList(),
                 _ => toys.OrderBy(t => t.ToyName).ToList()

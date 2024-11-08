@@ -4,6 +4,7 @@ using EduToyRent.Repository.Interfaces;
 using EduToyRent.Repository.Repositories;
 using EduToyRent.DAL.Interfaces;
 using EduToyRent.DAL.Repositories;
+using EduToyRent.Service.Common;
 
 namespace EduToyRent.API.Helper
 {
@@ -31,6 +32,7 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IVoucherService, VoucherService>();
             services.AddScoped<IPayOSService, PayOSService>();
             services.AddScoped<IReportService, ReportService>();
+			services.AddScoped<GmailSender>();
             services.AddScoped<IReportReplyService, ReportReplyService>();
             return services;
         }
