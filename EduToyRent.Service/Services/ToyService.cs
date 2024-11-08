@@ -399,15 +399,12 @@ namespace EduToyRent.Service.Services
 
             return paginationResult;
         }
-        public async Task<Result> DeteleToy(int toyId)
+        public async Task<dynamic> DeteleToy(int toyId)
         {
             var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
-            if (toy == null)
-                return Result.Failure(ToyErrors.ToyIsNull);
             toy.IsActive = true;
-            var updateResult = await _unitOfWork.ToyRepository.UpdateToy(toy);
-            if (!updateResult)
-                return Result.Failure(new Error("UpdateFailed", "Failed to update toy information"));
+            var updateResult = await _unitOfWork.ToyRepository.UpdateAsync(toy);
+            await _unitOfWork.SaveAsync();
             return Result.Success();
         }
         //public async Task<Result> UpdateQuantity(int toyId, int quantity, CurrentUserObject currentUserObject)
