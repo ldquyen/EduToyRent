@@ -175,7 +175,7 @@ namespace EduToyRent.Service.Services
             var order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
             if (order.AccountId != accountId)
                 return Result.Failure(OrderErrors.OrderOfAccountIsWrong);
-            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderId, includeProperties: "Toy, ShipDate", 1, 20);
+            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderId, includeProperties: "Toy, ShipDates", 1, 20);
             if (order.IsRentalOrder)
             {
                 var responseOrderDTO = _mapper.Map<ResponseOrderRentDetailForUserDTO>(order);
