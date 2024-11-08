@@ -284,6 +284,7 @@ namespace EduToyRent.Service.Services
                         Stock = t.Stock,
                         ImageUrl = t.ImageUrl,
                         CategoryName = t.Category?.CategoryName,
+                        IsDelete = t.IsDelete,
                         IsActive = t.IsActive                     
                         
                     }).ToList()
@@ -321,6 +322,7 @@ namespace EduToyRent.Service.Services
                     Stock = t.Stock,
                     ImageUrl = t.ImageUrl,
                     CategoryName = t.Category.CategoryName,
+                    IsDelete = t.IsDelete,
                     IsActive = t.IsActive
                 }).ToList()
             };
@@ -351,6 +353,7 @@ namespace EduToyRent.Service.Services
                         Stock = t.Stock,
                         ImageUrl = t.ImageUrl,
                         CategoryName = t.Category?.CategoryName,
+                        IsDelete = t.IsDelete,
                         IsActive = t.IsActive
                     }).ToList()
                 };
@@ -389,6 +392,7 @@ namespace EduToyRent.Service.Services
                     Stock = t.Stock,
                     ImageUrl = t.ImageUrl,
                     CategoryName = t.Category?.CategoryName,
+                    IsDelete = t.IsDelete,
                     IsActive = t.IsActive
                 }).ToList()
             };
