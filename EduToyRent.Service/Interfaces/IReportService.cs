@@ -12,6 +12,6 @@ namespace EduToyRent.Service.Interfaces
     {
         Task<Result> CreateReportAsync(CreateReportDTO dto);
         Task<Pagination<ReportListDTO>> GetReports(int pageIndex, int pageSize);
-        Task<Result> ChangeReportStatus(ChangeReportStatusDTO dto);
+        Task<Result> ChangeReportStatus(int reportId);
     }
 }
