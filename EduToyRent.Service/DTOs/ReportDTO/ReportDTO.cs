@@ -9,6 +9,7 @@ namespace EduToyRent.Service.DTOs.ReportDTO
     public class ReportListDTO
     {
         public int ReportId { get; set; }
+        public int ToyId {  get; set; }
         public string ToyName { get; set; }
         public string ReporterName { get; set; }
         public string ReportDetail { get; set; }
