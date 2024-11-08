@@ -34,7 +34,8 @@ namespace EduToyRent.Service.Mappings
             //toy
             CreateMap<CreateRentalToyDTO, Toy>();
             CreateMap<CreateSaleToyDTO, Toy>();
-            CreateMap<UpdateToyDTO, Toy>();
+            CreateMap<UpdateToyDTO, Toy>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId));
             CreateMap<Toy, ViewToyForRentDTO>().ReverseMap();
             CreateMap<Toy, ViewToyForSaleDTO>().ReverseMap();
             CreateMap<Toy, ViewToyForRentDetailDTO>().ReverseMap();

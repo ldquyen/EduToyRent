@@ -15,5 +15,6 @@ namespace EduToyRent.Service.DTOs.ToyDTO
         public int Stock { get; set; }
         public string ImageUrl { get; set; }
         public bool IsActive { get; set; }
+        public int CategoryId { get; set; }
     }
 }
