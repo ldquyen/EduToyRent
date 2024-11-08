@@ -30,7 +30,7 @@ namespace EduToyRent.Repository.Repositories
         public IPaymentRepository PaymentRepository { get; set; }
         public IShipDateRepository ShipDateRepository {  get; set; }
         public IReportRepository ReportRepository { get; set; }
-
+        public IReportReplyRepository ReportReplyRepository { get; set; }
         public UnitOfWork(EduToyRentDbContext context)
         {
             _context = context;
@@ -51,6 +51,7 @@ namespace EduToyRent.Repository.Repositories
             PaymentRepository = new PaymentRepository(_context);
             ShipDateRepository = new ShipDateRepository(_context);
             ReportRepository = new ReportRepository(_context);
+            ReportReplyRepository = new ReportReplyRepository(_context);
         }
 
         public async Task SaveAsync()

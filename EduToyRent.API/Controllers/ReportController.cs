@@ -16,6 +16,7 @@ namespace EduToyRent.API.Controllers
         }
 
         [HttpPost("create-report")] //Create Report for User - Phu
+        [Authorize(Policy = "UserOnly")]
         public async Task<IActionResult> CreateReport([FromQuery] CreateReportDTO dto)
         {
             var result = await _reportService.CreateReportAsync(dto);
@@ -32,6 +33,7 @@ namespace EduToyRent.API.Controllers
         }
 
         [HttpPut("change-report-status")] //Update Report status - Phu
+        [Authorize(Policy = "StaffOnly")]
         public async Task<IActionResult> ChangeReportStatus([FromQuery] ChangeReportStatusDTO dto)
         {
             var result = await _reportService.ChangeReportStatus(dto);

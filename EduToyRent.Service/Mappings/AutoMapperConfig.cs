@@ -97,13 +97,18 @@ namespace EduToyRent.Service.Mappings
             CreateMap<CreateReportDTO, Report>()
                 .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "Pending"));
+
             CreateMap<ReportListDTO, Report>();
             CreateMap<Report, ReportListDTO>()
-    .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName))
-    .ForMember(dest => dest.ReporterName, opt => opt.MapFrom(src => src.Account.AccountName))
-    .ForMember(dest => dest.ReportDetail, opt => opt.MapFrom(src => src.ReportDetail))
-    .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => src.ReportDate))
-    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+                .ForMember(dest => dest.ToyId, opt => opt.MapFrom(src=>src.ToyId))
+                .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName))
+                .ForMember(dest => dest.ReporterName, opt => opt.MapFrom(src => src.Account.AccountName))
+                .ForMember(dest => dest.ReportDetail, opt => opt.MapFrom(src => src.ReportDetail))
+                .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => src.ReportDate))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+            CreateMap<CreateReportReplyDTO, ReportReply>();
+            CreateMap<ReportReply, ReportReplyDTO>();
         }
     }
 }

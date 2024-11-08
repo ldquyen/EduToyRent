@@ -83,6 +83,7 @@ namespace EduToyRent.Service.Services
                         await _unitOfWork.AccountVoucherRepository.UseVoucher(createOrderDTO.VoucherId, currentUserObject.AccountId);
                     }
                     else order.FinalMoney = order.TotalMoney;
+                    order.Discount = (int)Math.Round(order.TotalMoney - order.FinalMoney);
                     var update2 = await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);
@@ -110,6 +111,7 @@ namespace EduToyRent.Service.Services
                         await _unitOfWork.AccountVoucherRepository.UseVoucher(createOrderDTO.VoucherId, currentUserObject.AccountId);
                     }
                     else order.FinalMoney = order.TotalMoney;
+                    order.Discount = (int)Math.Round(order.TotalMoney - order.FinalMoney);
                     var update4 = await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
                     return Result.SuccessWithObject(id);

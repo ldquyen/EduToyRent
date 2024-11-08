@@ -33,6 +33,7 @@ namespace EduToyRent.API.Helper
             services.AddScoped<IPayOSService, PayOSService>();
             services.AddScoped<IReportService, ReportService>();
 			services.AddScoped<GmailSender>();
+            services.AddScoped<IReportReplyService, ReportReplyService>();
             return services;
         }
 
