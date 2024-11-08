@@ -97,5 +97,15 @@ namespace EduToyRent.API.Controllers
             var result = await _toyService.ViewToysForSellAccount(search, sort, pageIndex, pageSize, currentUserObject);
             return Ok(result);
         }
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("delete")]
+        public async Task<IActionResult> DeleteToy(int id)
+        {
+            var result = await _toyService.DeteleToy(id);
+            if (result.IsSuccess)
+                return Ok(result);
+            return BadRequest(result);
+        }
     }
 }
