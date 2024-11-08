@@ -63,6 +63,7 @@ namespace EduToyRent.Service.Mappings
                 .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
             CreateMap<OrderDetail, ODRentDTO>()
                 .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName))
+                .ForMember(dest => dest.Shipper, opt => opt.MapFrom(src => src.ShipDates != null ? src.ShipDates.Shipper : null))
                 .ForMember(dest => dest.ShipperPhone, opt => opt.MapFrom(src => src.ShipDates != null ? src.ShipDates.ShipperPhone : null));
 
 
@@ -71,6 +72,7 @@ namespace EduToyRent.Service.Mappings
                 .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
             CreateMap<OrderDetail, ODSaleDTO>()
                 .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName))
+                .ForMember(dest => dest.Shipper, opt => opt.MapFrom(src => src.ShipDates != null ? src.ShipDates.Shipper : null))
                 .ForMember(dest => dest.ShipperPhone, opt => opt.MapFrom(src => src.ShipDates != null ? src.ShipDates.ShipperPhone : null));
 
             CreateMap<Order, ResponseOrderForUser>()

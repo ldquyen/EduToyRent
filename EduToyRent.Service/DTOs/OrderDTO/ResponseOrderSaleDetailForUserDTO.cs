@@ -26,6 +26,7 @@ namespace EduToyRent.Service.DTOs.OrderDTO
         public string ToyName { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
+        public string? Shipper { get; set; }
         public string? ShipperPhone { get; set; }
     }
 }

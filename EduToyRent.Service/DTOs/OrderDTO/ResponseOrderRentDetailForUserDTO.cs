@@ -29,6 +29,7 @@ namespace EduToyRent.Service.DTOs.OrderDTO
         public DateTime? RentalDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public decimal? RentalPrice { get; set; }
+        public string? Shipper { get; set; }
         public string? ShipperPhone { get; set; }
     }
 }
