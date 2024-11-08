@@ -15,12 +15,14 @@ namespace EduToyRent.Service.DTOs.ReportDTO
         public string ReportDetail { get; set; }
         public DateTime ReportDate { get; set; }
         public string Status { get; set; }
+        public string? Response {  get; set; }
     }
 
     public class ChangeReportStatusDTO
     {
         public int ReportId { get; set; }
         public string NewStatus { get; set; }
+        public string? Response { get; set; }
     }
 }
 

@@ -20,6 +20,7 @@ namespace EduToyRent.DataAccess.Entities
         public string ReportDetail { get; set; }
         public DateTime ReportDate { get; set; }
         public string Status { get; set; }
+        public string? Response { get; set; }
         [ForeignKey("ToyId")]
         public virtual Toy Toy { get; set; }
 
