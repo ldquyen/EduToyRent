@@ -77,9 +77,9 @@ namespace EduToyRent.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("view-toys/for-rent-supplier")]
         public async Task<ActionResult<Pagination<ViewToyForRentSupplier>>> ViewToysForRentAccount([FromQuery] string search = null,
-       [FromQuery] string sort = null,
-       [FromQuery] int pageIndex = 0,
-       [FromQuery] int pageSize = 10)
+        [FromQuery] string sort = null,
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 10)
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
             var result = await _toyService.ViewToysForRentAccount(search, sort, pageIndex, pageSize, currentUserObject);

@@ -166,13 +166,6 @@ namespace EduToyRent.Service.Services
             account.IsBan = false;
             var save = await _unitOfWork.AccountRepository.AddAsync(account);
             await _unitOfWork.SaveAsync();
-
-            //var cart = new Cart
-            //{
-            //    AccountId = account.AccountId
-            //};
-            //await _unitOfWork.CartRepository.AddAsync(cart);
-            //await _unitOfWork.SaveAsync();
             return Result.Success();
         }
         public async Task<dynamic> SignUpStaffToySupplier(SignupAccountDTO signupAccountDTO)

@@ -42,13 +42,10 @@ namespace EduToyRent.Service.Services
             rentalToy.ImageUrl = fileURL;
             rentalToy.SupplierId = supplierID;
             rentalToy.IsRental = true;
-            rentalToy.IsActive = false;
+            rentalToy.IsActive = true;
             rentalToy.IsDelete = false;
             var save = await _unitOfWork.ToyRepository.AddAsync(rentalToy);
             await _unitOfWork.SaveAsync();
-            CreateRentalRequestDTO createRentalRequestDTO = new CreateRentalRequestDTO();
-            createRentalRequestDTO.ToyId = rentalToy.ToyId;
-            await _requestFromService.CreateRentalRequest(createRentalRequestDTO);
             return Result.Success();
         }
 
@@ -58,13 +55,10 @@ namespace EduToyRent.Service.Services
             saleToy.ImageUrl = fileURL;
             saleToy.SupplierId = supplierID;
             saleToy.IsRental = false;
-            saleToy.IsActive = false;
+            saleToy.IsActive = true;
             saleToy.IsDelete = false;
             var save = await _unitOfWork.ToyRepository.AddAsync(saleToy);
             await _unitOfWork.SaveAsync();
-            CreateSaleRequestDTO createSaleRequestDTO = new CreateSaleRequestDTO();
-            createSaleRequestDTO.ToyId = saleToy.ToyId;
-            await _requestFromService.CreateSaleRequest(createSaleRequestDTO);
             return Result.Success();
         }
 

@@ -43,8 +43,6 @@ namespace EduToyRent.API.Controllers
             }
         }
 
-        [Authorize(Policy = "StaffOnly")]  //khac tri (Staff tao tk cua supplier )
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("sign-up-supplier")]
         public async Task<IActionResult> SignUpSupplier([FromBody] SignupAccountDTO signupAccountDTO)
         {

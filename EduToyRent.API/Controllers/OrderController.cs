@@ -80,7 +80,7 @@ namespace EduToyRent.API.Controllers
         public async Task<IActionResult> ViewOrderRentDetailForSupplier()
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            var result = await _orderService.ViewOrderRentDetailForSupplier(currentUserObject.AccountId);
+            var result = await _orderService.ViewOrderRentDetailForSupplier(currentUserObject.AccountId);       //fix1
             return Ok(result);
         }
 
