@@ -406,8 +406,7 @@ namespace EduToyRent.Service.Services
                 return Result.Failure(ToyErrors.ToyIsNull);
             toy.IsActive = true;
             var updateResult = await _unitOfWork.ToyRepository.UpdateAsync(toy);
-            if (!updateResult)
-                return Result.Failure(new Error("UpdateFailed", "Failed to update toy information"));
+            await _unitOfWork.SaveAsync();
             return Result.Success();
         }
         //public async Task<Result> UpdateQuantity(int toyId, int quantity, CurrentUserObject currentUserObject)
