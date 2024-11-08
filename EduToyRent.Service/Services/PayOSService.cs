@@ -194,7 +194,8 @@ namespace EduToyRent.Service.Services
             {
                 CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
                 PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment2.PaymentId);
-                payment2.TransactionId = paymentLinkInformation.id;    
+                payment2.TransactionId = paymentLinkInformation.id;
+                payment2.TransactionDate = DateTime.Now;
                 await _unitOfWork.PaymentRepository.UpdateAsync(payment2);
                 await _unitOfWork.SaveAsync();
                 return Result.SuccessWithObject(createPayment.checkoutUrl);
