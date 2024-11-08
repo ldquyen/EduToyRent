@@ -106,6 +106,9 @@ namespace EduToyRent.Service.Mappings
                 .ForMember(dest => dest.ReportDetail, opt => opt.MapFrom(src => src.ReportDetail))
                 .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => src.ReportDate))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+            CreateMap<CreateReportReplyDTO, ReportReply>();
+            CreateMap<ReportReply, ReportReplyDTO>();
         }
     }
 }

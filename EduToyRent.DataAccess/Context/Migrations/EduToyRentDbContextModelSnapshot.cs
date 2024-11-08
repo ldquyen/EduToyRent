@@ -712,6 +712,42 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.ToTable("Report");
                 });
 
+            modelBuilder.Entity("EduToyRent.DataAccess.Entities.ReportReply", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
+
+                    b.Property<string>("MessageContent")
+                        .IsRequired()
+                        .HasMaxLength(3000)
+                        .HasColumnType("nvarchar(3000)");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReportId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("ReportId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("ReportReply");
+                });
+
             modelBuilder.Entity("EduToyRent.DataAccess.Entities.ResetPasswordOTP", b =>
                 {
                     b.Property<int>("id")
@@ -1021,6 +1057,33 @@ namespace EduToyRent.DataAccess.Context.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Toy");
+                });
+
+            modelBuilder.Entity("EduToyRent.DataAccess.Entities.ReportReply", b =>
+                {
+                    b.HasOne("EduToyRent.DAL.Entities.Account", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("EduToyRent.DataAccess.Entities.Report", "Report")
+                        .WithMany()
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduToyRent.DAL.Entities.Account", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Report");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("EduToyRent.DAL.Entities.Account", b =>
