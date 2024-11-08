@@ -26,7 +26,6 @@ namespace EduToyRent.API.Controllers
             return BadRequest(result.Error);
         }
         [HttpGet("get-report")] //Get Reports for Staff - Phu
-        [Authorize(Policy = "StaffOnly")]
         public async Task<IActionResult> GetReports(int pageIndex = 0, int pageSize = 10)
         {
             var paginatedReports = await _reportService.GetReports(pageIndex, pageSize);
