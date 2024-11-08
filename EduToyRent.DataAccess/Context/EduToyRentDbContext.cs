@@ -41,6 +41,7 @@ namespace EduToyRent.DAL.Context
 
         public DbSet<RequestForm> RequestForms { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<ReportReply> ReportReplies { get; set; }
         public DbSet<StatusOrder> StatusOrders {  get; set; }
         #endregion
 
@@ -58,9 +59,9 @@ namespace EduToyRent.DAL.Context
                 .HasForeignKey(t => t.SupplierId);
 
             modelBuilder.Entity<Account>()
-    .HasMany(a => a.Carts)
-    .WithOne(c => c.Account)
-    .HasForeignKey(c => c.AccountId);
+                .HasMany(a => a.Carts)
+                .WithOne(c => c.Account)
+                .HasForeignKey(c => c.AccountId);
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Orders)
@@ -68,10 +69,10 @@ namespace EduToyRent.DAL.Context
                 .HasForeignKey(o => o.AccountId);
 
             modelBuilder.Entity<Review>()
-        .HasOne(r => r.Account)
-        .WithMany(a => a.Reviews)
-        .HasForeignKey(r => r.AccountId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(r => r.Account)
+                .WithMany(a => a.Reviews)
+                .HasForeignKey(r => r.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.AccountVouchers)
@@ -79,37 +80,35 @@ namespace EduToyRent.DAL.Context
                 .HasForeignKey(av => av.AccountId);
 
             modelBuilder.Entity<Payment>()
-        .HasOne(p => p.Account)
-        .WithMany(a => a.Payments)
-        .HasForeignKey(p => p.AccountId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(p => p.Account)
+                .WithMany(a => a.Payments)
+                .HasForeignKey(p => p.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.RefreshTokens)
                 .WithOne(rt => rt.Account)
                 .HasForeignKey(rt => rt.AccountId);
 
-
 			modelBuilder.Entity<ResetPasswordOTP>()
-			.HasKey(otp => otp.id);
+			    .HasKey(otp => otp.id);
 
 			modelBuilder.Entity<OrderDetail>()
-        .HasOne(od => od.Order)
-        .WithMany(o => o.OrderDetails)
-        .HasForeignKey(od => od.OrderId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(od => od.Order)
+                .WithMany(o => o.OrderDetails)
+                .HasForeignKey(od => od.OrderId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DepositOrder>()
                 .HasOne(de => de.Order)
                 .WithOne(o => o.DepositOrders)
                 .HasForeignKey<DepositOrder>(de => de.OrderId);
 
-
             modelBuilder.Entity<Payment>()
-        .HasOne(p => p.Order)
-        .WithMany(o => o.Payments)
-        .HasForeignKey(p => p.OrderId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(p => p.Order)
+                .WithMany(o => o.Payments)
+                .HasForeignKey(p => p.OrderId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(od => od.ShipDates)
@@ -117,28 +116,28 @@ namespace EduToyRent.DAL.Context
                 .HasForeignKey<ShipDate>(sd => sd.OrderDetailId);
 
             modelBuilder.Entity<Review>()
-        .HasOne(r => r.Toy)
-        .WithMany(t => t.Reviews)
-        .HasForeignKey(r => r.ToyId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(r => r.Toy)
+                .WithMany(t => t.Reviews)
+                .HasForeignKey(r => r.ToyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OrderDetail>()
-         .HasOne(od => od.Toy)
-         .WithMany(t => t.OrderDetails)
-         .HasForeignKey(od => od.ToyId)
-         .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(od => od.Toy)
+                .WithMany(t => t.OrderDetails)
+                .HasForeignKey(od => od.ToyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CartItem>()
-        .HasOne(ci => ci.Toy)
-        .WithMany(t => t.CartItems)
-        .HasForeignKey(ci => ci.ToyId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(ci => ci.Toy)
+                .WithMany(t => t.CartItems)
+                .HasForeignKey(ci => ci.ToyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CartItem>()
-        .HasOne(ci => ci.Cart)
-        .WithMany(c => c.CartItems)
-        .HasForeignKey(ci => ci.CartId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Voucher>()
                 .HasMany(v => v.AccountVouchers)
@@ -202,41 +201,51 @@ namespace EduToyRent.DAL.Context
                 .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<RequestForm>()
-    .HasOne(r => r.Toy)
-    .WithMany(t => t.RequestForms)
-    .HasForeignKey(r => r.ToyId)
-    .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(r => r.Toy)
+                .WithMany(t => t.RequestForms)
+                .HasForeignKey(r => r.ToyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RequestForm>()
-    .HasOne(r => r.Account)
-    .WithMany(a => a.RequestForms)
-    .HasForeignKey(r => r.ProcessedById)
-    .OnDelete(DeleteBehavior.Restrict);
-
-
-            modelBuilder.Entity<Report>()
-        .HasOne(r => r.Toy)
-        .WithMany(t => t.Reports)
-        .HasForeignKey(r => r.ToyId)
-        .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
+                .HasOne(r => r.Account)
+                .WithMany(a => a.RequestForms)
+                .HasForeignKey(r => r.ProcessedById)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Report>()
-       .HasOne(r => r.Toy)
-       .WithMany(t => t.Reports)
-       .HasForeignKey(r => r.ToyId)
-       .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
+                .HasOne(r => r.Toy)
+                .WithMany(t => t.Reports)
+                .HasForeignKey(r => r.ToyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.Toy)
+                .WithMany(t => t.Reports)
+                .HasForeignKey(r => r.ToyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Report>()
                 .HasOne(r => r.Account)
                 .WithMany(a => a.Reports)
                 .HasForeignKey(r => r.ReportById)
-                .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportReply>()
+                .HasOne(rr => rr.Sender)
+                .WithMany()
+                .HasForeignKey(rr => rr.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ReportReply>()
+                .HasOne(rr => rr.Receiver)
+                .WithMany()
+                .HasForeignKey(rr => rr.ReceiverId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<StatusOrder>()
-            .HasMany(r => r.Orders)
-            .WithOne(a => a.StatusOrder)
-            .HasForeignKey(a => a.StatusId);
+                .HasMany(r => r.Orders)
+                .WithOne(a => a.StatusOrder)
+                .HasForeignKey(a => a.StatusId);
 
             //Add-Migration InitMigration -Context EduToyRentDbContext -Project EduToyRent.DataAccess -StartupProject EduToyRent.API -OutputDir Context/Migrations
 
