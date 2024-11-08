@@ -18,6 +18,8 @@ namespace EduToyRent.DAL.Entities
         public DateTime? ReturnDate { get; set; }
         public DateTime? RefundDate { get; set; }
         public int ShipStatus { get; set; }
+        public string? Shipper { get; set; }
+        public string? ShipperPhone { get; set; }
 
         [ForeignKey("OrderDetailId")]
         public virtual OrderDetail OrderDetail { get; set; }

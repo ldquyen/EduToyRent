@@ -24,8 +24,6 @@ namespace EduToyRent.DAL.Entities
         public DateTime OrderDate { get; set; }
         public bool IsRentalOrder { get; set; }
         public string ReceivePhoneNumber { get; set; }
-        public string? Shipper { get; set; }
-        public string? ShipperPhone { get; set; }
 
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }

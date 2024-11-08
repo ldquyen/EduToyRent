@@ -42,13 +42,10 @@ namespace EduToyRent.Service.Services
             rentalToy.ImageUrl = fileURL;
             rentalToy.SupplierId = supplierID;
             rentalToy.IsRental = true;
-            rentalToy.IsActive = false;
+            rentalToy.IsActive = true;
             rentalToy.IsDelete = false;
             var save = await _unitOfWork.ToyRepository.AddAsync(rentalToy);
             await _unitOfWork.SaveAsync();
-            CreateRentalRequestDTO createRentalRequestDTO = new CreateRentalRequestDTO();
-            createRentalRequestDTO.ToyId = rentalToy.ToyId;
-            await _requestFromService.CreateRentalRequest(createRentalRequestDTO);
             return Result.Success();
         }
 
@@ -58,13 +55,10 @@ namespace EduToyRent.Service.Services
             saleToy.ImageUrl = fileURL;
             saleToy.SupplierId = supplierID;
             saleToy.IsRental = false;
-            saleToy.IsActive = false;
+            saleToy.IsActive = true;
             saleToy.IsDelete = false;
             var save = await _unitOfWork.ToyRepository.AddAsync(saleToy);
             await _unitOfWork.SaveAsync();
-            CreateSaleRequestDTO createSaleRequestDTO = new CreateSaleRequestDTO();
-            createSaleRequestDTO.ToyId = saleToy.ToyId;
-            await _requestFromService.CreateSaleRequest(createSaleRequestDTO);
             return Result.Success();
         }
 
@@ -290,6 +284,7 @@ namespace EduToyRent.Service.Services
                         Stock = t.Stock,
                         ImageUrl = t.ImageUrl,
                         CategoryName = t.Category?.CategoryName,
+                        IsDelete = t.IsDelete,
                         IsActive = t.IsActive                     
                         
                     }).ToList()
@@ -327,6 +322,7 @@ namespace EduToyRent.Service.Services
                     Stock = t.Stock,
                     ImageUrl = t.ImageUrl,
                     CategoryName = t.Category.CategoryName,
+                    IsDelete = t.IsDelete,
                     IsActive = t.IsActive
                 }).ToList()
             };
@@ -357,6 +353,7 @@ namespace EduToyRent.Service.Services
                         Stock = t.Stock,
                         ImageUrl = t.ImageUrl,
                         CategoryName = t.Category?.CategoryName,
+                        IsDelete = t.IsDelete,
                         IsActive = t.IsActive
                     }).ToList()
                 };
@@ -395,11 +392,31 @@ namespace EduToyRent.Service.Services
                     Stock = t.Stock,
                     ImageUrl = t.ImageUrl,
                     CategoryName = t.Category?.CategoryName,
+                    IsDelete = t.IsDelete,
                     IsActive = t.IsActive
                 }).ToList()
             };
 
             return paginationResult;
         }
+        public async Task<dynamic> DeteleToy(int toyId)
+        {
+            var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
+            toy.IsActive = true;
+            var updateResult = await _unitOfWork.ToyRepository.UpdateAsync(toy);
+            await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
+        //public async Task<Result> UpdateQuantity(int toyId, int quantity, CurrentUserObject currentUserObject)
+        //{
+        //    var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
+        //    if (toy == null)
+        //        return Result.Failure(ToyErrors.ToyIsNull);
+        //    toy.Stock = true;
+        //    var updateResult = await _unitOfWork.ToyRepository.UpdateToy(toy);
+        //    if (!updateResult)
+        //        return Result.Failure(new Error("UpdateFailed", "Failed to update toy information"));
+        //    return Result.Success();
+        //}
     }
 }

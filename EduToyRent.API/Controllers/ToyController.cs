@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.API.Helper;
+using EduToyRent.Service.DTOs.CategoryDTO;
+using EduToyRent.Service.Services;
 
 
 namespace EduToyRent.API.Controllers
@@ -77,9 +79,9 @@ namespace EduToyRent.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("view-toys/for-rent-supplier")]
         public async Task<ActionResult<Pagination<ViewToyForRentSupplier>>> ViewToysForRentAccount([FromQuery] string search = null,
-       [FromQuery] string sort = null,
-       [FromQuery] int pageIndex = 0,
-       [FromQuery] int pageSize = 10)
+        [FromQuery] string sort = null,
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 10)
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
             var result = await _toyService.ViewToysForRentAccount(search, sort, pageIndex, pageSize, currentUserObject);
@@ -96,6 +98,22 @@ namespace EduToyRent.API.Controllers
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
             var result = await _toyService.ViewToysForSellAccount(search, sort, pageIndex, pageSize, currentUserObject);
             return Ok(result);
+        }
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("delete")]
+        public async Task<IActionResult> DeleteToy(int id)
+        {
+            try
+            {
+                var result = await _toyService.DeteleToy(id);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

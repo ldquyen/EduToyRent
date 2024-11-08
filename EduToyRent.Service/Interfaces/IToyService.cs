@@ -22,7 +22,7 @@ namespace EduToyRent.Service.Interfaces
         Task<Pagination<ViewToyForRentDTO>> ViewToysForRent(string search, string sort, int pageIndex, int pageSize);
         Task<Pagination<ViewToyForRentSupplier>> ViewToysForRentAccount(string search, string sort, int pageIndex, int pageSize, CurrentUserObject currentUserObject);
         Task<Pagination<ViewToyForSellSupplier>> ViewToysForSellAccount(string search, string sort, int pageIndex, int pageSize, CurrentUserObject currentUserObject);
-
+        Task<dynamic> DeteleToy(int toyId);
 
     }
 }

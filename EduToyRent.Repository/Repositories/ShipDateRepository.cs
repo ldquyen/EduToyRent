@@ -18,14 +18,16 @@ namespace EduToyRent.Repository.Repositories
             _context = context;
         }
 
-        public async Task<bool> CreateShipDate(OrderDetail orderDetail)
+        public async Task<bool> CreateShipDate(OrderDetail orderDetail, string? Shipper, string? ShipperPhone)
         {
             ShipDate shipDate = new ShipDate()
             {
                 OrderDetailId = orderDetail.OrderDetailId,
                 DeliveryDate = DateTime.Now,
                 ReturnDate = orderDetail.ReturnDate,
-                ShipStatus = 1 //lay hang tu supplier
+                ShipStatus = 1, //lay hang tu supplier
+                Shipper = Shipper,
+                ShipperPhone  = ShipperPhone
             };
             await _context.ShipDates.AddAsync(shipDate);
             await _context.SaveChangesAsync();

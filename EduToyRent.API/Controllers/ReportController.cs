@@ -32,15 +32,14 @@ namespace EduToyRent.API.Controllers
         }
 
         [HttpPut("change-report-status")] //Update Report status - Phu
-        public async Task<IActionResult> ChangeReportStatus([FromQuery] ChangeReportStatusDTO dto)
+        public async Task<IActionResult> ChangeReportStatus([FromQuery] int reportId)
         {
-            var result = await _reportService.ChangeReportStatus(dto);
+            var result = await _reportService.ChangeReportStatus(reportId);
 
             if (!result.IsSuccess)
             {
                 return BadRequest(result.Error);
             }
-
             return Ok();
         }
     }

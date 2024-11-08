@@ -62,15 +62,20 @@ namespace EduToyRent.Service.Mappings
                 .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName))
                 .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
             CreateMap<OrderDetail, ODRentDTO>()
-                .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName));
+                .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName))
+                .ForMember(dest => dest.ShipperPhone, opt => opt.MapFrom(src => src.ShipDates.ShipperPhone));
 
             CreateMap<Order, ResponseOrderSaleDetailForUserDTO>()
                  .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName))
                 .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
             CreateMap<OrderDetail, ODSaleDTO>()
-                .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName));
+                .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName))
+                .ForMember(dest => dest.ShipperPhone, opt => opt.MapFrom(src => src.ShipDates.ShipperPhone));
             CreateMap<Order, ResponseOrderForUser>()
             .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
+
+            CreateMap<Order, InformationForShipDTO>()
+            .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName));
 
 
             CreateMap<OrderDetail, ReponseOrderSaleForSupplierDTO>();
@@ -97,6 +102,15 @@ namespace EduToyRent.Service.Mappings
             CreateMap<CreateReportDTO, Report>()
                 .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "Pending"));
+            CreateMap<ReportListDTO, Report>();
+            CreateMap<Report, ReportListDTO>()
+    .ForMember(dest => dest.ToyName, opt => opt.MapFrom(src => src.Toy.ToyName))
+    .ForMember(dest => dest.ReporterName, opt => opt.MapFrom(src => src.Account.AccountName))
+    .ForMember(dest => dest.ReportDetail, opt => opt.MapFrom(src => src.ReportDetail))
+    .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => src.ReportDate))
+    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+
         }
     }
 }

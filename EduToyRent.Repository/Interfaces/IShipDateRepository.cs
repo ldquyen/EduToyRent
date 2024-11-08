@@ -9,7 +9,7 @@ namespace EduToyRent.Repository.Interfaces
 {
     public interface IShipDateRepository : IRepository<ShipDate>
     {
-        Task<bool> CreateShipDate(OrderDetail orderDetail);
+        Task<bool> CreateShipDate(OrderDetail orderDetail, string? Shipper, string? ShipperPhone);
         Task<bool> CheckAllShip(List<int> orderDetailIds);
         Task<bool> CheckShip(int orderDetailId);
     }

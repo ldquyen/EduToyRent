@@ -80,12 +80,12 @@ namespace EduToyRent.API.Controllers
         public async Task<IActionResult> ViewOrderRentDetailForSupplier()
         {
             CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-            var result = await _orderService.ViewOrderRentDetailForSupplier(currentUserObject.AccountId);
+            var result = await _orderService.ViewOrderRentDetailForSupplier(currentUserObject.AccountId);       //fix1
             return Ok(result);
         }
 
         [Authorize(Policy = "SupplierOnly")]    //.Supplier view sale order
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] //fix
         [HttpGet("sale-details-for-supplier")]
         public async Task<IActionResult> ViewOrderSaleDetailForSupplier()
         {
@@ -94,12 +94,22 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "SupplierOnly")]    //.Supplier view info order to ship
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("information-ship/{orderDetailId}")]          
+        public async Task<IActionResult> SupplierViewInfoToShip(int orderDetailId)
+        {
+            var result = await _orderService.GetInfoShipForSupplier(orderDetailId);
+            return Ok(result);
+
+        }
+
         [Authorize(Policy = "SupplierOnly")]    //.Supplier confirm order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("supplier-confirm-ship/{orderDetailId}")]
-        public async Task<IActionResult> SupplierConfirmShip(int orderDetailId)
+        [HttpPut("supplier-confirm-ship")]          //api cu: supplier-confirm-ship/{orderDetailId}
+        public async Task<IActionResult> SupplierConfirmShip(SupplierConfirmDTO supplierConfirmDTO)
         {
-            var result = await _orderService.SupplierConfirmShip(orderDetailId);
+            var result = await _orderService.SupplierConfirmShip(supplierConfirmDTO);
             return Ok(result);
 
         }
@@ -122,5 +132,7 @@ namespace EduToyRent.API.Controllers
             var result = await _orderService.ReturnOrderRent(orderId, currentUserObject.AccountId);
             return Ok(result);
         }
+
+
     }
 }

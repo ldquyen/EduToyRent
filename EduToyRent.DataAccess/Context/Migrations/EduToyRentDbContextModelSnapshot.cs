@@ -293,12 +293,6 @@ namespace EduToyRent.DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Shipper")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShipperPhone")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ShippingAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -575,6 +569,12 @@ namespace EduToyRent.DataAccess.Context.Migrations
 
                     b.Property<int>("ShipStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("Shipper")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShipperPhone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ShipDateId");
 
