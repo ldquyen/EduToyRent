@@ -72,6 +72,9 @@ namespace EduToyRent.Service.Mappings
             CreateMap<Order, ResponseOrderForUser>()
             .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.StatusOrder.StatusName));
 
+            CreateMap<Order, InformationForShipDTO>()
+            .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName));
+
 
             CreateMap<OrderDetail, ReponseOrderSaleForSupplierDTO>();
             CreateMap<OrderDetail, ReponseOrderRentForSupplierDTO>();
@@ -104,6 +107,8 @@ namespace EduToyRent.Service.Mappings
     .ForMember(dest => dest.ReportDetail, opt => opt.MapFrom(src => src.ReportDetail))
     .ForMember(dest => dest.ReportDate, opt => opt.MapFrom(src => src.ReportDate))
     .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+
         }
     }
 }

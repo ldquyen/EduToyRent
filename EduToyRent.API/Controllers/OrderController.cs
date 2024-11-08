@@ -94,6 +94,16 @@ namespace EduToyRent.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "SupplierOnly")]    //.Supplier view info order to ship
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("information-ship/{orderDetailId}")]          
+        public async Task<IActionResult> SupplierViewInfoToShip(int orderDetailId)
+        {
+            var result = await _orderService.GetInfoShipForSupplier(orderDetailId);
+            return Ok(result);
+
+        }
+
         [Authorize(Policy = "SupplierOnly")]    //.Supplier confirm order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("supplier-confirm-ship")]          //api cu: supplier-confirm-ship/{orderDetailId}
@@ -122,5 +132,7 @@ namespace EduToyRent.API.Controllers
             var result = await _orderService.ReturnOrderRent(orderId, currentUserObject.AccountId);
             return Ok(result);
         }
+
+
     }
 }

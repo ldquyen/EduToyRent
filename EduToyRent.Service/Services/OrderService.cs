@@ -328,5 +328,12 @@ namespace EduToyRent.Service.Services
             return 0;
         }
 
+        public async Task<dynamic> GetInfoShipForSupplier(int orderDetailId)
+        {
+            var orderdetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
+            var order = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderdetail.OrderId, includeProperties: "Account");
+            var res = _mapper.Map<InformationForShipDTO>(order);
+            return Result.SuccessWithObject(res);
+        }
     }
 }
