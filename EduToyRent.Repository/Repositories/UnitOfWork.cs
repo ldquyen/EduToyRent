@@ -14,6 +14,7 @@ namespace EduToyRent.Repository.Repositories
     {
         private readonly EduToyRentDbContext _context;
         public IAccountRepository AccountRepository { get; set; }
+		public IResetPasswordOTPRepository ResetPasswordOTPRepository { get; set; }
         public IRefreshTokenRepository RefreshTokenRepository { get; set; }
         public ICartRepository CartRepository { get; set; }
         public ICartItemRepository CartItemRepository {  get; set; }
@@ -25,11 +26,16 @@ namespace EduToyRent.Repository.Repositories
         public IOrderDetailRepository OrderDetailRepository { get; set; }
         public IVoucherRepository VoucherRepository { get; set; }
         public IAccountVoucherRepository AccountVoucherRepository   { get; set; }
+        public IDepositOrderRepository DepositOrderRepository { get; set; }
+        public IPaymentRepository PaymentRepository { get; set; }
+        public IShipDateRepository ShipDateRepository {  get; set; }
+        public IReportRepository ReportRepository { get; set; }
 
         public UnitOfWork(EduToyRentDbContext context)
         {
             _context = context;
             AccountRepository = new AccountRepository(_context);
+			ResetPasswordOTPRepository = new ResetPasswordOTPRepository(_context);
             RefreshTokenRepository = new RefreshTokenRepository(_context);  
             CartRepository = new CartRepository(_context);
             CartItemRepository = new CartItemRepository(_context);
@@ -41,6 +47,10 @@ namespace EduToyRent.Repository.Repositories
             OrderDetailRepository = new OrderDetailRepository(_context);
             VoucherRepository = new VoucherRepository(_context);
             AccountVoucherRepository = new AccountVoucherRepository(_context);
+            DepositOrderRepository = new DepositOrderRepository(_context);
+            PaymentRepository = new PaymentRepository(_context);
+            ShipDateRepository = new ShipDateRepository(_context);
+            ReportRepository = new ReportRepository(_context);
         }
 
         public async Task SaveAsync()

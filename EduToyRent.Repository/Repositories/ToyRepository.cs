@@ -18,7 +18,10 @@ namespace EduToyRent.Repository.Repositories
         {
             _context = context;
         }
-
+        public async Task<List<Toy>> GetAllToy()
+        {
+            return await _context.Toys.ToListAsync();
+        }
         public async Task<Toy> GetToyById(int toyId)
         {
             return await _context.Toys
@@ -31,96 +34,6 @@ namespace EduToyRent.Repository.Repositories
         {
             _context.Toys.Update(toy);
             return await _context.SaveChangesAsync() > 0;
-        }
-        public async Task<int> GetRentCount()
-        {
-            return await _context.Toys.CountAsync(t => t.IsRental);
-        }
-
-        public async Task<int> GetSaleCount()
-        {
-            return await _context.Toys.CountAsync(t => !t.IsRental);
-        }
-
-        public async Task<IEnumerable<Toy>> ViewToysForRent(int pageIndex, int pageSize)
-        {
-            return await _context.Toys
-                .Where(t => t.IsRental)
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Toy>> ViewToysForSale(int pageIndex, int pageSize)
-        {
-            return await _context.Toys
-                .Where(t => !t.IsRental)
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-        public async Task<int> GetCountByToyName(string keyword, bool isRental)
-        {
-            return await _context.Toys.CountAsync(x => x.ToyName.Contains(keyword) && x.IsRental == isRental && !x.IsDelete);
-        }
-
-        public async Task<IEnumerable<Toy>> SearchToysByName(string keyword, bool isRental, int pageIndex, int pageSize)
-        {
-            pageIndex = pageIndex < 1 ? 1 : pageIndex;
-
-            return await _context.Toys
-                .Where(x => x.ToyName.Contains(keyword) && x.IsRental == isRental && !x.IsDelete)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Toy>> SortToysForRent(string sortBy, int pageIndex, int pageSize)
-        {
-            IQueryable<Toy> toys = _context.Toys.Where(t => t.IsRental);
-            switch (sortBy)
-            {
-                case "price_asc":
-                    toys = toys.OrderBy(x => x.RentPricePerDay);
-                    break;
-                case "price_desc":
-                    toys = toys.OrderByDescending(x => x.RentPricePerDay);
-                    break;
-                case "name_asc":
-                    toys = toys.OrderBy(x => x.ToyName);
-                    break;
-                case "name_desc":
-                    toys = toys.OrderByDescending(x => x.ToyName);
-                    break;
-            }
-            return await toys
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Toy>> SortToysForSale(string sortBy, int pageIndex, int pageSize)
-        {
-            IQueryable<Toy> toys = _context.Toys.Where(t => !t.IsRental);
-            switch (sortBy)
-            {
-                case "price_asc":
-                    toys = toys.OrderBy(x => x.BuyPrice);
-                    break;
-                case "price_desc":
-                    toys = toys.OrderByDescending(x => x.BuyPrice);
-                    break;
-                case "name_asc":
-                    toys = toys.OrderBy(x => x.ToyName);
-                    break;
-                case "name_desc":
-                    toys = toys.OrderByDescending(x => x.ToyName);
-                    break;
-            }
-            return await toys
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
         }
 
         public async Task<bool> CheckSameTypeOfToy(List<int> toyIds, bool isRent)
@@ -139,6 +52,85 @@ namespace EduToyRent.Repository.Repositories
             var hasInvalidToys = toys.Any(toy => toyIds.Contains(toy.ToyId) && (!toy.IsActive || toy.IsDelete || toy.Stock <= 0));
             return !hasInvalidToys;
 
+        }
+
+        public async Task<decimal> GetMoneySaleByToyId(int toyId, int quantity)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            decimal totalSale = 0;
+            totalSale = (toy.BuyPrice ?? 0) * quantity;
+            return totalSale;
+        }
+
+        public async Task<decimal> GetMoneyRentByToyId(int toyId, int quantity, DateTime? rentalDate, DateTime? returnDate)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            int totalDays = (returnDate.Value - rentalDate.Value).Days;
+            decimal totalRent = 0;
+
+            if (totalDays < 7) 
+            {
+                totalRent = totalDays * (toy.RentPricePerDay ?? 0); // duoi 7
+            }else if(totalDays == 7)
+            {
+                totalRent = (toy.RentPricePerWeek ?? 0); // bang 7
+            }
+            else if (totalDays < 14) //duoi 2 tuan
+            {
+                totalRent = (toy.RentPricePerWeek ?? 0) + ((totalDays - 7) * (toy.RentPricePerDay ?? 0));
+            }
+            else if(totalDays == 14) // bang 2 tuan
+            {
+                totalRent = (toy.RentPricePerTwoWeeks ?? 0);
+            }
+            else // hon 2 tuan
+            {
+                totalRent = (toy.RentPricePerTwoWeeks ?? 0) + ((totalDays - 14) * (toy.RentPricePerDay ?? 0));
+            }
+            return totalRent * quantity;
+        }
+
+        public async Task SubtractQuantity(int toyId, int quantity)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            toy.Stock -= quantity;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> CheckQuantity(int quantity, int toyId)
+        {
+            Toy toy = await _context.Toys.FirstOrDefaultAsync(x => x.ToyId == toyId);
+            if (quantity > toy.Stock) return true;
+            return false;
+        }
+
+        public async Task<List<Toy>> GetToysForRent()
+        {
+            return await _context.Toys
+                .Where(t => t.IsRental && t.IsActive && !t.IsDelete)
+                .ToListAsync();
+        }
+
+        public async Task<List<Toy>> GetToysForSale()
+        {
+            return await _context.Toys
+                .Where(t => !t.IsRental && t.IsActive && !t.IsDelete)
+                .ToListAsync();
+        }
+        public async Task<List<Toy>> GetToysForRentAccount(int accId)
+        {
+            return await _context.Toys
+                .Where(t => t.IsRental && t.SupplierId == accId)
+                .Include(t => t.Category)
+                .ToListAsync();
+        }
+
+        public async Task<List<Toy>> GetToysForSaleAccount(int accId)
+        {
+            return await _context.Toys
+                .Where(t => !t.IsRental && t.SupplierId == accId)
+                .Include(t => t.Category)
+                .ToListAsync();
         }
     }
 }

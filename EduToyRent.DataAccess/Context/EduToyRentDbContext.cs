@@ -32,7 +32,7 @@ namespace EduToyRent.DAL.Context
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
-
+		public DbSet<ResetPasswordOTP> ResetPasswordOTPs { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<ShipDate> ShipDates { get; set; }
         public DbSet<Toy> Toys { get; set; }
@@ -50,6 +50,7 @@ namespace EduToyRent.DAL.Context
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new StatusOrderConfiguration());
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Toys)
@@ -57,9 +58,9 @@ namespace EduToyRent.DAL.Context
                 .HasForeignKey(t => t.SupplierId);
 
             modelBuilder.Entity<Account>()
-                .HasOne(a => a.Cart)
-                .WithOne(c => c.Account)
-                .HasForeignKey<Cart>(c => c.AccountId);
+    .HasMany(a => a.Carts)
+    .WithOne(c => c.Account)
+    .HasForeignKey(c => c.AccountId);
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.Orders)
@@ -88,7 +89,11 @@ namespace EduToyRent.DAL.Context
                 .WithOne(rt => rt.Account)
                 .HasForeignKey(rt => rt.AccountId);
 
-            modelBuilder.Entity<OrderDetail>()
+
+			modelBuilder.Entity<ResetPasswordOTP>()
+			.HasKey(otp => otp.id);
+
+			modelBuilder.Entity<OrderDetail>()
         .HasOne(od => od.Order)
         .WithMany(o => o.OrderDetails)
         .HasForeignKey(od => od.OrderId)

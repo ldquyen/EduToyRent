@@ -19,12 +19,13 @@ namespace EduToyRent.DAL.Repositories
             _context = context;
         }
 
-        public async Task<CartItem?> GetAsync(int toyId)
-        {
-            return await _context.CartItems.FirstOrDefaultAsync(c => c.ToyId == toyId);
-        }
+        public async Task<CartItem?> GetCartItem(int toyId, int cartId)
+		{
+			return await _context.CartItems.Where(x => x.ToyId == toyId && x.CartId == cartId).FirstOrDefaultAsync();
+		}
 
-		public async Task<List<CartItem>?> GetByCartIdAsync(int cartId)
+
+        public async Task<List<CartItem>?> GetByCartIdAsync(int cartId)
 		{
 			return await _context.CartItems.Where(c => c.CartId == cartId).ToListAsync();
 		}

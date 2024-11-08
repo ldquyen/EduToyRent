@@ -14,6 +14,7 @@ namespace EduToyRent.API.Helper
             //repository
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+			services.AddScoped<IResetPasswordOTPRepository, ResetPasswordOTPRepository>();
 			services.AddScoped<ICartRepository, CartRepository>();
 			services.AddScoped<ICartItemRepository, CartItemRepository>();
 
@@ -28,8 +29,9 @@ namespace EduToyRent.API.Helper
 			services.AddScoped<ICartService, CartService>();
             services.AddScoped<IOrderService, OrderService>();  
             services.AddScoped<IVoucherService, VoucherService>();
-
-			return services;
+            services.AddScoped<IPayOSService, PayOSService>();
+            services.AddScoped<IReportService, ReportService>();
+            return services;
         }
 
 

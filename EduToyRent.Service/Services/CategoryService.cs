@@ -25,7 +25,7 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> CreateCategory(CreateNewCategoryDTO createNewCategoryDTO)
         {
             var category = _mapper.Map<Category>(createNewCategoryDTO);
-            await _unitOfWork.CategoryRepository.AddAsync(category);
+            var save = await _unitOfWork.CategoryRepository.AddAsync(category);
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
@@ -50,7 +50,7 @@ namespace EduToyRent.Service.Services
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(updateCategoryDTO.CategoryId);
             category.CategoryName = updateCategoryDTO.CategoryName;
-            await _unitOfWork.CategoryRepository.UpdateAsync(category);
+            var update = await _unitOfWork.CategoryRepository.UpdateAsync(category);
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }

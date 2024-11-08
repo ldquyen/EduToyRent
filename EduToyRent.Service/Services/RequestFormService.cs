@@ -28,7 +28,7 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> CreateRentalRequest(CreateRentalRequestDTO createRentalRequestDTO)
         {
             var rentalRequest = _mapper.Map<RequestForm>(createRentalRequestDTO);
-            await _unitOfWork.RequestFormRepository.AddAsync(rentalRequest);
+            var save = await _unitOfWork.RequestFormRepository.AddAsync(rentalRequest);
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
@@ -36,7 +36,7 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> CreateSaleRequest(CreateSaleRequestDTO createSaleRequestDTO)
         {
             var saleRequest = _mapper.Map<RequestForm>(createSaleRequestDTO);
-            await _unitOfWork.RequestFormRepository.AddAsync(saleRequest);
+            var save = await _unitOfWork.RequestFormRepository.AddAsync(saleRequest);
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
@@ -82,11 +82,11 @@ namespace EduToyRent.Service.Services
             {
                 var toy = await _unitOfWork.ToyRepository.GetAsync(x => x.ToyId == existingRequest.ToyId);
                 toy.IsActive = true; 
-                await _unitOfWork.ToyRepository.UpdateAsync(toy);
+                var update1 = await _unitOfWork.ToyRepository.UpdateAsync(toy);
             }
             existingRequest.ResponseDate = DateTime.Now;
             existingRequest.ProcessedById = staffId;    
-            await _unitOfWork.RequestFormRepository.UpdateAsync(existingRequest);
+            var update = await _unitOfWork.RequestFormRepository.UpdateAsync(existingRequest);
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
