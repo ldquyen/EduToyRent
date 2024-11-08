@@ -225,8 +225,8 @@ namespace EduToyRent.Service.Services
                 {
                     if (string.IsNullOrEmpty(confirmOrderDTO.Shipper) || string.IsNullOrEmpty(confirmOrderDTO.ShipperPhone))
                         return Result.Failure(OrderErrors.ShiperInfo);
-                    order.Shipper = confirmOrderDTO.Shipper;
-                    order.ShipperPhone = confirmOrderDTO.ShipperPhone;
+                    //order.Shipper = confirmOrderDTO.Shipper;
+                    //order.ShipperPhone = confirmOrderDTO.ShipperPhone;
                     order.StatusId = confirmOrderDTO.StatusId;
                     var update = await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.SaveAsync();
@@ -248,15 +248,17 @@ namespace EduToyRent.Service.Services
             var list = _mapper.Map<List<ReponseOrderSaleForSupplierDTO>>(odList);
             return Result.SuccessWithObject(list);
         }
-        public async Task<dynamic> SupplierConfirmShip(int orderDetailId)
+        public async Task<dynamic> SupplierConfirmShip(SupplierConfirmDTO supplierConfirmDTO)
         {
-            var od = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
+            var od = await _unitOfWork.OrderDetailRepository.GetByIdAsync(supplierConfirmDTO.OrderDetailId);
             var listid = await _unitOfWork.OrderDetailRepository.GetOrderDetailIdByOrderId(od.OrderId);
             if (!await _unitOfWork.ShipDateRepository.CheckShip(od.OrderDetailId))
             {
-                await _unitOfWork.ShipDateRepository.CreateShipDate(od);
+                await _unitOfWork.ShipDateRepository.CreateShipDate(od, supplierConfirmDTO.Shipper, supplierConfirmDTO.ShipperPhone);
                 if (await _unitOfWork.ShipDateRepository.CheckAllShip(listid))
+                {
                     await _unitOfWork.OrderRepository.UpdateOrderStatus(od.OrderId, 3);
+                }
             }
             return Result.Success();
         }

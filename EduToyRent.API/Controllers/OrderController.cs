@@ -96,10 +96,10 @@ namespace EduToyRent.API.Controllers
 
         [Authorize(Policy = "SupplierOnly")]    //.Supplier confirm order
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("supplier-confirm-ship/{orderDetailId}")]
-        public async Task<IActionResult> SupplierConfirmShip(int orderDetailId)
+        [HttpPut("supplier-confirm-ship")]          //api cu: supplier-confirm-ship/{orderDetailId}
+        public async Task<IActionResult> SupplierConfirmShip(SupplierConfirmDTO supplierConfirmDTO)
         {
-            var result = await _orderService.SupplierConfirmShip(orderDetailId);
+            var result = await _orderService.SupplierConfirmShip(supplierConfirmDTO);
             return Ok(result);
 
         }
