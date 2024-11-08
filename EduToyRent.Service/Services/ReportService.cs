@@ -47,7 +47,6 @@ namespace EduToyRent.Service.Services
                 TotalItemsCount = totalItemsCount
             };
         }
-
         public async Task<Result> ChangeReportStatus(ChangeReportStatusDTO dto)
         {
             var report = await _unitOfWork.ReportRepository.GetReportById(dto.ReportId);
@@ -59,11 +58,29 @@ namespace EduToyRent.Service.Services
             if ((report.Status == Pending && dto.NewStatus == Processing) ||
                 (report.Status == Processing && dto.NewStatus == Processed))
             {
+                if (dto.NewStatus == Processing)
+                {
+                    if (!string.IsNullOrWhiteSpace(dto.Response))
+                    {
+                        return Result.Failure(Result.CreateError("400", "Response should not be provided when marking the report as Processing"));
+                    }
+                }
+                else if (dto.NewStatus == Processed)
+                {
+                    if (string.IsNullOrWhiteSpace(dto.Response))
+                    {
+                        return Result.Failure(Result.CreateError("400", "Response is required when marking the report as Processed"));
+                    }
+
+                    report.Response = dto.Response;
+                }
                 report.Status = dto.NewStatus;
                 await _unitOfWork.ReportRepository.UpdateReport(report);
                 return Result.Success();
             }
+
             return Result.Failure(Result.CreateError("400", "Invalid status transition"));
         }
+
     }
 }
