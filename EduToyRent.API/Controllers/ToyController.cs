@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.API.Helper;
+using EduToyRent.Service.DTOs.CategoryDTO;
+using EduToyRent.Service.Services;
 
 
 namespace EduToyRent.API.Controllers
@@ -102,10 +104,16 @@ namespace EduToyRent.API.Controllers
         [HttpPut("delete")]
         public async Task<IActionResult> DeleteToy(int id)
         {
-            var result = await _toyService.DeteleToy(id);
-            if (result.IsSuccess)
-                return Ok(result);
-            return BadRequest(result);
+            try
+            {
+                var result = await _toyService.DeteleToy(id);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }
