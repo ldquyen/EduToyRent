@@ -101,35 +101,28 @@ namespace EduToyRent.API.Controllers
         }
         [Authorize(Policy = "SupplierOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("delete")]
-        public async Task<IActionResult> DeleteToy(int id)
+        [HttpPut("delete-undelete-toy")]
+        public async Task<IActionResult> DeleteUndeleteToy(int id, int flag)
         {
             try
             {
-                var result = await _toyService.DeteleToy(id);
-                if (result.IsSuccess) return Ok(result);
-                return BadRequest(result);
+                if (flag == 1)
+                {
+                    var result = await _toyService.DeteleToy(id);
+                    if (result.IsSuccess) return Ok(result);
+                    return BadRequest(result);
+                }
+                else
+                {
+                    var result = await _toyService.UndoDeteleToy(id);
+                    if (result.IsSuccess) return Ok(result);
+                    return BadRequest(result);
+                }
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-        }
-        [Authorize(Policy = "SupplierOnly")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("undo-delete")]
-        public async Task<IActionResult> UndoDeleteToy(int id)
-        {
-            try
-            {
-                var result = await _toyService.UndoDeteleToy(id);
-                if (result.IsSuccess) return Ok(result);
-                return BadRequest(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }      
+        }     
     }
 }
