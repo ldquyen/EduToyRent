@@ -1,5 +1,8 @@
-﻿using EduToyRent.Service.DTOs.ReportDTO;
+﻿using EduToyRent.API.Helper;
+using EduToyRent.Service.DTOs.AccountDTO;
+using EduToyRent.Service.DTOs.ReportDTO;
 using EduToyRent.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +44,15 @@ namespace EduToyRent.API.Controllers
                 return BadRequest(result.Error);
             }
             return Ok();
+        }
+        [Authorize(Policy = "SupplierOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("reports-by-account")]
+        public async Task<IActionResult> GetReportsByAccountId(int pageIndex = 0, int pageSize = 10)
+        {
+            CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+            var paginatedReports = await _reportService.GetReportsByAccountId(pageIndex, pageSize, currentUserObject);
+            return Ok(paginatedReports);
         }
     }
 }

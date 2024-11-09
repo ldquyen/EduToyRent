@@ -1,5 +1,6 @@
 ﻿
 using EduToyRent.Service.Common;
+using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.ReportDTO;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,7 @@ namespace EduToyRent.Service.Interfaces
         Task<Result> CreateReportAsync(CreateReportDTO dto);
         Task<Pagination<ReportListDTO>> GetReports(int pageIndex, int pageSize);
         Task<Result> ChangeReportStatus(int reportId);
+        Task<Pagination<ReportListDTO>> GetReportsByAccountId(int pageIndex, int pageSize, CurrentUserObject currentUserObject);
+
     }
 }

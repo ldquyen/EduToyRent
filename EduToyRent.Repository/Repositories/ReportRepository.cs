@@ -32,7 +32,16 @@ namespace EduToyRent.Repository.Repositories
                 .Take(take)
                 .ToListAsync();
         }
-
+        public async Task<ICollection<Report>> GetReportsByAccountId(int skip, int take, int id)
+        {
+            return await _context.Reports
+                .Include(r => r.Toy)
+                .Include(r => r.Account)
+                .OrderByDescending(r => r.ReportDate)
+                .Skip(skip)
+                .Take(take).Where(t => t.ReportById == id)
+                .ToListAsync();
+        }
         public async Task<int> GetTotalReportsCount()
         {
             return await _context.Reports.CountAsync();

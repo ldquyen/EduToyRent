@@ -14,5 +14,7 @@ namespace EduToyRent.Repository.Interfaces
         Task<int> GetTotalReportsCount();
         Task<Report> GetReportById(int reportId);
         Task UpdateReport(Report report);
+        Task<ICollection<Report>> GetReportsByAccountId(int skip, int take, int id);
+
     }
 }

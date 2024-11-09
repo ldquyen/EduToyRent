@@ -3,6 +3,7 @@ using EduToyRent.DataAccess.Entities;
 using EduToyRent.Repository.Interfaces;
 using EduToyRent.Repository.Repositories;
 using EduToyRent.Service.Common;
+using EduToyRent.Service.DTOs.AccountDTO;
 using EduToyRent.Service.DTOs.ReportDTO;
 using EduToyRent.Service.Interfaces;
 using System;
@@ -66,6 +67,20 @@ namespace EduToyRent.Service.Services
                 return Result.Success();
             }
             return Result.Failure(Result.CreateError("400", "Invalid status transition"));
+        }
+        public async Task<Pagination<ReportListDTO>> GetReportsByAccountId(int pageIndex, int pageSize, CurrentUserObject currentUserObject)
+        {
+            var totalItemsCount = await _unitOfWork.ReportRepository.GetTotalReportsCount();
+            var reports = await _unitOfWork.ReportRepository.GetReportsByAccountId(pageIndex * pageSize, pageSize, currentUserObject.AccountId);
+            var reportDTOs = _mapper.Map<ICollection<ReportListDTO>>(reports);
+
+            return new Pagination<ReportListDTO>
+            {
+                Items = reportDTOs,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                TotalItemsCount = totalItemsCount
+            };
         }
     }
 }
