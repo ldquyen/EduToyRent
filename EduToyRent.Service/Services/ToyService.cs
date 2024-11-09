@@ -402,7 +402,7 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> DeteleToy(int toyId)
         {
             var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
-            toy.IsActive = true;
+            toy.IsDelete = true;
             var updateResult = await _unitOfWork.ToyRepository.UpdateAsync(toy);
             await _unitOfWork.SaveAsync();
             return Result.Success();
@@ -410,7 +410,15 @@ namespace EduToyRent.Service.Services
         public async Task<dynamic> UndoDeteleToy(int toyId)
         {
             var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
-            toy.IsActive = false;
+            toy.IsDelete = false;
+            var updateResult = await _unitOfWork.ToyRepository.UpdateAsync(toy);
+            await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
+        public async Task<dynamic> UnbanToy(int toyId)
+        {
+            var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
+            toy.IsActive = true;
             var updateResult = await _unitOfWork.ToyRepository.UpdateAsync(toy);
             await _unitOfWork.SaveAsync();
             return Result.Success();

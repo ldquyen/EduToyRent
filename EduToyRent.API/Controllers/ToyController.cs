@@ -131,5 +131,21 @@ namespace EduToyRent.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize(Policy = "StaffOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("unban")]
+        public async Task<IActionResult> UnBanToy(int id)
+        {
+            try
+            {
+                var result = await _toyService.UnbanToy(id);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
