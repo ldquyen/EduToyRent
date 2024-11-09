@@ -117,7 +117,7 @@ namespace EduToyRent.API.Controllers
         }
         [Authorize(Policy = "SupplierOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut("delete")]
+        [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoDeleteToy(int id)
         {
             try
