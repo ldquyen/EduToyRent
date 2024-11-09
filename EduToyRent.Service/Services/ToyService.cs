@@ -407,6 +407,14 @@ namespace EduToyRent.Service.Services
             await _unitOfWork.SaveAsync();
             return Result.Success();
         }
+        public async Task<dynamic> UndoDeteleToy(int toyId)
+        {
+            var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
+            toy.IsActive = false;
+            var updateResult = await _unitOfWork.ToyRepository.UpdateAsync(toy);
+            await _unitOfWork.SaveAsync();
+            return Result.Success();
+        }
         //public async Task<Result> UpdateQuantity(int toyId, int quantity, CurrentUserObject currentUserObject)
         //{
         //    var toy = await _unitOfWork.ToyRepository.GetToyById(toyId);
