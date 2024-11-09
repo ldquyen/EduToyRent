@@ -24,7 +24,6 @@ namespace EduToyRent.Service.Interfaces
         Task<Pagination<ViewToyForSellSupplier>> ViewToysForSellAccount(string search, string sort, int pageIndex, int pageSize, CurrentUserObject currentUserObject);
         Task<dynamic> DeteleToy(int toyId);
         Task<dynamic> UndoDeteleToy(int toyId);
-        Task<dynamic> UnbanToy(int toyId);
 
     }
 }
