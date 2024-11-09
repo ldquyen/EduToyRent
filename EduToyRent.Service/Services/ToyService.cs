@@ -161,7 +161,10 @@ namespace EduToyRent.Service.Services
                         Description = t.Description,
                         RentPricePerDay = t.RentPricePerDay,
                         Stock = t.Stock,
+                        IsActive = t.IsActive,
+                        IsDelete = t.IsDelete,
                         ImageUrl = t.ImageUrl
+                        
                     }).ToList()
                 };
             }
@@ -195,6 +198,8 @@ namespace EduToyRent.Service.Services
                     Description = t.Description,
                     RentPricePerDay = t.RentPricePerDay,
                     Stock = t.Stock,
+                    IsActive = t.IsActive,
+                    IsDelete = t.IsDelete,
                     ImageUrl = t.ImageUrl
                 }).ToList()
             };
@@ -222,6 +227,8 @@ namespace EduToyRent.Service.Services
                         Description = t.Description,
                         BuyPrice = t.BuyPrice,
                         Stock = t.Stock,
+                        IsActive = t.IsActive,
+                        IsDelete = t.IsDelete,
                         ImageUrl = t.ImageUrl
                     }).ToList()
                 };
@@ -256,6 +263,8 @@ namespace EduToyRent.Service.Services
                     Description = t.Description,
                     BuyPrice = t.BuyPrice,
                     ImageUrl = t.ImageUrl,
+                    IsActive = t.IsActive,
+                    IsDelete = t.IsDelete,
                     Stock = t.Stock
                 }).ToList()
             };

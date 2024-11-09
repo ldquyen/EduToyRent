@@ -13,6 +13,8 @@ namespace EduToyRent.Service.DTOs.ToyDTO
         public string Description { get; set; }
         public decimal? RentPricePerDay { get; set; }
         public int Stock { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDelete { get; set; }
         public string ImageUrl { get; set; }
     }
 
@@ -23,6 +25,8 @@ namespace EduToyRent.Service.DTOs.ToyDTO
         public string Description { get; set; }
         public decimal? BuyPrice { get; set; }
         public int Stock { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDelete { get; set; }
         public string ImageUrl { get; set; }
     }
 
